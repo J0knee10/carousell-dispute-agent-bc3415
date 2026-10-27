@@ -10,7 +10,7 @@ llm:
   judge_model: gemini-flash-lite-latest
   # Model that writes the synthetic disputes. Kept different from the judge
   # so the same model is not grading its own writing.
-  generator_model: gemini-flash-latest
+  generator_model: gemma-4-26b-a4b-it
   temperature: 0.0
   generator_temperature: 0.9
   # Free-tier friendly pacing: wait at least this long between calls.

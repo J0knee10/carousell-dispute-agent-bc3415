@@ -50,13 +50,21 @@ class GeminiClient:
         temperature: float = 0.0,
         min_seconds_between_calls: float = 4.5,
         max_retry_wait_seconds: float = 90,
+        timeout_seconds: float = 120,
     ):
         self.name = "gemini"
         self.model = model
         self.temperature = temperature
         self.min_interval = min_seconds_between_calls
         self.max_retry_wait = max_retry_wait_seconds
-        self.client = genai.Client(api_key=api_key)
+        # A timeout stops a stalled request hanging a batch run, and turning off the
+        # SDK's own retries lets the loop below decide when to wait and when to stop.
+        self.client = genai.Client(
+            api_key=api_key,
+            http_options=types.HttpOptions(
+                timeout=int(timeout_seconds * 1000), retry_options=types.HttpRetryOptions(attempts=1)
+            ),
+        )
         self.stats = CallStats()
 
     def generate(
@@ -98,10 +106,17 @@ class GeminiClient:
                 time.sleep(delay + 1)
                 continue
             except errors.ServerError as e:
+                # 503 "high demand" spikes are common on the free tier; back off and retry.
                 server_errors += 1
-                if server_errors > 3:
+                if server_errors > 4:
                     raise LLMError(f"Gemini server error ({e.code}): {e.message}") from e
-                time.sleep(5 * server_errors)
+                time.sleep(10 * server_errors)
+                continue
+            except Exception as e:  # network errors and timeouts from the HTTP client
+                server_errors += 1
+                if server_errors > 4:
+                    raise LLMError(f"Gemini request failed: {e}") from e
+                time.sleep(10 * server_errors)
                 continue
 
             self.stats.record(task, time.monotonic() - start)
