@@ -1,0 +1,67 @@
+# Project settings. Secrets (the Gemini key) live in .env, not here.
+# Paths are relative to the repo root.
+
+llm:
+  # mock: offline keyword rules, for tests and development (results are not real)
+  # gemini: Google Gemini API, needs GEMINI_API_KEY in .env
+  provider: gemini
+  # Model that judges disputes (agent, baseline, message drafts).
+  # GEMINI_MODEL in .env overrides this.
+  judge_model: gemini-flash-lite-latest
+  # Model that writes the synthetic disputes. Kept different from the judge
+  # so the same model is not grading its own writing.
+  generator_model: gemini-flash-latest
+  temperature: 0.0
+  generator_temperature: 0.9
+  # Free-tier friendly pacing: wait at least this long between calls.
+  min_seconds_between_calls: 4.5
+  # Per-minute 429s that ask us to wait up to this long are retried in place.
+  # Longer waits (or daily quota) stop the run so it can resume later.
+  max_retry_wait_seconds: 90
+
+rag:
+  policy_dir: data/policy
+  persist_dir: .chroma
+  collection: carousell_sg_policy
+  # dense (embeddings only), lexical (BM25 only) or hybrid (both, rank-fused)
+  mode: hybrid
+  # Clauses retrieved per query; each claim gap gets its own query.
+  top_k: 3
+  # Upper bound on clauses handed to the judge after merging all queries.
+  max_clauses: 8
+  chunk_max_chars: 900
+  chunk_min_chars: 300
+
+agent:
+  # Recommendations below this confidence are escalated for careful review.
+  confidence_threshold: 0.7
+
+data:
+  mercari_archive: data/raw/train.tsv.7z
+  mercari_tsv: data/raw/train.tsv
+  listings_sample: data/listings/listings_sample.jsonl
+  sample_size: 300
+  # Mercari prices are in USD; converted at this fixed rate for a Singapore setting.
+  usd_to_sgd: 1.35
+  seed: 3415
+  seed_cases: data/cases/seed_cases.yaml
+  generated_cases: data/cases/generated_cases.jsonl
+  splits: data/cases/splits.json
+  test_size: 50
+  labels: data/labels/labels.csv
+  retrieval_queries: data/eval/retrieval_queries.jsonl
+
+generation:
+  # Number of synthetic disputes to add on top of the hand-written seed cases.
+  # Mix follows the brief: 60% clear, 30% borderline, 10% ineligible.
+  target_total: 200
+  mix:
+    clear: 0.6
+    borderline: 0.3
+    ineligible: 0.1
+
+outputs:
+  runs_dir: outputs/runs
+  decision_log: outputs/decision_log.jsonl
+  whatif_dir: outputs/whatif
+  reports_dir: reports
