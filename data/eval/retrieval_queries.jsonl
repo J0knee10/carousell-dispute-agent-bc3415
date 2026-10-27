@@ -1,0 +1,25 @@
+{"query": "buyer received a different model or version than listed", "expected_phrases": ["different variation"]}
+{"query": "item arrived in a different colour or size than the listing", "expected_phrases": ["different variation"]}
+{"query": "accessory promised in the listing is missing from the package", "expected_phrases": ["missing parts", "missing part(s)"]}
+{"query": "item has an undisclosed defect and does not work", "expected_phrases": ["undisclosed defect"]}
+{"query": "colour shade is slightly different from the photos", "expected_phrases": ["light pink"]}
+{"query": "buyer says condition is worse than the 8/10 rating in the listing", "expected_phrases": ["8/10"]}
+{"query": "signs of wear on an item listed as used", "expected_phrases": ["correctly listed as being in used condition"]}
+{"query": "buyer changed their mind and wants to return the item", "expected_phrases": ["change their mind"]}
+{"query": "buyer ordered the wrong size by mistake", "expected_phrases": ["wrong order"]}
+{"query": "buyer claims an accessory that was never in the listing", "expected_phrases": ["not in the original listing"]}
+{"query": "dispute raised after the dispute window closed", "expected_phrases": ["after the dispute window", "whichever occurs first"]}
+{"query": "how many days after delivery can a buyer raise a dispute for tracked mail", "expected_phrases": ["For Tracked Mail: 2 days"]}
+{"query": "item was damaged after it was delivered", "expected_phrases": ["post successful delivery"]}
+{"query": "minor scratches that do not affect functionality", "expected_phrases": ["surface wear"]}
+{"query": "payment made by bank transfer instead of the Buy button", "expected_phrases": ["Buyer Protection is applied to orders paid through", "PayNow, DBS PayLah"]}
+{"query": "item not received and it was sent by untracked mail", "expected_phrases": ["Item Not Received: Covered only"]}
+{"query": "seller did not respond to the dispute request within 24 hours", "expected_phrases": ["fail to respond within the 24-hour"]}
+{"query": "can a buyer raise a second dispute on the same order", "expected_phrases": ["raised once"]}
+{"query": "what evidence can the seller submit to counter the claim", "expected_phrases": ["Photos and condition of the item from seller"]}
+{"query": "what happens if a party misses the evidence deadline", "expected_phrases": ["ruled against"]}
+{"query": "outcome for an incomplete item: partial refund or send the missing part", "expected_phrases": ["prescribe a refund", "missing part(s)"]}
+{"query": "returned item must be unused and in the same condition", "expected_phrases": ["must be unused"]}
+{"query": "buyer already got a refund from the seller outside Carousell", "expected_phrases": ["separate resolution process"]}
+{"query": "item looks very different from the listing photo", "expected_phrases": ["deviates extensively"]}
+{"query": "when is a full refund given without returning the item", "expected_phrases": ["Full refund without returns"]}
