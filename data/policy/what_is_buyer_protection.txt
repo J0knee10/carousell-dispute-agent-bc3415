@@ -1,0 +1,70 @@
+https://support.carousell.com/hc/en-us/articles/360020382834--Singapore-What-is-Buyer-Protection
+[Singapore] What is Buyer Protection?
+
+Buyer Protection is applied to orders paid through the 'Buy' button using supported payment methods. It ensures safe payments, provides access to customer support, and gives buyers the right to claim a refund if an item does not arrive or is significantly not as described.
+For Sellers
+The ‘Buy’ button allows you to deal safely on our platform.
+
+Enabling the 'Buy' button on your listings allows you to:
+
+    Offer Delivery: Add delivery as a deal method so you aren't limited to meet-ups.
+    Official Shipping: Access to Carousell Official Delivery with exclusive door-to-door shipping rates.
+    Flexible Payments: Provide buyers with multiple payment options, including PayNow, DBS PayLah!, Visa/Mastercard, Atome and PayLater by Grab.
+    Dispute Mediation: Carousell steps in as a neutral third party to resolve any issues.
+
+sg_APR-BP-helpcentrearticle-legoapp.jpg
+
+Simply toggle on the “Enable ‘Buy’ button” on your listings to enjoy the benefits above. 
+Eligibility and Maintenance
+
+To qualify for the 'Buy' button, sellers must meet specific criteria:
+
+    Review Rating: Maintain a seller review rating of at least 4.0.
+    Low Cancellation Rate: Maintain a low order cancellation rate over the last 30 days:
+        Less than 10 orders: Only one cancellation allowed.
+        More than 10 orders: Cancellation rate must be kept below 10%.
+
+Eligibility will be reassessed and updated on a weekly basis every Monday.
+❗Permanent Ban Policy
+
+A seller will be permanently restricted from using the 'Buy' button if, within the last 12 months, they meet both of the following conditions:
+
+    Lifetime cancellation rate is 50% or higher.
+    Total lifetime cancellations (initiated by seller or system) are 5 or more.
+
+ 
+For Buyers
+
+When you pay via the ‘Buy’ Button, Buyer Protection is applied to your order. It helps ensure safe payments, access to customer support, and gives you the right to claim a refund if your item doesn't arrive or is significantly not as described.
+
+Listings with the ‘Buy’ button enabled will be applicable for Buyer Protection if you make payment through the Carousell-supported payment methods. Currently, we accept PayNow, DBS PayLah!, Visa/ Mastercard Debit/Credit Cards, Atome and PayLater by Grab*
+
+*only applicable for selected listings
+
+sg_BP-Q3-M2_lego2a-app.png
+
+With Buyer Protection, you will be able to raise a dispute and it will cover you for the below scenarios:
+
+    Item Not Received: Covered only if tracked shipping was used. Buyer Protection does not cover non-delivery for untracked mail.
+    Significantly Not As Described (SNAD): An item qualifies for a refund if:
+        It is a different variation (size, color, model, or version).
+        It has incomplete or missing parts compared to the listing description.
+        For event tickets, it is a different variation in event, date, or seating.
+        The item's condition differs from the listing.
+        The item is damaged or has undisclosed defects affecting its functionality.
+
+ 
+📝 How to Raise a Dispute
+
+Simply raise a dispute/ return request from your Order Details Page in app and our dedicated Support Team will get back to you within 24 hours. 
+
+Updated as of Apr 2026
+
+
+Buyer Protection is currently available in the selected categories which you can list with the ‘Buy’ button.
+
+*Advisory*
+
+Beware of fake orders claiming to be under Buyer Protection or orders with the 'Buy' button. As a seller, you would never need to leave the app, send your email address or mobile number to receive payment. If you're being asked to enter your credit/debit card details to receive payment, do not proceed and report the user to us immediately. 
+
+Read more about Phishing scams here.

@@ -1,0 +1,74 @@
+https://support.carousell.com/hc/en-us/articles/360001547687--Singapore-What-happens-when-a-refund-return-request-is-raised
+[Singapore] What happens when a refund/return request is raised?
+
+Sellers will be informed of the return/refund request raised by the buyer through email and notification on Updates. You can view the return/refund request under Sales > Returns tab.
+
+Notification card main component (1).png 221.png
+
+ 
+
+Sellers have 24 hours to review the return/refund request and choose to accept or decline the proposed resolution from the buyer. 
+
+review request.png
+
+a. Should the seller accept the buyer’s proposed resolution;
+
+    A refund (in full or part of) will be immediately processed for item(s) not received and/or (if) the buyer keeps the item. 
+    A full refund will be issued when the item has been returned to the seller. 
+
+b. Should the seller decline the buyer’s proposed resolution, the seller can choose to propose a different resolution or let Carousell steps in to resolve the dispute by raising to support. 
+
+crc-form-blank-buyer-my (8).png
+
+Propose a different resolution
+
+Seller can counter-propose with a different resolution and buyer will be updated via email and notification once it is submitted. The buyer has 24 hours to accept the resolution offered by the seller. In the event that the buyer declines the counter-proposal offered or if no action was taken after 24 hours, the dispute will be raised to Carousell.
+
+crc-form-blank-buyer-my (9).png review request.png
+
+Raise to support team
+
+Sellers are required to furnish more details as evidence to counter buyer’s claims for dispute. The evidence submitted can be in the form of (and not limited to);
+
+    Photos and condition of the item from seller at the point of shipment 
+        Seller’s are advised to test the item before delivery and to keep the evidence as proof of the item’s functionality. Carousell may use this as proof in cases where the item is claimed to be not working /functionally damaged.
+    Proof of adequate packaging measures taken by the seller at the point of shipment
+    Photos of the condition of the received item from buyer
+    Proof of item in misrepresented working condition (if applicable)
+
+crc-form-blank-buyer-my (4).png
+
+Once the dispute has been raised to Carousell for review or if no action was taken due to inactivity, both parties would not be able to proceed with self resolution. The status card of the dispute would show that the issue has been raised to Carousell.
+
+Return details (8).png
+
+Our support team will reach out to both buyers and sellers within 24 hours via email to advise on the next steps.
+
+Depending on the initial evidence submitted, Carousell may reach out to either parties for more information* in order to investigate and come to a resolution.
+
+*To facilitate the dispute resolution process, Carousell may require buyers/sellers to provide supporting documents via email within a stipulated time period. Failure to do so would result in the dispute being ruled against the non-compliant party. Buyers/sellers are advised to check their emails at least once a day during the period of dispute and to respond by the stipulated deadline.
+
+Read up more on Carousell’s dispute handling process
+
+Follow-up steps after a resolution has been decided
+Once a dispute resolution has been accepted, you will be updated via Updates > For action tab as well as from your profile page under My purchases > Returns tab > Order details page.
+Activity-main-1 (3).png 242.png
+
+The resolution outcome may come in the form of: 
+i. Full refund with returns
+ii. Full refund without returns
+iii. Partial refund
+iv. dispute declined as it is not covered under our Buyer Protection and Certified refund policy
+
+For cases where a Full refund with returns is issued, you will need to arrange for the shipment of the item back to the seller. You may opt for Doorstep pick-up (via Carousell delivery partner), arrange delivery yourself via a preferred courier or meet-up. You have 2 days to select the return method, else your return request will be cancelled. You will only be refunded once item has been returned to the seller. Read more on the step-by-step for Full refund with returns. 
+
+Return request content (6).png
+For a Full refund without returns and/or partial refund*, once resolution has been ruled, you will be immediately refunded. No further action is required from you. 
+
+*Both parties must be agreeable to a final amount before a partial refund can be processed. The final amount agreed upon for refund would be a fixed amount that would not include any additional fees or charges. 
+
+Return details (11).png
+
+In the event that Carousell has ruled that it is an invalid dispute, the return/refund request will be declined. Once the request is declined, you will not be able to raise a return/refund again.
+
+Return details (12).png

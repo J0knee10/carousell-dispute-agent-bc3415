@@ -1,0 +1,90 @@
+https://support.carousell.com/hc/en-us/articles/18271789237017--Singapore-Overview-of-Carousell-s-dispute-handling-process
+[Singapore] Overview of Carousell’s dispute handling process
+Dispute handling
+
+These terms apply to you if you have filed a dispute through the Carousell Platform in connection with a Buyer Protection or Certified transaction and you agree to comply with the same.
+
+A dispute can be raised for multiple items in an order, however it can only be raised once. It is the sole responsibility of Buyers to ensure that they have checked and accounted for all the items in their order before submitting a dispute request. 
+
+Refer to this article for information on How to raise a dispute.
+Eligibility
+
+Dispute Reasons
+
+ A dispute can only be raised for any of the following reasons:
+
+1. The item is significantly not as described / you received the wrong item
+
+2. Incomplete items 
+
+3. Item not received
+
+Dispute Window
+
+A dispute must be raised within the dispute / returns window set out under the relevant refund policy. For more details on Carousell’s Refund policies, please refer here. 
+Dispute Request
+
+After the buyer has selected the reason for the dispute, the buyer may 
+
+    request a full refund for items that are not received, or 
+    propose a resolution outcome for items that are significantly not as described or incomplete in the form of a (i) return and refund, or (ii) partial refund of a single item without return,
+
+(each a “Dispute Request”).
+
+Where buyers propose a refund (in full or in part) under a Dispute Request, the refund amount could be a percentage of the listing price or any amount determined to be a reasonable resolution sum so long as it is agreed by the seller. Both parties must be agreeable to the refund amount before the refund can be processed. Please note that any delivery fee, platform fee, Carousell BNPL fee and any other buyer-incurred fees paid by the buyer (“Paid Transaction Fees”) will not be refunded for a partial refund of a single item. The partial refund agreed upon between the buyer and the seller (less any Paid Transaction Fees) would be refunded back to the buyer’s payment method. 
+
+For more details on the refund calculation, kindly refer here. 
+
+Upon receiving a Dispute Request, the seller will be notified via the Carousell Platform and email. The seller has 24 hours from the time the Dispute Request is submitted by the buyer and received by the seller to accept the resolution outcome set out under the Dispute Request or counter-propose with another resolution.
+ 
+If the seller accepts the Dispute Request including any request for a refund, depending on the agreed resolution, the buyer will be refunded once the item(s) has been returned to the seller (for a return and refund outcome) or immediately refunded when the partial refund outcome is accepted by the seller. 
+
+If the seller chooses to decline the buyer's proposed resolution, the seller may counter-propose with a different resolution or raise a request for Carousell Support to review the dispute. At any point in time, both parties can escalate the dispute to Carousell Support for review. 
+
+Should the seller fail to respond within the 24-hour timeline, the seller would be deemed to have accepted the resolution outcome stipulated under the Dispute Request.
+
+Where the seller counter-proposed a different resolution, the buyer has 24 hours from the time the counter-proposed resolution was submitted by the seller and notified to the buyer to choose to accept the seller's counter-proposed resolution or decline the proposed resolution outcome by the seller. 
+
+Should the buyer choose to accept the proposed resolution outcome, depending on the agreed resolution, the buyer will be refunded once the item(s) has been returned to the seller (for a return and refund outcome) or immediately refunded when the partial refund outcome is accepted by the buyer. 
+
+Should the buyer choose to decline the proposed resolution outcome, the dispute will be raised to Carousell Support. 
+Carousell Support
+
+Where Carousell’s Support steps in to review the dispute, Carousell may require buyers and/or sellers to provide additional supporting documents within the stipulated timeline to assist in our investigation. Both buyer and seller shall provide their full cooperation throughout the dispute resolution process. If any of the parties fail to adhere to the stipulated timeline, the dispute may be ruled against that non-compliant party. You are advised to check your emails regularly during any periods of dispute and to respond by the stipulated deadline. Once a resolution is reached, Carousell will inform both parties of the outcome via email.
+Carousell-supported Dispute Resolution Process 
+Item is not significantly as described/received the wrong item
+
+Subject to Carousell’s determination, if the claim is found to be valid, a refund (in full or in part) or return and refund (in full or in part) can be prescribed.
+
+Incomplete items
+
+Subject to Carousell’s determination:
+
+    the seller may be requested to deliver to the buyer the missing part(s) or such other actions as may be required to make the item or order whole; or 
+    it may prescribe a refund (in full or in part) or return and refund (in full or in part).
+
+For the above-stated scenarios, sellers will be responsible for and requested to cover the additional shipping costs, to be paid to the buyer directly.
+Item not received 
+
+Buyer Protection does not cover non-delivery for orders with untracked mail as the method of delivery. To claim for non-delivery of orders, Buyers must opt for tracked delivery.
+
+Delivery compensation cover
+
+    For Carousell-supported delivery partners, Carousell will liaise with our delivery partner to obtain compensation (capped at the prescribed insurance coverage limit from Carousell official delivery partners - refer here for more information ) on behalf of the seller. 
+    For non-integrated logistic partners, sellers will have to liaise with the relevant delivery partner to obtain compensation. This compensation value is capped at the delivery partner’s stated compensation amount. Sellers are strongly advised to offer delivery options that provide sufficient compensation coverage of the value of the item.
+
+Sellers are responsible for ensuring that the item they are mailing complies with the chosen delivery partner’s packaging guidelines and terms of service, including satisfying the requirements to qualify for their respective compensation payouts if needed.
+
+For the avoidance of doubt, Carousell will not compensate for lost/missing parcels. In no event shall Carousell be liable to provide any compensation for lost or undelivered items. Where applicable, Carousell’s obligation shall only extend to facilitate the compensation claim request.
+
+In the event that any item is not received, a full refund of that item will be processed including any platform fee and Carousell BNPL fee charged for that item. 
+Carousell-supported Dispute Resolution Outcomes
+Refund with return process
+
+In the event that a return is required as part of the resolution decision, buyers and sellers will have to arrange for the item to be returned within 7 days of the decision. Buyers must complete the return process through the app following the steps highlighted in this article: Step-by-step for buyers on how to proceed with a full refund with returns
+
+Sellers must submit their return address in the app and track the return progress. More details in this article: Step-by-step for sellers after a full refund with returns decision has been ruled
+
+In the event that the item gets damaged during the return process due to improper packaging, Carousell reserves the right to decide whether a refund should still be issued to the buyer.
+
+Kindly note that the actual processing and settlement of any refunds will be conducted exclusively by Carousell's authorised third-party payment partner(s). Both parties further agree and acknowledge that the authorised third-party payment partner(s) is the contracting party responsible for all payment processing services, including any refunds made on the platform.

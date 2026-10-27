@@ -1,0 +1,361 @@
+# Hand-written dispute cases built on real listings from listings_sample.jsonl.
+#
+# Each case names a listing by listing_id; the listing text is pulled in from the
+# sample, so only the order, dispute and chat are written here. `meta` holds the
+# outcome the author intended (the provisional label) and why.
+#
+# Field reference: src/dispute_agent/schemas.py (Order, Dispute, CaseMeta).
+# Times are Singapore local time.
+
+- case_id: S01
+  listing_id: L0080
+  order: {payment_method: PayNow, delivery_method: tracked_mail, order_confirmed_at: 2026-10-05T10:00, delivered_at: 2026-10-08T14:00}
+  dispute:
+    reason: incomplete
+    raised_at: 2026-10-09T09:30
+    buyer_complaint: "The listing says it comes with an 8GB SD card and Need for Speed Most Wanted. The console and charger arrived but there is no SD card in the slot or anywhere in the box. Without the card I can't save games."
+    buyer_proposed_resolution: partial_refund
+    buyer_requested_refund_sgd: 25
+    buyer_photo_descriptions:
+      - "Opened parcel showing the PS Vita, a generic charger and the game cartridge"
+      - "Close-up of the empty memory card slot on the console"
+    seller_response: "I'm sure I put everything in. Maybe it fell out in the bubble wrap?"
+    seller_counter_proposal: "Refund $10"
+  chat:
+    - {sender: buyer, text: "Hi, got the Vita today, thanks. The SD card isn't inside though?"}
+    - {sender: seller, text: "Should be in the slot. Check the bubble wrap"}
+    - {sender: buyer, text: "Checked everything, it's not there. Photos attached."}
+  meta: {difficulty: clear, scenario: missing_accessory, target_outcome: partial_refund, demo: true,
+         notes: "Accessory explicitly promised in the listing is missing; console itself works."}
+
+- case_id: S02
+  listing_id: L0089
+  order: {payment_method: Visa/Mastercard, delivery_method: tracked_mail, order_confirmed_at: 2026-10-10T20:15, delivered_at: 2026-10-13T11:00}
+  dispute:
+    reason: snad
+    raised_at: 2026-10-13T21:00
+    buyer_complaint: "Listing says 64GB iPhone 6. Settings shows 16GB capacity and the model number on the back matches the 16GB version. I paid for 64GB."
+    buyer_proposed_resolution: return_and_refund
+    buyer_photo_descriptions:
+      - "Screenshot of Settings > General > About showing Capacity 16 GB"
+      - "Back of the phone showing the model number"
+    seller_response: "It was sold to me as 64GB, I never checked. It works fine though."
+    seller_counter_proposal: "Refund $40 and you keep it"
+  chat:
+    - {sender: buyer, text: "The phone is 16GB not 64GB, see screenshot"}
+    - {sender: seller, text: "Oh I didn't know. I can give some money back"}
+    - {sender: buyer, text: "I need the 64GB, I'd rather return it"}
+  meta: {difficulty: clear, scenario: wrong_variation, target_outcome: full_refund_with_return, demo: true,
+         notes: "Different version (storage) from what was listed."}
+
+- case_id: S03
+  listing_id: L0042
+  order: {payment_method: PayNow, delivery_method: tracked_mail, order_confirmed_at: 2026-10-02T13:00, delivered_at: 2026-10-06T10:30}
+  dispute:
+    reason: snad
+    raised_at: 2026-10-07T08:00
+    buyer_complaint: "Listing says the phone is in perfect shape. It switches off by itself every few minutes even at 100% battery and restarts in a loop. Tried two chargers."
+    buyer_proposed_resolution: return_and_refund
+    buyer_photo_descriptions:
+      - "Video description: phone powers off on its own while on the home screen at 100% battery"
+    seller_response: "It was working when I packed it. Maybe something happened in shipping."
+    seller_evidence:
+      - "Photo of the phone switched on, taken before shipping"
+  chat:
+    - {sender: buyer, text: "Phone keeps turning off by itself, is this a known issue?"}
+    - {sender: seller, text: "Never happened to me"}
+  meta: {difficulty: clear, scenario: undisclosed_functional_defect, target_outcome: full_refund_with_return,
+         notes: "Undisclosed defect affecting function; a photo of it switched on does not show it stays on."}
+
+- case_id: S04
+  listing_id: L0128
+  order: {payment_method: DBS PayLah!, delivery_method: tracked_mail, order_confirmed_at: 2026-10-12T09:00, delivered_at: 2026-10-15T16:00}
+  dispute:
+    reason: incomplete
+    raised_at: 2026-10-16T10:00
+    buyer_complaint: "The listing says it also comes with a black band, a charger and a wireless dongle. I got the tracker with the pink band and the charger, but no black band and no dongle."
+    buyer_proposed_resolution: partial_refund
+    buyer_requested_refund_sgd: 20
+    buyer_photo_descriptions:
+      - "Contents of the package laid out: tracker on pink band, charging cable, packaging"
+    seller_response: "Sorry, I think I left the black band and dongle in my drawer. I can mail them."
+    seller_counter_proposal: "Send the missing items by post"
+  chat:
+    - {sender: buyer, text: "Missing the black band and dongle"}
+    - {sender: seller, text: "Ah my bad, let me look for them"}
+  meta: {difficulty: clear, scenario: missing_accessory, target_outcome: partial_refund,
+         notes: "Seller admits missing parts. Policy also allows asking the seller to send the missing parts."}
+
+- case_id: S05
+  listing_id: L0030
+  order: {programme: buyer_protection, payment_method: Visa/Mastercard, delivery_method: tracked_mail, order_confirmed_at: 2026-10-01T18:00, delivered_at: 2026-10-05T12:00}
+  dispute:
+    reason: snad
+    raised_at: 2026-10-05T19:30
+    buyer_complaint: "Listing says no missing stones and genuine amethyst eyes. One of the dragon's eyes is an empty setting, the stone is missing."
+    buyer_proposed_resolution: return_and_refund
+    buyer_photo_descriptions:
+      - "Macro photo of the ring: left eye setting is empty, right eye has a purple stone"
+    seller_response: "All stones were there when I listed it. I don't know what happened."
+  chat:
+    - {sender: buyer, text: "One eye stone is missing, did it come loose before shipping?"}
+    - {sender: seller, text: "No it was complete"}
+  meta: {difficulty: clear, scenario: undisclosed_defect, target_outcome: full_refund_with_return,
+         notes: "Listing explicitly says no missing stones; buyer has a clear photo."}
+
+- case_id: S06
+  listing_id: L0078
+  order: {payment_method: PayNow, delivery_method: tracked_mail, order_confirmed_at: 2026-10-14T11:00, delivered_at: 2026-10-17T15:00}
+  dispute:
+    reason: snad
+    raised_at: 2026-10-17T20:00
+    buyer_complaint: "Ordered size 2 as listed. The tag inside says size 6. They're far too big."
+    buyer_proposed_resolution: return_and_refund
+    buyer_photo_descriptions:
+      - "Photo of the waistband tag showing size 6"
+    seller_response: "Oops I have two pairs, must have sent the wrong one. Happy to swap."
+    seller_counter_proposal: "Return and I send the size 2"
+  chat:
+    - {sender: buyer, text: "These are size 6 not 2"}
+    - {sender: seller, text: "Sorry! I'll sort it out"}
+  meta: {difficulty: clear, scenario: wrong_variation, target_outcome: full_refund_with_return,
+         notes: "Wrong size sent; seller agrees it is the wrong item."}
+
+- case_id: S07
+  listing_id: L0099
+  order: {payment_method: PayNow, delivery_method: tracked_mail, order_confirmed_at: 2026-10-08T08:00, delivered_at: 2026-10-10T13:00}
+  dispute:
+    reason: snad
+    raised_at: 2026-10-11T10:00
+    buyer_complaint: "Played it for a day and honestly it's not as fun as I expected. The game and case are fine but I'd like to return it."
+    buyer_proposed_resolution: return_and_refund
+    seller_response: "The game is exactly as described. All sales are final."
+  chat:
+    - {sender: buyer, text: "Can I return the game? Not really my style"}
+    - {sender: seller, text: "Sorry, it's in the condition I described"}
+  meta: {difficulty: clear, scenario: change_of_mind, target_outcome: decline,
+         notes: "Buyer changed their mind; item matches the listing."}
+
+- case_id: S08
+  listing_id: L0060
+  order: {payment_method: Atome, delivery_method: tracked_mail, order_confirmed_at: 2026-10-03T12:00, delivered_at: 2026-10-07T10:00}
+  dispute:
+    reason: snad
+    raised_at: 2026-10-07T22:00
+    buyer_complaint: "The set doesn't fit my bed. I need king size. All 8 pieces are there and it's new, but it's useless to me."
+    buyer_proposed_resolution: return_and_refund
+    seller_response: "The listing says queen size in the title and description."
+  chat:
+    - {sender: buyer, text: "Is this king size?"}
+    - {sender: seller, text: "It's queen, as listed"}
+  meta: {difficulty: clear, scenario: not_in_listing, target_outcome: decline,
+         notes: "Buyer ordered the wrong size by mistake; listing was clear."}
+
+- case_id: S09
+  listing_id: L0010
+  order: {payment_method: Visa/Mastercard, delivery_method: tracked_mail, order_confirmed_at: 2026-10-09T19:00, delivered_at: 2026-10-12T14:00}
+  dispute:
+    reason: incomplete
+    raised_at: 2026-10-12T21:00
+    buyer_complaint: "An Elite controller normally comes with the paddles, extra thumbsticks and a carrying case. I only got the controller."
+    buyer_proposed_resolution: partial_refund
+    buyer_requested_refund_sgd: 40
+    buyer_photo_descriptions:
+      - "The controller on its own, no case or accessories"
+    seller_response: "I only listed the controller. I never said it came with the case or paddles."
+  chat:
+    - {sender: buyer, text: "Where are the paddles and case?"}
+    - {sender: seller, text: "The listing is just the controller"}
+  meta: {difficulty: clear, scenario: not_in_listing, target_outcome: decline,
+         notes: "Claim is for items never mentioned in the listing."}
+
+- case_id: S10
+  listing_id: L0039
+  order: {payment_method: PayNow, delivery_method: tracked_mail, order_confirmed_at: 2026-10-06T10:00, delivered_at: 2026-10-09T12:00}
+  dispute:
+    reason: snad
+    raised_at: 2026-10-10T09:00
+    buyer_complaint: "Seller said great condition but there is pilling all over the sleeves and under the arms. It looks worn."
+    buyer_proposed_resolution: partial_refund
+    buyer_requested_refund_sgd: 15
+    buyer_photo_descriptions:
+      - "Sleeve showing small fabric pills along the forearm"
+      - "Underarm area with light pilling"
+    seller_response: "I mentioned the slight pilling in the description and showed it in the last picture."
+  chat:
+    - {sender: buyer, text: "There's a lot of pilling"}
+    - {sender: seller, text: "Yes, that's in the listing and the last photo"}
+  meta: {difficulty: borderline, scenario: wear_disclosed, target_outcome: decline, demo: true,
+         notes: "Wear was disclosed and the item was listed as used; the buyer thinks it is worse than expected."}
+
+- case_id: S11
+  listing_id: L0044
+  order: {payment_method: PayNow, delivery_method: tracked_mail, order_confirmed_at: 2026-10-11T15:00, delivered_at: 2026-10-14T11:00}
+  dispute:
+    reason: snad
+    raised_at: 2026-10-14T19:00
+    buyer_complaint: "The colour is described as Blue Lotus but in person it looks much more teal-green than blue. Not what I expected from the photos."
+    buyer_proposed_resolution: return_and_refund
+    buyer_photo_descriptions:
+      - "Shorts photographed indoors under warm light, camo print in blue-green tones"
+    seller_response: "That is the official Lululemon colour name. Photos were taken in daylight."
+  chat:
+    - {sender: buyer, text: "The colour looks different from your pics"}
+    - {sender: seller, text: "Lighting probably, it's the same shorts"}
+  meta: {difficulty: borderline, scenario: minor_shade, target_outcome: decline,
+         notes: "Shade difference of the same colourway, like the policy's light pink vs rose pink example."}
+
+- case_id: S12
+  listing_id: L0129
+  order: {payment_method: Visa/Mastercard, delivery_method: tracked_mail, order_confirmed_at: 2026-10-04T13:00, delivered_at: 2026-10-07T17:00}
+  dispute:
+    reason: snad
+    raised_at: 2026-10-08T12:00
+    buyer_complaint: "Listed as 9/10. I'd say 7/10 at best: there is creasing on the toe box and the soles are more yellow than I expected."
+    buyer_proposed_resolution: partial_refund
+    buyer_requested_refund_sgd: 40
+    buyer_photo_descriptions:
+      - "Toe box with light creases"
+      - "Soles with yellowing"
+    seller_response: "Yellowing was disclosed. Light creasing is normal for worn sneakers; they're still 9/10."
+  chat:
+    - {sender: buyer, text: "These are not 9/10"}
+    - {sender: seller, text: "They are, creasing is normal wear"}
+  meta: {difficulty: borderline, scenario: subjective_condition, target_outcome: decline,
+         notes: "Mirrors the policy example 'listed as 8/10 but receiver claims 6/10'."}
+
+- case_id: S13
+  listing_id: L0123
+  order: {payment_method: PayNow, delivery_method: tracked_mail, order_confirmed_at: 2026-10-15T09:00, delivered_at: 2026-10-18T13:00}
+  dispute:
+    reason: snad
+    raised_at: 2026-10-18T20:00
+    buyer_complaint: "There's a crack-like line on the back glass and scratches on the screen. Not happy with the condition."
+    buyer_proposed_resolution: return_and_refund
+    buyer_photo_descriptions:
+      - "Back of the phone showing a thin line across the glass"
+      - "Screen with light scratches visible under a lamp"
+    seller_response: "Both are in my listing: light scratches and a scratch/crack thing on the back."
+  chat:
+    - {sender: buyer, text: "The back looks cracked"}
+    - {sender: seller, text: "That's mentioned in the listing"}
+  meta: {difficulty: borderline, scenario: wear_disclosed, target_outcome: decline,
+         notes: "Every flaw the buyer reports was disclosed in the listing."}
+
+- case_id: S14
+  listing_id: L0041
+  order: {payment_method: DBS PayLah!, delivery_method: tracked_mail, order_confirmed_at: 2026-10-13T10:00, delivered_at: 2026-10-16T12:00}
+  dispute:
+    reason: snad
+    raised_at: 2026-10-16T21:00
+    buyer_complaint: "Listing says no flaws, no stains. There's a brownish stain about 2cm wide on the right cuff. Otherwise it's fine."
+    buyer_proposed_resolution: partial_refund
+    buyer_requested_refund_sgd: 10
+    buyer_photo_descriptions:
+      - "Right cuff with a 2cm brownish stain"
+    seller_response: "I didn't notice it. Could have come from the washing."
+    seller_counter_proposal: "Refund $5"
+  chat:
+    - {sender: buyer, text: "There's a stain on the cuff, listing said no stains"}
+    - {sender: seller, text: "Didn't see it before, sorry"}
+  meta: {difficulty: borderline, scenario: cosmetic_undisclosed_minor, target_outcome: partial_refund,
+         notes: "Listing explicitly promised no stains; the defect is minor and cosmetic, so a partial refund rather than a return."}
+
+- case_id: S15
+  listing_id: L0033
+  order: {payment_method: PayNow, delivery_method: tracked_mail, order_confirmed_at: 2026-10-16T14:00, delivered_at: 2026-10-20T10:00}
+  dispute:
+    reason: incomplete
+    raised_at: 2026-10-21T08:00
+    buyer_complaint: "The listing says it includes thigh highs. They were not in the package."
+    buyer_proposed_resolution: partial_refund
+    buyer_requested_refund_sgd: 10
+    seller_response: "I packed the thigh highs. Here is the photo I took of the open parcel before sealing it."
+    seller_evidence:
+      - "Photo of the open parcel before sealing: skirt, corset top, hair bows and a pair of thigh highs visible"
+  chat:
+    - {sender: buyer, text: "No thigh highs in the bag"}
+    - {sender: seller, text: "They were definitely in there, I have a photo"}
+  meta: {difficulty: borderline, scenario: conflicting_accounts, target_outcome: decline,
+         notes: "Seller has packing evidence; buyer has none. Reasonable to expect the agent to escalate or ask the buyer for evidence."}
+
+- case_id: S16
+  listing_id: L0132
+  order: {paid_via_buy_button: false, payment_method: Bank transfer, delivery_method: tracked_mail, order_confirmed_at: 2026-10-07T12:00, delivered_at: 2026-10-10T15:00}
+  dispute:
+    reason: snad
+    raised_at: 2026-10-10T20:00
+    buyer_complaint: "Two of the discs in the Seiryu box won't play at all, the player says it can't read them. Listing said it plays well."
+    buyer_proposed_resolution: return_and_refund
+    buyer_photo_descriptions:
+      - "TV screen showing 'Disc cannot be read'"
+    seller_response: "They played on my machine."
+  chat:
+    - {sender: buyer, text: "Transferred the money to your bank account, thanks"}
+    - {sender: seller, text: "Received, will post tomorrow"}
+    - {sender: buyer, text: "Two discs don't work"}
+  meta: {difficulty: ineligible, scenario: off_platform_payment, target_outcome: decline, target_eligible: false, demo: true,
+         notes: "Complaint might be valid, but payment was a bank transfer outside the 'Buy' button, so Buyer Protection does not apply."}
+
+- case_id: S17
+  listing_id: L0015
+  order: {payment_method: PayNow, delivery_method: tracked_mail, order_confirmed_at: 2026-10-01T09:00, delivered_at: 2026-10-04T11:00}
+  dispute:
+    reason: incomplete
+    raised_at: 2026-10-09T10:00
+    buyer_complaint: "The listing says it comes with the booklet. There's no booklet in the box."
+    buyer_proposed_resolution: partial_refund
+    buyer_requested_refund_sgd: 15
+    seller_response: "It was in the box lid pocket."
+  chat:
+    - {sender: buyer, text: "Finally opened the box, no booklet"}
+  meta: {difficulty: ineligible, scenario: late_dispute, target_outcome: decline, target_eligible: false,
+         notes: "Tracked mail delivered 4 Oct; the Buyer Protection window closed 2 days later. Raised on 9 Oct."}
+
+- case_id: S18
+  listing_id: L0076
+  order: {payment_method: Visa/Mastercard, delivery_method: meetup, order_confirmed_at: 2026-10-10T12:00, meetup_confirmed_at: 2026-10-11T18:00, completed_at: 2026-10-11T19:00}
+  dispute:
+    reason: incomplete
+    raised_at: 2026-10-13T09:00
+    buyer_complaint: "Listing mentions a shoulder strap. When I got home I realised the strap wasn't with the bag."
+    buyer_proposed_resolution: partial_refund
+    buyer_requested_refund_sgd: 20
+    seller_response: "You checked the bag at the meet-up and marked the order complete."
+  chat:
+    - {sender: buyer, text: "Thanks for meeting! Marked as received"}
+    - {sender: buyer, text: "Wait, where's the strap?"}
+  meta: {difficulty: ineligible, scenario: order_completed, target_outcome: decline, target_eligible: false,
+         notes: "Buyer marked the order completed before raising the dispute, which closes the dispute window."}
+
+- case_id: S19
+  listing_id: L0109
+  order: {payment_method: PayNow, delivery_method: untracked_mail, order_confirmed_at: 2026-10-05T10:00, expected_delivery_at: 2026-10-09T12:00}
+  dispute:
+    reason: not_received
+    raised_at: 2026-10-12T10:00
+    buyer_complaint: "It's been a week and the hair extensions never arrived."
+    buyer_proposed_resolution: full_refund
+    seller_response: "I posted it by normal mail on the 6th."
+  chat:
+    - {sender: buyer, text: "Still haven't received it"}
+    - {sender: seller, text: "Posted on the 6th, normal mail has no tracking"}
+  meta: {difficulty: ineligible, scenario: untracked_not_received, target_outcome: decline, target_eligible: false,
+         notes: "Buyer Protection does not cover non-delivery with untracked mail."}
+
+- case_id: S20
+  listing_id: L0090
+  order: {payment_method: PayNow, delivery_method: tracked_mail, order_confirmed_at: 2026-10-18T10:00, delivered_at: 2026-10-21T12:00}
+  dispute:
+    reason: incomplete
+    raised_at: 2026-10-21T18:00
+    buyer_complaint: "The listing is for earphones, a 3ft cable and a 10ft cable. The 10ft cable is missing."
+    buyer_proposed_resolution: partial_refund
+    buyer_requested_refund_sgd: 5
+    buyer_photo_descriptions:
+      - "Earphones and one short cable on a table"
+    seller_responded: false
+  chat:
+    - {sender: buyer, text: "Hi, the 10ft cable is missing?"}
+  meta: {difficulty: clear, scenario: seller_no_response, target_outcome: partial_refund,
+         notes: "Seller did not respond within 24 hours, so the policy deems the buyer's proposal accepted."}
