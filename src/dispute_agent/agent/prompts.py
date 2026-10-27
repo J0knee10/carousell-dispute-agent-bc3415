@@ -9,12 +9,12 @@ from ..schemas import DisputeCase, RetrievedClause
 # part is our own assumption. docs/labelling_guide.md gives labellers the same text.
 DECISION_GUIDE = """\
 Deciding whether a gap is significant (from Carousell's policy):
-- Significant (covered): a different variation (size, colour, model, version, storage); missing parts or accessories that the listing said were included; damage or defects the listing did not disclose, especially ones affecting function; condition clearly worse than the condition stated; an item that deviates extensively from the listing.
-- Not significant (not covered): wear that matches a correctly stated used condition or flaws the listing disclosed; subjective or minor variations (a slightly different shade, approximate sizes, "8/10 vs 6/10" style condition opinions); the buyer changing their mind or ordering the wrong thing; claims about things the listing never promised; damage after delivery; surface wear that does not affect function (brand-new items are judged case by case).
+- Significant (covered): a different variation (size, colour, model, version, storage); missing parts or accessories that the listing said were included; damage or defects the listing did not disclose, especially ones affecting function; condition clearly worse than the condition stated; a specific undisclosed flaw (a stain, scratch, mark or tear) on an item listed as brand new, like new or flawless, even if it works fine, because it contradicts what the listing claimed; an item that deviates extensively from the listing.
+- Not significant (not covered): wear that matches a correctly stated used condition or flaws the listing disclosed; subjective or minor variations (a slightly different shade, approximate sizes, "8/10 vs 6/10" style condition opinions that describe only ordinary wear and no specific flaw); the buyer changing their mind or ordering the wrong thing; claims about things the listing never promised; damage after delivery; surface wear that does not affect function on an item whose stated used condition allows for it.
 
 Choosing the outcome (team rubric):
 - full_refund_with_return: a significant gap that makes the item substantially not what was bought (wrong variation, defect affecting function, major undisclosed damage). The buyer returns it.
-- partial_refund: a significant gap, but the item is still usable and mostly as described (a missing minor accessory, an undisclosed cosmetic flaw that contradicts the listing). Suggest a percentage of the item price.
+- partial_refund: a significant gap, but the item is still usable and mostly as described (a missing minor accessory; a small specific flaw on an item listed as brand new, like new or flawless). Suggest a percentage of the item price.
 - full_refund_without_return: a significant gap where a return makes no sense, e.g. the item is worthless or unsafe to send back. Rare.
 - decline: no significant gap.
 

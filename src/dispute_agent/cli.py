@@ -148,10 +148,14 @@ def cmd_evaluate(args) -> int:
     cfg = load_config()
     llm = get_llm(provider=args.provider)
     run = args.run or f"{llm.name}_{args.split}"
-    ids = case_ids_for(args.split)
     by_id = cases_by_id()
+    ids = case_ids_for(args.split)
+    split = args.split
+    if args.scenario:
+        ids = [i for i in ids if by_id[i].meta.scenario in args.scenario]
+        split += f" ({', '.join(args.scenario)})"
     cases = [by_id[i] for i in ids]
-    write_run_info(run, {"split": args.split, "case_ids": ids, "provider": llm.name, "model": llm.model})
+    write_run_info(run, {"split": split, "case_ids": ids, "provider": llm.name, "model": llm.model})
     systems = ["agent", "baseline"] if args.system == "both" else [args.system]
     threshold = cfg["agent"]["confidence_threshold"]
     try:
@@ -269,6 +273,7 @@ def build_parser() -> argparse.ArgumentParser:
     sp.add_argument("--system", choices=["agent", "baseline", "both"], default="both")
     sp.add_argument("--split", choices=["test", "dev", "all", "seed", "demo"], default="test")
     sp.add_argument("--run", default=None, help="run name (default <provider>_<split>)")
+    sp.add_argument("--scenario", action="append", help="only cases of this scenario (repeatable)")
     provider(sp)
     add("report", cmd_report, "rebuild the report for a run").add_argument("run")
     add("eval-retrieval", cmd_eval_retrieval, "retrieval accuracy on the query set")
