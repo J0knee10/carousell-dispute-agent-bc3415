@@ -8,9 +8,12 @@ llm:
   # Model that judges disputes (agent, baseline, message drafts).
   # GEMINI_MODEL in .env overrides this.
   judge_model: gemini-flash-lite-latest
-  # Model that writes the synthetic disputes. Kept different from the judge
-  # so the same model is not grading its own writing.
-  generator_model: gemma-4-26b-a4b-it
+  # Models that write the synthetic disputes, tried in order (the next one is
+  # used when one runs out of free quota). Kept different from the judge so the
+  # same model is not grading its own writing.
+  generator_model:
+    - gemini-3-flash-preview
+    - gemma-4-26b-a4b-it
   temperature: 0.0
   generator_temperature: 0.9
   # Free-tier friendly pacing: wait at least this long between calls.

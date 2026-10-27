@@ -1,0 +1,10 @@
+.venv
+.env
+.git
+.chroma
+outputs
+data/raw
+**/__pycache__
+.pytest_cache
+.claude
+SESSION_HANDOFF.md

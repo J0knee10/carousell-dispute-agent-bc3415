@@ -7,6 +7,7 @@ save progress and resume later.
 
 from __future__ import annotations
 
+import json
 import re
 import threading
 import time
@@ -77,11 +78,19 @@ class GeminiClient:
         hints: dict[str, Any] | None = None,
         temperature: float | None = None,
     ) -> T:
+        # Gemma models on the API are very slow with a response schema, so for them
+        # the schema goes in the prompt and the JSON reply is validated here.
+        schema_in_prompt = self.model.startswith("gemma")
+        if schema_in_prompt:
+            prompt = (
+                f"{prompt}\n\nReply with only a JSON object matching this JSON Schema:\n"
+                f"{json.dumps(schema.model_json_schema())}"
+            )
         config = types.GenerateContentConfig(
             system_instruction=system,
             temperature=self.temperature if temperature is None else temperature,
             response_mime_type="application/json",
-            response_schema=schema,
+            response_schema=None if schema_in_prompt else schema,
         )
         server_errors = 0
         rate_limits = 0
@@ -108,13 +117,13 @@ class GeminiClient:
             except errors.ServerError as e:
                 # 503 "high demand" spikes are common on the free tier; back off and retry.
                 server_errors += 1
-                if server_errors > 4:
+                if server_errors > 3:
                     raise LLMError(f"Gemini server error ({e.code}): {e.message}") from e
                 time.sleep(10 * server_errors)
                 continue
             except Exception as e:  # network errors and timeouts from the HTTP client
                 server_errors += 1
-                if server_errors > 4:
+                if server_errors > 3:
                     raise LLMError(f"Gemini request failed: {e}") from e
                 time.sleep(10 * server_errors)
                 continue
@@ -123,8 +132,10 @@ class GeminiClient:
             parsed = resp.parsed
             if isinstance(parsed, schema):
                 return parsed
+            text = (resp.text or "").strip()
+            text = re.sub(r"^```(?:json)?\s*|\s*```$", "", text)
             try:
-                return schema.model_validate_json(resp.text or "")
+                return schema.model_validate_json(text)
             except ValidationError as e:
                 bad_output += 1
                 if bad_output > 1:
