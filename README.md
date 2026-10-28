@@ -158,6 +158,23 @@ leans towards declining.
 On the 20 hand-written seed cases the agent scored 100% and the baseline 80%
 ([report](reports/evaluation_gemini_seed.md)).
 
+**AI-assisted checks (not human).** Claude, an AI model separate from the
+Gemini models used here, did two checks. Its answers are in their own columns
+and never replace the human ones:
+
+- *Citation check:* 64 of the agent's 70 citations (91%) support the decision
+  they are cited for (`claude_supports` in
+  [the citation sheet](reports/citation_check_gemini_test_v2.csv)). Most of the
+  6 misses cite a procedural clause (how a return works), or a clause listing
+  what *is* covered on a decline.
+- *Labels:* Claude labelled the 50 test cases (`claude_*` in
+  `data/labels/labels.csv`) and agreed with the provisional labels on 47 (94%,
+  Cohen's kappa 0.90) and on all 50 eligibility calls. The three differences
+  (G059, G129, G134) are judgement calls. Scored against Claude's labels, the
+  agent gets 94% and the baseline 84%. Treat that with caution: Claude had
+  already seen which cases the agent got wrong, and all three differences
+  favour the agent.
+
 **How the decision guide changed.** The first test run
 ([report](reports/evaluation_gemini_test.md)) gave agent 82%, baseline 84%.
 Both declined every small undisclosed flaw on items listed as new or like new,

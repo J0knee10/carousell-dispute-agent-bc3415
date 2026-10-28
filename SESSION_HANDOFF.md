@@ -30,7 +30,7 @@ All 200 cases generated, split (50 test / 150 dev) and evaluated. Latest test ru
 ## Next steps
 
 1. Jonathan reviews, then pushes to GitHub.
-2. B1/B2 label `data/labels/labels.csv` (guide: `docs/labelling_guide.md`), then re-run `uv run dispute-agent evaluate --split test --run gemini_test_v3`. G008 is mislabelled (its listing says the knobs are missing); G129/G134 are judgement calls.
-3. Someone fills `reports/citation_check_gemini_test_v2.csv` (citation accuracy).
+2. B1/B2 label `data/labels/labels.csv` (guide: `docs/labelling_guide.md`), then re-run `uv run dispute-agent evaluate --split test --run gemini_test_v3`. Hide the `provisional_*` and `claude_*` columns while labelling. G059, G129, G134 and G147 are judgement calls.
+3. Someone spot-checks Claude's `claude_supports` column in `reports/citation_check_gemini_test_v2.csv` (about 15 rows) and fills `supports` for those.
 4. Deploy to Streamlit Community Cloud (README has the steps).
 5. Check the Mercari competition rules before making the repo public.

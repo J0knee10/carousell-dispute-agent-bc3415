@@ -99,31 +99,58 @@ def build_report(run: str) -> tuple[Path, dict]:
         if m["wrong_cases"]:
             lines += [f"Wrong cases ({system}): " + ", ".join(f"{w['case_id']} ({w['label']} -> {w['pred']}{', escalated' if w['escalated'] else ''})" for w in m["wrong_cases"]), ""]
 
+    reports = path("outputs.reports_dir")
+    reports.mkdir(parents=True, exist_ok=True)
+    sheet = _citation_sheet(run, reports / f"citation_check_{run}.csv", split_ids)
     lines += [
         "## Citation check by hand",
         "",
         f"`citation_check_{run}.csv` lists every clause the agent cited with the decision it supports. Fill the `supports` column (Y/N); the share of Y is the citation accuracy in the brief.",
         "",
     ]
-    reports = path("outputs.reports_dir")
-    reports.mkdir(parents=True, exist_ok=True)
+    for col, who in (("supports", "a person"), ("claude_supports", "Claude (an AI reviewer, not a person)")):
+        filled = [r[col].strip().upper() for r in sheet if r[col].strip()]
+        if filled:
+            share = sum(v == "Y" for v in filled) / len(filled)
+            lines += [f"- Checked by {who}: {len(filled)} of {len(sheet)} citations, {share:.0%} support the decision.", ""]
     out = reports / f"evaluation_{run}.md"
     out.write_text("\n".join(lines) + "\n", encoding="utf-8")
     (reports / f"evaluation_{run}.json").write_text(json.dumps(results, indent=2), encoding="utf-8")
-    _citation_sheet(run, reports / f"citation_check_{run}.csv", split_ids)
     return out, results
 
 
-def _citation_sheet(run: str, out: Path, split_ids: set[str]) -> None:
+CITATION_COLUMNS = ["case_id", "predicted_outcome", "reasons", "clause_id", "clause_section", "clause_text",
+                    "supports", "claude_supports", "claude_note"]
+CITATION_FILLED = ["supports", "claude_supports", "claude_note"]
+
+
+def _citation_sheet(run: str, out: Path, split_ids: set[str]) -> list[dict]:
+    """Write the sheet, keeping any checks already filled in for the same case and clause."""
+    old = {}
+    if out.exists():
+        with open(out, encoding="utf-8", newline="") as f:
+            old = {(r["case_id"], r["clause_id"]): r for r in csv.DictReader(f)}
     by_id = clauses_by_id()
     preds = latest_by_case(load_records(run, "agent"))
+    rows = []
+    for cid, p in sorted(preds.items()):
+        if cid not in split_ids or p.get("decided_by") != "llm":
+            continue
+        for c in p.get("citations", []):
+            clause = by_id.get(c)
+            row = {
+                "case_id": cid,
+                "predicted_outcome": p["predicted_outcome"],
+                "reasons": " | ".join(p.get("reasons", [])),
+                "clause_id": c,
+                "clause_section": clause.section if clause else "",
+                "clause_text": clause.text if clause else "",
+            }
+            kept = old.get((cid, c), {})
+            row.update({col: kept.get(col, "") for col in CITATION_FILLED})
+            rows.append(row)
     with open(out, "w", encoding="utf-8", newline="") as f:
-        w = csv.writer(f)
-        w.writerow(["case_id", "predicted_outcome", "reasons", "clause_id", "clause_section", "clause_text", "supports"])
-        for cid, p in sorted(preds.items()):
-            if cid not in split_ids or p.get("decided_by") != "llm":
-                continue
-            for c in p.get("citations", []):
-                clause = by_id.get(c)
-                w.writerow([cid, p["predicted_outcome"], " | ".join(p.get("reasons", [])), c,
-                            clause.section if clause else "", (clause.text[:400] if clause else ""), ""])
+        w = csv.DictWriter(f, fieldnames=CITATION_COLUMNS)
+        w.writeheader()
+        w.writerows(rows)
+    return rows

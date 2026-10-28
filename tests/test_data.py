@@ -1,8 +1,10 @@
+import csv
+
 from dispute_agent.agent.eligibility import check_eligibility
 from dispute_agent.config import load_config
 from dispute_agent.data.cases import load_seed_cases, make_splits
 from dispute_agent.data.generate import SCENARIOS, SCENARIOS_BY_NAME, generate_case, make_plan, quote_ok
-from dispute_agent.data.labels import cohen_kappa
+from dispute_agent.data.labels import claude_agreement_report, cohen_kappa, export_sheet, read_sheet
 from dispute_agent.data.mercari import load_sample
 
 
@@ -53,3 +55,18 @@ def test_split_holds_out_test_cases_and_keeps_demos_in_dev():
 def test_kappa():
     assert cohen_kappa(["a", "b", "a", "b"], ["a", "b", "a", "b"]) == 1.0
     assert cohen_kappa(["a", "a", "b", "b"], ["a", "b", "a", "b"]) == 0.0
+
+
+def test_export_keeps_filled_columns_and_reports_claude_agreement(tmp_path):
+    sheet = tmp_path / "labels.csv"
+    export_sheet(sheet)
+    rows = list(read_sheet(sheet).values())
+    rows[0].update(claude_outcome=rows[0]["provisional_outcome"], claude_eligible="true", claude_note="checked")
+    with open(sheet, "w", encoding="utf-8", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=list(rows[0]))
+        writer.writeheader()
+        writer.writerows(rows)
+    export_sheet(sheet)
+    kept = read_sheet(sheet)[rows[0]["case_id"]]
+    assert (kept["claude_outcome"], kept["claude_note"]) == (rows[0]["provisional_outcome"], "checked")
+    assert claude_agreement_report(read_sheet(sheet))["vs_provisional"]["agreement"] == 1.0

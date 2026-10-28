@@ -16,6 +16,7 @@ typed.
 | `b2_outcome`, `b2_eligible` | B2 | Your own judgement, without looking at B1's |
 | `final_outcome`, `final_eligible` | B1 + B2 + C1 | Only where B1 and B2 disagree, after discussing |
 | `notes` | Anyone | Why the case is hard, or what is wrong with it |
+| `claude_outcome`, `claude_eligible`, `claude_note` | Already filled for the 50 test cases | An AI reviewer's (Claude's) opinion, kept separate from the human labels and never used as the answer key. **Hide these too until you have labelled.** Useful afterwards when B1 and B2 settle disagreements. |
 
 Outcome values (type exactly): `full_refund_with_return`, `full_refund_without_return`, `partial_refund`, `decline`.
 Eligible values: `true` or `false`.

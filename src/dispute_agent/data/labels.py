@@ -20,8 +20,13 @@ COLUMNS = [
     "provisional_outcome", "provisional_eligible",
     "b1_outcome", "b1_eligible", "b2_outcome", "b2_eligible",
     "final_outcome", "final_eligible", "notes",
+    "claude_outcome", "claude_eligible", "claude_note",
 ]
-HUMAN_COLUMNS = ["b1_outcome", "b1_eligible", "b2_outcome", "b2_eligible", "final_outcome", "final_eligible", "notes"]
+# Filled in by people (or, for claude_*, by an AI reviewer as a separate opinion); never overwritten.
+FILLED_COLUMNS = [
+    "b1_outcome", "b1_eligible", "b2_outcome", "b2_eligible", "final_outcome", "final_eligible", "notes",
+    "claude_outcome", "claude_eligible", "claude_note",
+]
 
 
 def _bool(text: str) -> bool | None:
@@ -64,7 +69,7 @@ def export_sheet(file: Path | None = None) -> tuple[Path, int]:
             "provisional_eligible": str(case.meta.target_eligible),
         }
         old = existing.get(case.case_id, {})
-        for col in HUMAN_COLUMNS:
+        for col in FILLED_COLUMNS:
             row[col] = old.get(col, "")
         rows.append(row)
     file.parent.mkdir(parents=True, exist_ok=True)
@@ -107,12 +112,46 @@ def cohen_kappa(a: list[str], b: list[str]) -> float | None:
     return (observed - expected) / (1 - expected)
 
 
+def _agreement(sheet: dict[str, dict], col_a: str, col_b: str) -> dict:
+    """Outcome agreement and kappa between two columns, over cases where both are filled."""
+    both = [(cid, _outcome(r.get(col_a, "")), _outcome(r.get(col_b, ""))) for cid, r in sheet.items()]
+    both = [(cid, x, y) for cid, x, y in both if x and y]
+    if not both:
+        return {"cases": 0}
+    a = [x for _, x, _ in both]
+    b = [y for _, _, y in both]
+    kappa = cohen_kappa(a, b)
+    return {
+        "cases": len(both),
+        "agreement": round(sum(x == y for x, y in zip(a, b)) / len(both), 3),
+        "cohen_kappa": round(kappa, 3) if kappa is not None else None,
+        "disagreements": [{"case_id": cid, col_a: x, col_b: y} for cid, x, y in both if x != y],
+    }
+
+
+def claude_agreement_report(sheet: dict[str, dict] | None = None) -> dict:
+    """How the AI reviewer's labels compare with the provisional and human labels."""
+    sheet = sheet if sheet is not None else read_sheet()
+    report = {"note": "claude_* columns are an AI reviewer's opinion, not human labels."}
+    for col in ("provisional_outcome", "b1_outcome", "b2_outcome", "final_outcome"):
+        res = _agreement(sheet, "claude_outcome", col)
+        if res["cases"]:
+            report[f"vs_{col.removesuffix('_outcome')}"] = res
+    elig = [(_bool(r.get("claude_eligible", "")), _bool(r.get("provisional_eligible", ""))) for r in sheet.values()]
+    elig = [(x, y) for x, y in elig if x is not None and y is not None]
+    if elig:
+        report["eligibility_vs_provisional"] = round(sum(x == y for x, y in elig) / len(elig), 3)
+    return report
+
+
 def agreement_report() -> dict:
     sheet = read_sheet()
+    claude = claude_agreement_report(sheet) if any(r.get("claude_outcome") for r in sheet.values()) else None
     pairs = [(cid, _outcome(r.get("b1_outcome", "")), _outcome(r.get("b2_outcome", ""))) for cid, r in sheet.items()]
     both = [(cid, x, y) for cid, x, y in pairs if x and y]
     if not both:
-        return {"labelled_by_both": 0, "message": "No case has both B1 and B2 outcome labels yet."}
+        out = {"labelled_by_both": 0, "message": "No case has both B1 and B2 outcome labels yet."}
+        return {**out, "claude": claude} if claude else out
     a = [x for _, x, _ in both]
     b = [y for _, _, y in both]
     diff = sheet
@@ -126,4 +165,5 @@ def agreement_report() -> dict:
         "cohen_kappa": round(kappa, 3) if kappa is not None else None,
         "agreement_by_difficulty": {k: round(sum(v) / len(v), 3) for k, v in by_difficulty.items()},
         "disagreements": [{"case_id": cid, "b1": x, "b2": y} for cid, x, y in both if x != y],
+        **({"claude": claude} if claude else {}),
     }
