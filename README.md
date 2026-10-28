@@ -208,6 +208,7 @@ src/dispute_agent/
 data/                         policy text, listings, cases, labels, eval queries
 docs/labelling_guide.md       how to label cases
 reports/                      evaluation reports
+presentation/                 demo video slides (build_slides.js) and VIDEO_SCRIPT.md
 tests/                        pytest suite (runs offline with the mock)
 ```
 

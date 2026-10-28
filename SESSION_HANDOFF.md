@@ -34,3 +34,4 @@ All 200 cases generated, split (50 test / 150 dev) and evaluated. Latest test ru
 3. Someone spot-checks Claude's `claude_supports` column in `reports/citation_check_gemini_test_v2.csv` (about 15 rows) and fills `supports` for those.
 4. Deploy to Streamlit Community Cloud (README has the steps).
 5. Check the Mercari competition rules before making the repo public.
+6. Record the demo video: `presentation/VIDEO_SCRIPT.md` and `presentation/Carousell_Dispute_Agent_Slides.pptx` (names go in `TEAM` in `build_slides.js`).
