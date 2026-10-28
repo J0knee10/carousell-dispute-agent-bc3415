@@ -134,6 +134,40 @@ See `reports/` for the latest numbers. Details on labels are in
 Until B1 and B2 finish labelling, accuracy is measured against the provisional
 labels. The report says how many labels of each kind it used.
 
+### Results so far (provisional labels, judge `gemini-flash-lite-latest`)
+
+Test set, 50 held-out cases ([full report](reports/evaluation_gemini_test_v2.md)):
+
+| Measure | Agent | Single-prompt baseline |
+|---|---|---|
+| Decision accuracy | 88% | 86% |
+| clear / borderline / ineligible | 93% / 73% / 100% | 97% / 73% / 60% |
+| Eligibility accuracy | 100% | 74% |
+| Cases with invented clause IDs | 0% | 4% |
+| Buyer-win / seller-win cases right | 83% / 92% | 92% / 81% |
+| Accuracy on cases not escalated | 92% | 88% |
+| Seconds per case (median) | 8.9 | 4.5 |
+
+On overall accuracy the two are close: one case is 2 points, so a 2-point gap
+on 50 cases is not a reliable difference. The agent's clear gains are on
+eligibility (the plain-code rules never miss a bank transfer, a late dispute or
+a completed order, which the baseline missed 2 times in 5) and on citations
+(no invented clause IDs). The baseline leans towards refunding; the agent
+leans towards declining.
+
+On the 20 hand-written seed cases the agent scored 100% and the baseline 80%
+([report](reports/evaluation_gemini_seed.md)).
+
+**How the decision guide changed.** The first test run
+([report](reports/evaluation_gemini_test.md)) gave agent 82%, baseline 84%.
+Both declined every small undisclosed flaw on items listed as new or like new,
+because two lines of the decision guide contradicted each other. We clarified
+the rule and checked the change on dev cases only (agent 81% to 89%, baseline
+78% to 81%; [before](reports/evaluation_dev_borderline_v1.md),
+[after](reports/evaluation_dev_borderline_v2.md)), then re-ran the test set once.
+Both systems use the same guide, so the comparison stays fair, but the test set
+has now been used twice.
+
 ## Limitations
 
 - Disputes are synthetic and may be easier than real ones; the generator sees the scenario and the target outcome it should support.
