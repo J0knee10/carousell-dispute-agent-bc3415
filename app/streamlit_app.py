@@ -5,7 +5,7 @@ Run with:  uv run streamlit run app/streamlit_app.py
 
 from __future__ import annotations
 
-import json
+import os
 import sys
 from pathlib import Path
 
@@ -15,11 +15,27 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT / "src") not in sys.path:  # lets the app run without installing the package
     sys.path.insert(0, str(ROOT / "src"))
 
+SECRET_NAMES = ("GEMINI_API_KEY", "OPENAI_API_KEY", "LLM_PROVIDER", "GEMINI_MODEL", "OPENAI_MODEL", "OLLAMA_MODEL", "OLLAMA_HOST")
+
+
+def secrets_to_env() -> None:
+    """On Streamlit Community Cloud the key lives in the app's Secrets, not in .env."""
+    try:
+        for name in SECRET_NAMES:
+            if name in st.secrets and not os.environ.get(name):
+                os.environ[name] = str(st.secrets[name])
+    except Exception:  # no secrets file: running locally with .env
+        pass
+
+
+secrets_to_env()
+
 from dispute_agent.agent.graph import NODE_LABELS, build_graph  # noqa: E402
 from dispute_agent.agent.runner import current_state, new_thread, resume, stream_to_review  # noqa: E402
-from dispute_agent.config import load_config, path  # noqa: E402
+from dispute_agent.config import judge_model, load_config, path  # noqa: E402
 from dispute_agent.data.cases import case_ids_for, cases_by_id  # noqa: E402
-from dispute_agent.llm import LLMError, RateLimitError, gemini_available, get_llm  # noqa: E402
+from dispute_agent.llm import LLMError, RateLimitError, available_providers, get_llm  # noqa: E402
+from dispute_agent.llm.ollama import installed_models  # noqa: E402
 from dispute_agent.rag.chunker import clauses_by_id, load_clauses  # noqa: E402
 from dispute_agent.rag.store import get_store  # noqa: E402
 from dispute_agent.schemas import OUTCOME_LABELS, OUTCOMES, DisputeCase  # noqa: E402
@@ -46,9 +62,28 @@ def store():
 
 
 @st.cache_resource
-def agent(provider: str):
-    llm = get_llm(provider=provider)
+def agent(provider: str, model: str | None = None):
+    llm = get_llm(provider=provider, model=model)
     return llm, build_graph(llm, store())
+
+
+@st.cache_data(ttl=60, show_spinner=False)
+def providers_here() -> list[str]:
+    # Cached: checking for a local Ollama server takes up to 1.5 s when there is none.
+    return available_providers()
+
+
+@st.cache_data(ttl=60, show_spinner=False)
+def ollama_models() -> list[str]:
+    return installed_models(load_config()["llm"]["ollama"]["host"])
+
+
+PROVIDER_LABELS = {
+    "gemini": "Gemini (Google cloud, free tier)",
+    "ollama": "Local model (Ollama, this computer)",
+    "openai": "OpenAI (cloud, paid)",
+    "mock": "Mock (offline keyword rules)",
+}
 
 
 @st.cache_data
@@ -67,24 +102,32 @@ def outcome_badge(outcome: str | None) -> str:
 
 # ------------------------------------------------------------------- sidebar
 
-def sidebar() -> str:
+def sidebar() -> tuple[str, str | None]:
     st.sidebar.title("⚖️ Dispute Agent")
     st.sidebar.caption("Carousell Singapore · 'not as described' disputes")
-    options = ["gemini", "mock"] if gemini_available() else ["mock"]
+    options = providers_here()
     default = load_config()["llm"]["provider"]
     provider = st.sidebar.radio(
         "LLM provider",
         options,
         index=options.index(default) if default in options else 0,
-        help="mock uses keyword rules and needs no API key; its answers are not real judgements.",
+        format_func=lambda p: PROVIDER_LABELS.get(p, p),
+        help="Only providers that can run here are listed: a key is set, or a local Ollama server is running. "
+        "Mock needs nothing; its answers are not real judgements.",
     )
-    if provider == "gemini":
-        st.sidebar.caption(f"Judge model: `{load_config()['llm']['judge_model']}`")
-    else:
+    model = None
+    if provider == "ollama":
+        models = ollama_models() or [judge_model("ollama")]
+        preferred = judge_model("ollama")
+        model = st.sidebar.selectbox("Local model", models, index=models.index(preferred) if preferred in models else 0)
+        st.sidebar.caption("Runs on this computer; case data never leaves it.")
+    elif provider == "mock":
         st.sidebar.warning("Mock mode: answers come from keyword rules, not an LLM.")
-    if not gemini_available():
-        st.sidebar.info("Add GEMINI_API_KEY to .env (or Streamlit secrets) to use Gemini.")
-    return provider
+    else:
+        st.sidebar.caption(f"Judge model: `{judge_model(provider)}`")
+    if "gemini" not in options:
+        st.sidebar.info("Add GEMINI_API_KEY to .env (or the app's Streamlit secrets) to use Gemini.")
+    return provider, model
 
 
 # -------------------------------------------------------------- case display
@@ -202,6 +245,12 @@ def show_results(state: dict) -> None:
                 hide_index=True,
                 width="stretch",
             )
+    if state.get("tool_calls"):
+        with st.expander(f"Tool calls by the judge ({len(state['tool_calls'])})", expanded=True):
+            st.caption("The judge decided the clauses it was given were not enough and called the search_policy tool.")
+            for call in state["tool_calls"]:
+                found = ", ".join(f"`{c}`" for c in call["new_clauses"]) or "nothing new"
+                st.markdown(f"- `search_policy(\"{call['query']}\")` → {found}")
     if state.get("clauses"):
         with st.expander(f"Policy clauses retrieved ({len(state['clauses'])})"):
             for c in state["clauses"]:
@@ -209,7 +258,7 @@ def show_results(state: dict) -> None:
                 st.caption(c["text"][:400] + ("..." if len(c["text"]) > 400 else ""))
 
 
-def staff_form(case_id: str, state: dict, provider: str) -> None:
+def staff_form(case_id: str, state: dict, provider: str, model: str | None) -> None:
     rec = state["recommendation"]
     st.markdown("### Staff decision")
     with st.form(f"decide-{case_id}"):
@@ -235,12 +284,15 @@ def staff_form(case_id: str, state: dict, provider: str) -> None:
             decision["outcome"] = outcome
         if (approve and rec.get("outcome") == "partial_refund") or (not approve and outcome == "partial_refund"):
             decision["partial_refund_percent"] = int(pct)
-        llm, graph = agent(provider)
+        llm, graph = agent(provider, model)
         try:
             with st.spinner("Recording the decision and drafting messages..."):
                 final = resume(graph, st.session_state.threads[case_id], decision)
         except RateLimitError as e:
-            st.error(f"Gemini quota reached: {e}. The decision was not recorded; try again later.")
+            st.error(f"API quota reached: {e}. The decision was not recorded; try again later.")
+            return
+        except LLMError as e:
+            st.error(f"The LLM call failed: {e}. The decision was not recorded.")
             return
         st.session_state.results[case_id] = final
         st.rerun()
@@ -269,7 +321,7 @@ def show_trace(state: dict) -> None:
 
 # --------------------------------------------------------------------- pages
 
-def page_review(provider: str) -> None:
+def page_review(provider: str, model: str | None) -> None:
     st.title("Review a dispute")
     cases = all_cases()
     split = st.segmented_control("Cases", ["demo", "dev", "test", "all"], default="demo",
@@ -290,8 +342,8 @@ def page_review(provider: str) -> None:
 
     st.session_state.setdefault("threads", {})
     st.session_state.setdefault("results", {})
-    if st.button("Run the agent", type="primary", key=f"run-{case_id}-{provider}"):
-        llm, graph = agent(provider)
+    if st.button("Run the agent", type="primary", key=f"run-{case_id}-{provider}-{model}"):
+        llm, graph = agent(provider, model)
         thread = new_thread(case_id)
         try:
             with st.status("Running the agent...", expanded=True) as status:
@@ -300,7 +352,7 @@ def page_review(provider: str) -> None:
                         st.write(f"✓ **{t['step']}**: {t['summary']}")
                 status.update(label="Waiting for your decision", state="complete", expanded=False)
         except RateLimitError as e:
-            st.error(f"Gemini quota reached: {e}. Try again later or switch to mock.")
+            st.error(f"API quota reached: {e}. Try again later or switch provider.")
             return
         except LLMError as e:
             st.error(f"The LLM call failed: {e}")
@@ -317,11 +369,11 @@ def page_review(provider: str) -> None:
     if state.get("decision"):
         show_final(state)
     else:
-        staff_form(case_id, state, provider)
+        staff_form(case_id, state, provider, model)
     show_trace(state)
 
 
-def page_whatif(provider: str) -> None:
+def page_whatif(provider: str, model: str | None) -> None:
     from dispute_agent.evaluation.harness import QuotaExhausted
     from dispute_agent.evaluation.whatif import run_whatif
 
@@ -341,10 +393,13 @@ def page_whatif(provider: str) -> None:
             lines.append(msg)
             bar.progress(min(len(lines) / limit, 1.0), text=msg)
         try:
-            llm, _ = agent(provider)
+            llm, _ = agent(provider, model)
             _, result = run_whatif(change, split=split, limit=limit, llm=llm, progress=progress)
         except QuotaExhausted as e:
-            st.error(f"Gemini quota reached after {e.done} cases. Try again later.")
+            st.error(f"API quota reached after {e.done} cases. Try again later.")
+            return
+        except LLMError as e:
+            st.error(f"The LLM call failed: {e}")
             return
         st.session_state.whatif = result
     result = st.session_state.get("whatif")
@@ -370,7 +425,8 @@ def page_whatif(provider: str) -> None:
 
 def page_evaluation() -> None:
     st.title("Evaluation results")
-    reports = sorted(path("outputs.reports_dir").glob("*.md"))
+    # The model comparison first, then the newest runs.
+    reports = sorted(path("outputs.reports_dir").glob("*.md"), key=lambda p: (p.stem != "model_comparison", -p.stat().st_mtime))
     if not reports:
         st.info("No reports yet. Run `uv run dispute-agent evaluate` first.")
         return
@@ -403,7 +459,11 @@ def page_about() -> None:
     st.markdown(
         "The agent is a LangGraph workflow. Fixed rules (payment method, dispute window) are plain code; "
         "the LLM matches the buyer's claims against the listing and judges them against policy clauses "
-        "found by hybrid search (ChromaDB embeddings plus BM25). Every recommendation pauses for a staff decision."
+        "found by hybrid search (ChromaDB embeddings plus BM25). If those clauses do not cover a gap, the judge "
+        "calls the `search_policy` tool and the graph loops back with the new clauses. Code then checks the "
+        "citations and confidence, and every recommendation pauses for a staff decision.\n\n"
+        "The judge can be Gemini (cloud), a local model through Ollama, or OpenAI; "
+        "`reports/model_comparison.md` compares them on the held-out test set."
     )
     st.graphviz_chart(
         """
@@ -413,7 +473,9 @@ def page_about() -> None:
           claims [label="Claim matching\\n(LLM)"]; rag [label="Policy retrieval\\n(RAG)"]; judge [label="Policy judgement\\n(LLM)"];
           gate [label="Confidence and\\ncitation check"]; staff [label="Staff decides\\n(pause)", fillcolor="#fde68a"]; msgs [label="Message drafts\\n(LLM)"];
           intake -> elig; elig -> claims [label="covered"]; elig -> rules [label="not covered /\\nprocedural"];
-          claims -> rag -> judge -> gate -> staff; rules -> staff; staff -> msgs;
+          tool [label="search_policy\\ntool (RAG)", fillcolor="#dbeafe"];
+          claims -> rag -> judge; judge -> tool [label="needs more\\npolicy"]; tool -> judge [label="new\\nclauses"];
+          judge -> gate -> staff; rules -> staff; staff -> msgs;
         }
         """
     )
@@ -421,10 +483,10 @@ def page_about() -> None:
 
 
 def main() -> None:
-    provider = sidebar()
+    provider, model = sidebar()
     pages = {
-        "Review a dispute": lambda: page_review(provider),
-        "What-if policy test": lambda: page_whatif(provider),
+        "Review a dispute": lambda: page_review(provider, model),
+        "What-if policy test": lambda: page_whatif(provider, model),
         "Evaluation results": page_evaluation,
         "Policy library": page_policy,
         "How it works": page_about,
