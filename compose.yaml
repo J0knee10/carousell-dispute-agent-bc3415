@@ -4,6 +4,7 @@ services:
     ports:
       - "8501:8501"
     # Optional: put GEMINI_API_KEY in .env to use Gemini; without it the app offers mock mode only.
+    # To use Ollama running on the host, add OLLAMA_HOST=http://host.docker.internal:11434 to .env.
     env_file:
       - path: .env
         required: false
