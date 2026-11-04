@@ -2,12 +2,25 @@
 # Paths are relative to the repo root.
 
 llm:
-  # mock: offline keyword rules, for tests and development (results are not real)
-  # gemini: Google Gemini API, needs GEMINI_API_KEY in .env
+  # mock:   offline keyword rules, for tests and development (results are not real)
+  # gemini: Google Gemini API, needs GEMINI_API_KEY in .env (free tier)
+  # ollama: a local model served by Ollama (https://ollama.com); no key, nothing leaves the machine
+  # openai: OpenAI API, needs OPENAI_API_KEY in .env (paid)
+  # LLM_PROVIDER in .env overrides this.
   provider: gemini
-  # Model that judges disputes (agent, baseline, message drafts).
-  # GEMINI_MODEL in .env overrides this.
-  judge_model: gemini-flash-lite-latest
+  # Model that judges disputes (agent, baseline, message drafts), per provider.
+  # GEMINI_MODEL, OLLAMA_MODEL and OPENAI_MODEL in .env override these.
+  # reports/model_comparison.md explains why these models.
+  judge_models:
+    gemini: gemini-flash-lite-latest
+    ollama: qwen3:8b
+    openai: gpt-5-mini
+  ollama:
+    host: http://localhost:11434
+    # Context window in tokens. The baseline prompt holds the whole policy
+    # (about 7,000 tokens), more than Ollama's default window.
+    num_ctx: 16384
+    timeout_seconds: 600
   # Models that write the synthetic disputes, tried in order (the next one is
   # used when one runs out of free quota). Kept different from the judge so the
   # same model is not grading its own writing.
@@ -38,6 +51,10 @@ rag:
 agent:
   # Recommendations below this confidence are escalated for careful review.
   confidence_threshold: 0.7
+  # The judge may call the search_policy tool when the retrieved clauses do not
+  # cover a gap. Rounds: how many times it may search before it must decide.
+  max_tool_rounds: 1
+  max_searches_per_round: 2
 
 data:
   mercari_archive: data/raw/train.tsv.7z

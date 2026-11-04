@@ -1,8 +1,8 @@
 """The interface every LLM provider implements.
 
 Agent code only ever calls `generate(task=..., system=..., prompt=..., schema=...)`
-and gets back a validated pydantic object, so swapping Gemini for a local model
-means writing one new class.
+and gets back a validated pydantic object, so Gemini, OpenAI, a local Ollama
+model and the offline mock are interchangeable.
 """
 
 from __future__ import annotations
@@ -33,11 +33,15 @@ class RateLimitError(LLMError):
 class CallStats:
     calls: int = 0
     seconds: float = 0.0
+    tokens_in: int = 0
+    tokens_out: int = 0
     by_task: dict[str, int] = field(default_factory=dict)
 
-    def record(self, task: str, seconds: float) -> None:
+    def record(self, task: str, seconds: float, tokens_in: int = 0, tokens_out: int = 0) -> None:
         self.calls += 1
         self.seconds += seconds
+        self.tokens_in += tokens_in or 0
+        self.tokens_out += tokens_out or 0
         self.by_task[task] = self.by_task.get(task, 0) + 1
 
 

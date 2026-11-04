@@ -128,7 +128,12 @@ class GeminiClient:
                 time.sleep(10 * server_errors)
                 continue
 
-            self.stats.record(task, time.monotonic() - start)
+            usage = resp.usage_metadata
+            self.stats.record(
+                task, time.monotonic() - start,
+                tokens_in=getattr(usage, "prompt_token_count", 0) or 0,
+                tokens_out=(getattr(usage, "candidates_token_count", 0) or 0) + (getattr(usage, "thoughts_token_count", 0) or 0),
+            )
             parsed = resp.parsed
             if isinstance(parsed, schema):
                 return parsed
