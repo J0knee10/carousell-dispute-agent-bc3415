@@ -197,6 +197,14 @@ def test_openai_client_counts_spend_and_sends_reasoning_effort(monkeypatch, tmp_
     assert abs(spend.spent_sgd() - 0.75 * 1.35) < 1e-6
 
 
+def test_openai_requests_per_day_limit_counts_as_daily():
+    from dispute_agent.llm.openai_client import _is_daily_limit
+
+    assert _is_daily_limit(Exception("Rate limit reached for gpt-5.4-mini on requests per day (RPD): Limit 50"))
+    assert _is_daily_limit(Exception("insufficient_quota"))
+    assert not _is_daily_limit(Exception("Rate limit reached on tokens per min (TPM)"))
+
+
 def test_openai_without_key_is_a_clear_error(monkeypatch):
     monkeypatch.delenv("OPENAI_API_KEY", raising=False)
     with pytest.raises(LLMError, match="OPENAI_API_KEY"):

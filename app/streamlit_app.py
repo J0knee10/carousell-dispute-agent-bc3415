@@ -61,11 +61,18 @@ def store():
     return get_store()
 
 
-@st.cache_resource
 def agent(provider: str, model: str | None = None):
-    # The app falls back to the paid provider when the free one fails (config llm.fallback).
-    llm = get_llm(provider=provider, model=model, for_app=True)
-    return llm, build_graph(llm, store())
+    """One LLM client and graph per browser session.
+
+    The client falls back to the paid provider when the free one fails (config
+    llm.fallback), and remembers which model answered last; sharing it between
+    sessions could show one user another user's model.
+    """
+    agents = st.session_state.setdefault("agents", {})
+    if (provider, model) not in agents:
+        llm = get_llm(provider=provider, model=model, for_app=True)
+        agents[(provider, model)] = (llm, build_graph(llm, store()))
+    return agents[(provider, model)]
 
 
 @st.cache_data(ttl=60, show_spinner=False)

@@ -23,6 +23,12 @@ _NO_TEMPERATURE = ("gpt-5", "o1", "o3", "o4")
 _REASONING = ("gpt-5", "o1", "o3", "o4")
 
 
+def _is_daily_limit(err: Exception) -> bool:
+    """Out of credit, or a requests-per-day cap (OpenAI's free usage tier): waiting minutes will not help."""
+    text = str(err)
+    return "insufficient_quota" in text or "per day" in text or "(RPD)" in text
+
+
 def _retry_after(err: Exception, default: float) -> float:
     """Seconds OpenAI asks us to wait (retry-after-ms or retry-after headers), capped at 60."""
     headers = getattr(getattr(err, "response", None), "headers", None) or {}
@@ -134,7 +140,7 @@ class OpenAIClient:
             except openai.RateLimitError as e:
                 # insufficient_quota means the account is out of credit: waiting will not help.
                 # Otherwise it is a per-minute limit: wait as long as OpenAI asks, then retry.
-                daily = "insufficient_quota" in str(e)
+                daily = _is_daily_limit(e)
                 rate_limits += 1
                 if daily or rate_limits > 12:
                     raise RateLimitError(f"OpenAI quota exhausted for {self.model}: {e}", daily=daily, model=self.model) from e
