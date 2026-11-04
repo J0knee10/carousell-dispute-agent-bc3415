@@ -365,7 +365,7 @@ pres.addSection({ title: SEC4 });
     objectName: "Model chart",
   });
   const rows = [
-    ["+18 pts", "with Llama", "the agent’s gain over a single prompt is largest with a weak model (Gemini: +2)"],
+    ["+18 pts", "with Llama", "the agent’s largest gain over a single prompt (Gemini: +2); not significant on 50 cases"],
     ["19 of 21", "for Llama", "cases that should be declined were refunded by the local model (Gemini: 1)"],
     ["Private", "but slower", "local models keep case data on the PC, at 15 to 19 s a case against 9 s"],
   ];

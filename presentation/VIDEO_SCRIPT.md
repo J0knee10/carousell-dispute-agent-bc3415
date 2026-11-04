@@ -101,7 +101,7 @@ If a step gives a different answer from the one expected, keep going: say what t
 - **The search tool:** the judge can call `search_policy` when the clauses it was given don't cover a gap; the graph loops back to it with the new clauses, once at most. On the test set no model needed it, because the per-gap searches already found the clauses. When we removed the per-gap searches and gave the search to a planning step, it was used (Llama in every case, Qwen in 9%, Gemini in 3 of 10) without changing accuracy, so per-gap retrieval stays the default (`reports/model_comparison.md`).
 - **The four outcomes** are Carousell's own (full refund with return, full refund without return, partial refund, decline). When to choose a partial refund over a return is our rubric (`DECISION_GUIDE` in `src/dispute_agent/agent/prompts.py`); Carousell's policy doesn't spell it out.
 - **Photo checking** is an interface only (`src/dispute_agent/agent/photo.py`); cases carry text descriptions of photos.
-- **G155 changed between runs:** in the second test run it recommended a refund with return (escalated); on 28 Oct and in the 4 Nov run it declined (escalated). Each time it flagged the case for a person, which is the point of the escalation rule. LLM output varies even at temperature 0.
+- **G155 changed between runs:** a partial refund in the first test run, a full refund with return in the second, and a decline in the 4 Nov run and in the demo checks on 28 Oct and 4 Nov. It was escalated every time, which is the point of the escalation rule. LLM output varies even at temperature 0.
 
 **The evaluation**
 - **Labels:** provisional, meaning the outcome each case was written for. Two team members (B1 and B2) label the test set by hand (`docs/labelling_guide.md`); then we re-run the evaluation. An AI reviewer (Claude) also labelled the 50 test cases in separate columns and agreed with the provisional labels on 47 (kappa 0.90).
@@ -121,7 +121,7 @@ If a step gives a different answer from the one expected, keep going: say what t
 - **Results:** agent 90% / 52% / 48%, single prompt 88% / 34% / 44% (Gemini / Llama / Qwen). Of the 21 cases that should be declined and reach the LLM, Gemini refunded 1, Llama 19, Qwen 21.
 - **Why Gemini stays:** the only model accurate enough to save staff time, and the fastest (9 s against 15 and 19 s a case). Llama is the local fallback when data must stay on the machine.
 - **Hardware limits:** one PC with an 8 GB RTX 4060 Ti, which limits local models to about 8 billion parameters at 4-bit; a 10,240-token window keeps Llama fully on the GPU (Qwen ran 11% on the CPU). Bigger models would have run mostly on the CPU, and every run had to finish in one night.
-- **Does retrieval change the decisions?** Barely, for the local models (no retrieval: 60% / 52%), but without it nothing can be cited and 90% of cases go to a person. Retrieval's value is grounding and auditability.
+- **Does retrieval change the decisions?** Only a little on our test set. With the policy lists taken out of the prompt, Gemini got 23 of 25 clear cases right with retrieval and 22 without: without it, it declined two missing-accessory claims the policy covers, and it could cite nothing, so every case went to a person. The local models refund almost everything either way. Retrieval's main value is grounding: every recommendation cites a clause staff can check.
 - **OpenAI:** the client is ready (`--provider openai`); the paid key had not arrived when we ran the comparison.
 
 **Costs and deployment**
