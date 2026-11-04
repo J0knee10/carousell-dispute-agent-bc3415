@@ -155,6 +155,9 @@ def cmd_evaluate(args) -> int:
     if args.scenario:
         ids = [i for i in ids if by_id[i].meta.scenario in args.scenario]
         split += f" ({', '.join(args.scenario)})"
+    if args.limit:
+        ids = ids[: args.limit]
+        split += f" (first {args.limit})"
     cases = [by_id[i] for i in ids]
     retrieval = "none" if args.no_retrieval else args.retrieval
     variant = {"per_gap": "", "agentic": "agent-driven retrieval", "none": "no retrieval"}[retrieval]
@@ -291,6 +294,7 @@ def build_parser() -> argparse.ArgumentParser:
     sp.add_argument("--retrieval", choices=["per_gap", "agentic", "none"], default="per_gap",
                     help="agent retrieval design: per gap (default), agent-driven via the tool, or none")
     sp.add_argument("--no-retrieval", action="store_true", help="same as --retrieval none")
+    sp.add_argument("--limit", type=int, default=None, help="only the first N cases of the split (a quick probe)")
     sp.add_argument("--keep-failures", action="store_true", help="on resume, do not re-run cases whose answer failed")
     provider(sp)
     add("report", cmd_report, "rebuild the report for a run").add_argument("run")

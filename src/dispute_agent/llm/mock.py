@@ -20,10 +20,12 @@ from ..schemas import (
     ClaimMatchResult,
     FollowUpQuestion,
     GapAssessment,
+    GapCoverage,
     GeneratedDispute,
     MessageDrafts,
     PromisedClaim,
     ReportedIssue,
+    ResearchPlan,
 )
 from .base import CallStats, LLMError, T
 
@@ -134,9 +136,7 @@ class MockLLM:
             outcome, pct, conf = "decline", 0, 0.75
         # Unclear gaps make the mock call the search_policy tool once, so tests cover the loop.
         searches = [f"policy on {g['description'][:60]}" for g in gaps if g["gap_type"] == "other"]
-        if hints.get("tool") == "available_agentic":
-            searches = [g["retrieval_query"] for g in gaps]
-        elif hints.get("tool") != "available":
+        if hints.get("tool") != "available":
             searches = []
         proposed = hints.get("proposed_rule")
         if proposed and outcome == "decline" and "wear" in proposed.lower() and "wear_consistent_with_listing" in types:
@@ -152,6 +152,14 @@ class MockLLM:
             needs_more_evidence=conf < 0.5,
             follow_up_questions=[FollowUpQuestion(to="buyer", question="[MOCK] Please send a clear photo of the issue.")] if conf < 0.5 else [],
             summary_for_staff=f"[MOCK] Recommend {outcome.replace('_', ' ')}.",
+        )
+
+    def _research_plan(self, hints: dict) -> ResearchPlan:
+        """Searches for every gap, so tests cover the plan -> search -> judge path."""
+        gaps = hints.get("gaps", [])
+        return ResearchPlan(
+            coverage=[GapCoverage(gap_id=g["gap_id"], clause_ids=[]) for g in gaps],
+            search_policy=[g["retrieval_query"] for g in gaps],
         )
 
     def _whatif_adjudication(self, hints: dict) -> Adjudication:

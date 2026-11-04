@@ -183,6 +183,20 @@ class Adjudication(BaseModel):
     summary_for_staff: str = Field(description="One or two sentences a support agent can read first")
 
 
+class GapCoverage(BaseModel):
+    gap_id: str
+    clause_ids: list[str] = Field(description="IDs of the clauses provided that say how this kind of problem is treated; empty list if none do")
+
+
+class ResearchPlan(BaseModel):
+    """First step of agent-driven retrieval: which gaps the clauses cover, and what to search for."""
+
+    coverage: list[GapCoverage]
+    search_policy: list[str] = Field(
+        description="Tool call: one short search query for each gap that no clause provided covers. Empty list if every gap is covered."
+    )
+
+
 class BaselineJudgement(BaseModel):
     eligible: bool = Field(description="Whether the dispute is covered by Buyer Protection at all")
     outcome: Outcome

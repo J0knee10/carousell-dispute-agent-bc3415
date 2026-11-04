@@ -36,6 +36,7 @@ from ..schemas import (
     DisputeCase,
     EligibilityResult,
     MessageDrafts,
+    ResearchPlan,
     Recommendation,
     RetrievedClause,
 )
@@ -50,11 +51,11 @@ REASON_QUERIES = {
 
 # Retrieval designs compared in reports/model_comparison.md:
 #   per_gap: one search per gap found by claim matching (the default), plus the search_policy tool as a fallback
-#   agentic: only a general search on the dispute reason; the judge must call search_policy itself for each gap
+#   agentic: only a general search on the dispute reason; a planning step (LLM) decides which gaps the
+#            clauses cover and calls search_policy for the rest, then the judge decides
 #   none:    no policy clauses at all (ablation)
 RETRIEVAL_MODES = ("per_gap", "agentic", "none")
-AGENTIC_TOOL_ROUNDS = 2
-AGENTIC_SEARCHES_PER_ROUND = 3
+AGENTIC_SEARCHES = 3
 
 PROPOSAL_TO_OUTCOME = {
     "return_and_refund": "full_refund_with_return",
@@ -74,6 +75,8 @@ class AgentState(TypedDict, total=False):
     messages: dict
     proposed_rule: str
     judge_rounds: int
+    plan: dict
+    pending_searches: list[str]
     search_found: int
     tool_calls: Annotated[list[dict], operator.add]
     trace: Annotated[list[dict], operator.add]
@@ -196,7 +199,8 @@ def build_graph(
     tool_rounds = cfg["agent"].get("max_tool_rounds", 1) if max_tool_rounds is None else max_tool_rounds
     max_searches = cfg["agent"].get("max_searches_per_round", 2)
     if retrieval == "agentic":
-        tool_rounds, max_searches = AGENTIC_TOOL_ROUNDS, AGENTIC_SEARCHES_PER_ROUND
+        # The planning step does the searching, so the judge itself gets no tool.
+        tool_rounds, max_searches = 0, AGENTIC_SEARCHES
     if not use_retrieval:
         tool_rounds = 0
 
@@ -254,8 +258,6 @@ def build_graph(
             tool = "none"
         else:
             tool = "available" if rounds < tool_rounds else "used"
-        if tool == "available" and retrieval == "agentic":
-            tool = "available_agentic"
         result = llm.generate(
             task="whatif_adjudication" if proposed else "adjudication",
             system=prompts.JUDGE_SYSTEM,
@@ -267,18 +269,38 @@ def build_graph(
                    "proposed_rule": proposed, "tool": tool},
         )
         summary = f"{result.outcome} (confidence {result.confidence:.2f})"
-        if result.search_policy and tool.startswith("available"):
-            summary += "; calls search_policy: " + "; ".join(f"'{q}'" for q in result.search_policy[:max_searches])
-        return {"adjudication": result.model_dump(), "judge_rounds": rounds + 1, "trace": _step("Policy judgement", t, summary)}
+        pending = result.search_policy[:max_searches] if tool == "available" else []
+        if pending:
+            summary += "; calls search_policy: " + "; ".join(f"'{q}'" for q in pending)
+        return {"adjudication": result.model_dump(), "judge_rounds": rounds + 1, "pending_searches": pending,
+                "trace": _step("Policy judgement", t, summary)}
 
     def after_judge(state: AgentState) -> str:
-        wants = bool(state["adjudication"].get("search_policy"))
+        wants = bool(state.get("pending_searches"))
         return "search" if wants and state.get("judge_rounds", 0) <= tool_rounds else "gate"
+
+    def plan(state: AgentState) -> AgentState:
+        """Agent-driven retrieval: the LLM decides what the general clauses miss and what to search for."""
+        t = time.monotonic()
+        clauses = [RetrievedClause.model_validate(c) for c in state["clauses"]]
+        result = llm.generate(
+            task="research_plan", system=prompts.PLAN_SYSTEM.format(n=max_searches),
+            prompt=prompts.plan_prompt(json.dumps(state["claims"]["gaps"], indent=1), clauses),
+            schema=ResearchPlan, hints={"gaps": state["claims"]["gaps"], "clauses": state["clauses"]},
+        )
+        pending = [q for q in result.search_policy if q.strip()][:max_searches]
+        covered = sum(bool(c.clause_ids) for c in result.coverage)
+        summary = f"{covered} of {len(result.coverage)} gap(s) covered by the general clauses"
+        summary += ("; calls search_policy: " + "; ".join(f"'{q}'" for q in pending)) if pending else "; no search needed"
+        return {"plan": result.model_dump(), "pending_searches": pending, "trace": _step("Research plan", t, summary)}
+
+    def after_plan(state: AgentState) -> str:
+        return "search" if state.get("pending_searches") else "judge"
 
     def search(state: AgentState) -> AgentState:
         """The search_policy tool: run the judge's queries and add clauses it has not seen."""
         t = time.monotonic()
-        queries = state["adjudication"]["search_policy"][:max_searches]
+        queries = state.get("pending_searches", [])[:max_searches]
         known = {c["clause_id"] for c in state["clauses"]}
         found: list[dict] = []
         calls = []
@@ -291,11 +313,14 @@ def build_graph(
         return {
             "clauses": state["clauses"] + found,
             "search_found": len(found),
+            "pending_searches": [],
             "tool_calls": calls,
             "trace": _step("Policy search tool", t, summary),
         }
 
     def after_search(state: AgentState) -> str:
+        if retrieval == "agentic":
+            return "judge"  # the plan searched before any judgement was made
         # Nothing new found: the judgement already made stands, with no second LLM call.
         return "judge" if state.get("search_found") else "gate"
 
@@ -371,13 +396,15 @@ def build_graph(
     g.add_node("retrieve", retrieve)
     g.add_node("judge", judge)
     g.add_node("search", search)
+    g.add_node("plan", plan)
     g.add_node("gate", gate)
     g.add_node("staff_review", staff_review)
     g.add_edge(START, "intake")
     g.add_edge("intake", "eligibility")
     g.add_conditional_edges("eligibility", route, {"claims": "claims", "rules": "rules"})
     g.add_edge("claims", "retrieve")
-    g.add_edge("retrieve", "judge")
+    g.add_conditional_edges("retrieve", lambda s: "plan" if retrieval == "agentic" else "judge", {"plan": "plan", "judge": "judge"})
+    g.add_conditional_edges("plan", after_plan, {"search": "search", "judge": "judge"})
     g.add_conditional_edges("judge", after_judge, {"search": "search", "gate": "gate"})
     g.add_conditional_edges("search", after_search, {"judge": "judge", "gate": "gate"})
     g.add_edge("gate", "staff_review")
@@ -399,6 +426,7 @@ NODE_LABELS = {
     "retrieve": "Policy retrieval",
     "judge": "Policy judgement",
     "search": "Policy search tool",
+    "plan": "Research plan",
     "gate": "Confidence and citation check",
     "staff_review": "Staff decision",
     "messages": "Message drafts",

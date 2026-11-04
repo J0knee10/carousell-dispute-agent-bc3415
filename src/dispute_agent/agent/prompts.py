@@ -89,10 +89,6 @@ SEARCH_TOOL_AVAILABLE = """\
 TOOL: search_policy (available)
 The clauses above were found by searching for each gap. If deciding a gap needs a policy rule that none of them covers, write up to {n} short search queries in search_policy (e.g. "seller sends the missing part", "damage during delivery"). The tool searches the full policy, the clauses it finds are added, and you will be asked again. If the clauses above are enough, which is the usual case, leave search_policy empty and decide now."""
 
-SEARCH_TOOL_AGENTIC = """\
-TOOL: search_policy (available)
-The clauses above come only from a general search on the dispute reason, not on the specific gaps. To find the policy for each gap, write up to {n} short search queries in search_policy (e.g. "missing parts incomplete item", "non-significant colour variation"). The tool searches the full policy, the clauses it finds are added, and you will be asked again. Leave search_policy empty only when the clauses above already cover every gap."""
-
 SEARCH_TOOL_USED = """\
 TOOL: search_policy (already used; not available again)
 Clauses found by your searches are included above. Leave search_policy empty and decide with the clauses you have."""
@@ -106,8 +102,7 @@ def judge_prompt(
     tool: str = "none",
     max_searches: int = 2,
 ) -> str:
-    """tool: 'available' (the judge may call search_policy), 'available_agentic' (it must find the clauses
-    itself), 'used' (it already did) or 'none'."""
+    """tool: 'available' (the judge may call search_policy), 'used' (it already did) or 'none'."""
     parts = [
         render_case(case),
         "",
@@ -126,14 +121,26 @@ def judge_prompt(
         ]
     if tool == "available":
         parts += ["", SEARCH_TOOL_AVAILABLE.format(n=max_searches)]
-    elif tool == "available_agentic":
-        parts += ["", SEARCH_TOOL_AGENTIC.format(n=max_searches)]
     elif tool == "used":
         parts += ["", SEARCH_TOOL_USED]
     else:
         parts += ["", "No tools are available: leave search_policy empty."]
     parts += ["", "Assess each gap and recommend an outcome."]
     return "\n".join(parts)
+
+
+PLAN_SYSTEM = """\
+You prepare the policy research for a colleague on Carousell Singapore's support team who will judge a 'not as described' dispute. You do not judge the dispute.
+
+You have one tool, search_policy, which searches Carousell's full Buyer Protection policy. The clauses you are given come only from a general search on the dispute reason.
+1. For each gap, list the IDs of the clauses given that say how that kind of problem is treated (covered or not covered). Leave the list empty if none do.
+2. For each gap with no such clause, write one short search query in search_policy, in plain policy language (e.g. "missing parts incomplete item", "non-significant colour variation", "damage after delivery", "buyer changed their mind"). Write at most {n} queries.
+3. If every gap is covered, leave search_policy empty."""
+
+
+def plan_prompt(claims_json: str, clauses: list[RetrievedClause]) -> str:
+    return "\n".join(["GAPS FOUND BY THE CASE ANALYST", claims_json, "", "POLICY CLAUSES", render_clauses(clauses), "",
+                      "List the clauses that cover each gap, and the searches needed for the rest."])
 
 
 BASELINE_SYSTEM = f"""\
