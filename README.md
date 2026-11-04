@@ -76,8 +76,10 @@ pull a model, e.g. `ollama pull qwen3:8b` (5.2 GB) or `ollama pull llama3.1:8b`
 `--provider ollama --model qwen3:8b`. An 8B model needs about 6 GB of GPU memory
 to run at full speed (see [Model comparison](#model-comparison)).
 
-**Optional: OpenAI.** Put `OPENAI_API_KEY=...` in `.env` and use
-`--provider openai` (model in `config.yaml`, `OPENAI_MODEL` overrides it).
+**Optional: OpenAI (paid).** Add `OPENAI_API_KEY=sk-...` to `.env` (see
+`.env.example`). The judge model is `gpt-5.4-mini` with low reasoning effort
+(`config.yaml`; `OPENAI_MODEL` overrides it). The CLI takes `--provider openai`.
+In the app, OpenAI is also the **fallback** for Gemini (below).
 
 ## Run the app
 
@@ -89,6 +91,18 @@ Pages: review a dispute (run the agent, approve or override, see the tool calls
 and message drafts), what-if policy test, evaluation results (including the
 model comparison), policy library (search the clauses), and how it works. The
 sidebar lists only the providers that can run on this machine.
+
+**Gemini first, OpenAI as fallback.** The free Gemini key is the default. If
+both keys are set and a Gemini call fails (free quota used up, or the service
+overloaded), the app makes that call with OpenAI instead: after a daily-quota
+error it stays on OpenAI until the app restarts; after any other error it goes
+back to Gemini on the next call. Each recommendation shows which model judged
+it. **Paid usage is capped at S$100 a month**: the app prices every OpenAI call
+from its tokens (`llm.openai.prices_usd_per_million` in `config.yaml`, converted
+at 1.35 SGD per USD) and stops making paid calls when the month's total reaches
+`llm.openai.app_budget_sgd_per_month`. The running total is kept in
+`outputs/openai_spend.json`. Evaluations from the command line never fall back
+and are not capped, so every number in `reports/` comes from the model it names.
 
 Docker alternative (no Python needed): `docker compose up --build`, then open
 http://localhost:8501. The Docker files are included but were not tested on
@@ -334,14 +348,18 @@ server is running. Steps:
 3. Repository `J0knee10/carousell-dispute-agent-bc3415`, branch `main`, main file path `app/streamlit_app.py`.
 4. Open **Advanced settings**: choose Python **3.12**, and under **Secrets** paste:
    ```toml
-   GEMINI_API_KEY = "your-key"
+   GEMINI_API_KEY = "your-gemini-key"
+   OPENAI_API_KEY = "sk-your-openai-key"
    ```
+   Gemini is used first; OpenAI only when Gemini fails, up to S$100 a month. Leave out the OpenAI line to run on Gemini alone.
 5. Click **Deploy**. The first start takes a few minutes (it installs the packages and downloads the 80 MB embedding model).
 
-On the cloud the app offers Gemini and mock only. Everyone who opens the link
-shares that key's free quota (about one full test run a day for
+On the cloud the app offers Gemini, OpenAI and mock (no Ollama). Everyone who
+opens the link shares the free Gemini quota (about one full test run a day for
 `gemini-flash-lite-latest`; it resets at midnight Pacific time, 4 PM in
-Singapore). Decisions logged on the cloud are lost when the app restarts.
+Singapore), then the OpenAI fallback. Files on Community Cloud do not survive a
+restart: the decision log and the OpenAI spend total start again from zero, so
+the budget on the OpenAI project itself is the hard limit.
 After changing dependencies, regenerate `requirements.txt` with
 `uv export --no-hashes --no-dev --no-emit-project -o requirements.txt`.
 

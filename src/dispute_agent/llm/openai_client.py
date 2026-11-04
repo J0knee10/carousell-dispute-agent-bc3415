@@ -23,6 +23,18 @@ _NO_TEMPERATURE = ("gpt-5", "o1", "o3", "o4")
 _REASONING = ("gpt-5", "o1", "o3", "o4")
 
 
+def _retry_after(err: Exception, default: float) -> float:
+    """Seconds OpenAI asks us to wait (retry-after-ms or retry-after headers), capped at 60."""
+    headers = getattr(getattr(err, "response", None), "headers", None) or {}
+    for name, scale in (("retry-after-ms", 0.001), ("retry-after", 1.0)):
+        try:
+            if headers.get(name) is not None:
+                return min(60.0, float(headers.get(name)) * scale)
+        except (TypeError, ValueError):
+            pass
+    return min(60.0, default)
+
+
 class SpendTracker:
     """Running OpenAI spend for the current calendar month, kept in a small JSON file.
 
@@ -109,6 +121,7 @@ class OpenAIClient:
         if self.spend:
             self.spend.check(self.model)
         failures = 0
+        rate_limits = 0
         while True:
             start = time.monotonic()
             try:
@@ -120,11 +133,12 @@ class OpenAIClient:
                 )
             except openai.RateLimitError as e:
                 # insufficient_quota means the account is out of credit: waiting will not help.
+                # Otherwise it is a per-minute limit: wait as long as OpenAI asks, then retry.
                 daily = "insufficient_quota" in str(e)
-                failures += 1
-                if daily or failures > 5:
+                rate_limits += 1
+                if daily or rate_limits > 12:
                     raise RateLimitError(f"OpenAI quota exhausted for {self.model}: {e}", daily=daily, model=self.model) from e
-                time.sleep(10 * failures)
+                time.sleep(_retry_after(e, default=5.0 * rate_limits) + 1)
                 continue
             except (openai.APIConnectionError, openai.InternalServerError) as e:
                 failures += 1
