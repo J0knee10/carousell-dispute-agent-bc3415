@@ -62,6 +62,7 @@ def build_report(run: str) -> tuple[Path, dict]:
         "| Measure | Agent | Single-prompt baseline |",
         "|---|---|---|",
         row("Cases scored", lambda m: str(m["n"])),
+        row("Failed (no valid answer; counted as wrong)", lambda m: f"{m.get('failed', {}).get('n', 0)}"),
         row("Decision accuracy (4 outcomes)", lambda m: _pct(m["decision_accuracy"])),
         *[
             row(f"  {d} cases", lambda m, d=d: f"{_pct(m['accuracy_by_difficulty'].get(d, {}).get('accuracy'))} (n={m['accuracy_by_difficulty'].get(d, {}).get('n', 0)})")
@@ -73,13 +74,16 @@ def build_report(run: str) -> tuple[Path, dict]:
         row("Eligibility accuracy", lambda m: _pct(m["eligibility_accuracy"])),
         row("Ineligible cases flagged", lambda m: _pct(m["ineligible_flagged"]["share"])),
         row("Judged cases citing a clause", lambda m: _pct(m["cited_at_least_one_clause"])),
-        row("Cases with invented clause IDs", lambda m: _pct(m["invented_citation_rate"])),
+        row("Cases with invented clause IDs (final answer)", lambda m: _pct(m["invented_citation_rate"])),
+        row("Judged cases where the model cited a clause it was not shown", lambda m: _pct(m.get("raw_invented_citation_rate"))),
+        row("Judged cases where the judge called search_policy", lambda m: _pct(m.get("tool_use", {}).get("cases_using_search"))),
         row("Escalated", lambda m: _pct(m["escalation"]["escalated_share"])),
         row("Wrong decisions that were escalated", lambda m: _pct(m["escalation"]["wrong_decisions_escalated"])),
         row("Right decisions that were escalated", lambda m: _pct(m["escalation"]["right_decisions_escalated"])),
         row("Accuracy on cases not escalated", lambda m: _pct(m["escalation"]["accuracy_when_not_escalated"])),
         row("Seconds per case (median)", lambda m: str(m["seconds_per_case"]["median"])),
         row("LLM calls per case", lambda m: str(m["llm_calls_per_case"])),
+        row("Tokens per case (in / out)", lambda m: f"{m.get('tokens_per_case', {}).get('input') or 'n/a'} / {m.get('tokens_per_case', {}).get('output') or 'n/a'}"),
         "",
     ]
     if "agent" in results and "baseline" in results and results["agent"].get("n") and results["baseline"].get("n"):
@@ -97,7 +101,7 @@ def build_report(run: str) -> tuple[Path, dict]:
             lines.append(f"| {short[lab]} | " + " | ".join(str(m["confusion"][lab][p]) for p in OUTCOMES) + " |")
         lines.append("")
         if m["wrong_cases"]:
-            lines += [f"Wrong cases ({system}): " + ", ".join(f"{w['case_id']} ({w['label']} -> {w['pred']}{', escalated' if w['escalated'] else ''})" for w in m["wrong_cases"]), ""]
+            lines += [f"Wrong cases ({system}): " + ", ".join(f"{w['case_id']} ({w['label']} -> {w['pred'] or 'FAILED'}{', escalated' if w['escalated'] else ''})" for w in m["wrong_cases"]), ""]
 
     reports = path("outputs.reports_dir")
     reports.mkdir(parents=True, exist_ok=True)

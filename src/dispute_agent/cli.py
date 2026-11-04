@@ -1,6 +1,6 @@
 """Command line entry point: `uv run dispute-agent <command>`.
 
-Exit code 75 means the Gemini quota ran out; progress is saved and the same
+Exit code 75 means the API quota ran out; progress is saved and the same
 command resumes later.
 """
 
@@ -12,6 +12,7 @@ import sys
 import time
 
 EXIT_QUOTA = 75
+PROVIDERS = ("gemini", "ollama", "openai", "mock")
 
 
 def _utf8_stdout() -> None:
@@ -31,7 +32,7 @@ def _quota_exit(err) -> int:
 
     e = err.err if hasattr(err, "err") else err
     kind = "daily" if isinstance(e, RateLimitError) and e.daily else "per-minute"
-    _print(f"\nSTOPPED: Gemini {kind} quota exhausted for model {getattr(e, 'model', '?')}.")
+    _print(f"\nSTOPPED: {kind} quota exhausted for model {getattr(e, 'model', '?')}.")
     if getattr(e, "retry_after_seconds", None):
         _print(f"Suggested retry after: {e.retry_after_seconds:.0f}s")
     _print("Progress is saved. Run the same command again later to resume.")
@@ -48,7 +49,7 @@ def cmd_check_llm(args) -> int:
         ok: bool
 
     for role in ("judge", "generator"):
-        llm = get_llm(role, provider=args.provider)
+        llm = get_llm(role, provider=args.provider, model=args.model if role == "judge" else None)
         try:
             llm.generate(task="ping", system="Reply with ok=true.", prompt="ping", schema=Ping) if llm.name != "mock" else None
             _print(f"{role}: {llm.name}/{llm.model} OK")
@@ -122,7 +123,7 @@ def cmd_run_case(args) -> int:
     from .rag.store import get_store
 
     case = cases_by_id()[args.case_id]
-    llm = get_llm(provider=args.provider)
+    llm = get_llm(provider=args.provider, model=args.model)
     graph = build_graph(llm, get_store(), draft_messages=args.approve)
     try:
         r = run_to_review(graph, case, llm)
@@ -146,7 +147,7 @@ def cmd_evaluate(args) -> int:
     from .rag.store import get_store
 
     cfg = load_config()
-    llm = get_llm(provider=args.provider)
+    llm = get_llm(provider=args.provider, model=args.model)
     run = args.run or f"{llm.name}_{args.split}"
     by_id = cases_by_id()
     ids = case_ids_for(args.split)
@@ -155,12 +156,14 @@ def cmd_evaluate(args) -> int:
         ids = [i for i in ids if by_id[i].meta.scenario in args.scenario]
         split += f" ({', '.join(args.scenario)})"
     cases = [by_id[i] for i in ids]
-    write_run_info(run, {"split": split, "case_ids": ids, "provider": llm.name, "model": llm.model})
+    variant = "no retrieval" if args.no_retrieval else ""
+    write_run_info(run, {"split": split, "case_ids": ids, "provider": llm.name, "model": llm.model, "variant": variant})
     systems = ["agent", "baseline"] if args.system == "both" else [args.system]
     threshold = cfg["agent"]["confidence_threshold"]
     try:
         for system in systems:
-            run_system(system, cases, llm, get_store(), run, threshold, progress=_print)
+            run_system(system, cases, llm, get_store(), run, threshold, progress=_print,
+                       use_retrieval=not args.no_retrieval, retry_errors=not args.keep_failures)
     except QuotaExhausted as e:
         _print(f"Done {e.done}, remaining {e.remaining} for this system.")
         build_report(run)
@@ -168,6 +171,15 @@ def cmd_evaluate(args) -> int:
     out, _ = build_report(run)
     _print(f"\nReport: {out}")
     _print(out.read_text(encoding="utf-8"))
+    return 0
+
+
+def cmd_compare(args) -> int:
+    from .evaluation.compare import build_comparison
+
+    out = build_comparison(args.runs, out_name=args.out, hardware=args.hardware or "")
+    _print(out.read_text(encoding="utf-8"))
+    _print(f"Saved to {out}")
     return 0
 
 
@@ -204,7 +216,7 @@ def cmd_whatif(args) -> int:
     from .evaluation.harness import QuotaExhausted
 
     try:
-        out, result = run_whatif(args.change, split=args.split, limit=args.limit, provider=args.provider, progress=_print)
+        out, result = run_whatif(args.change, split=args.split, limit=args.limit, provider=args.provider, model=args.model, progress=_print)
     except QuotaExhausted as e:
         return _quota_exit(e)
     _print(json.dumps(result["summary"], indent=2))
@@ -216,14 +228,14 @@ def cmd_wait_for_quota(args) -> int:
     """Block until a tiny request to the model succeeds. Used as a watchdog after a quota stop."""
     from pydantic import BaseModel
 
-    from .config import gemini_api_key, load_config
+    from .config import gemini_api_key, judge_model
     from .llm.gemini import GeminiClient
     from .llm import RateLimitError, LLMError
 
     class Ping(BaseModel):
         ok: bool
 
-    model = args.model or load_config()["llm"]["judge_model"]
+    model = args.model or judge_model("gemini")
     client = GeminiClient(model=model, api_key=gemini_api_key() or "", max_retry_wait_seconds=0)
     deadline = time.time() + args.max_hours * 3600
     attempt = 0
@@ -254,7 +266,8 @@ def build_parser() -> argparse.ArgumentParser:
         return sp
 
     def provider(sp):
-        sp.add_argument("--provider", choices=["gemini", "mock"], default=None, help="override config.yaml")
+        sp.add_argument("--provider", choices=list(PROVIDERS), default=None, help="override config.yaml")
+        sp.add_argument("--model", default=None, help="judge model for that provider (default from config.yaml)")
 
     provider(add("check-llm", cmd_check_llm, "check the LLM provider responds"))
     add("build-index", cmd_build_index, "build the policy vector index").add_argument("--force", action="store_true")
@@ -274,8 +287,14 @@ def build_parser() -> argparse.ArgumentParser:
     sp.add_argument("--split", choices=["test", "dev", "all", "seed", "demo"], default="test")
     sp.add_argument("--run", default=None, help="run name (default <provider>_<split>)")
     sp.add_argument("--scenario", action="append", help="only cases of this scenario (repeatable)")
+    sp.add_argument("--no-retrieval", action="store_true", help="ablation: the agent's judge gets no policy clauses")
+    sp.add_argument("--keep-failures", action="store_true", help="on resume, do not re-run cases whose answer failed")
     provider(sp)
     add("report", cmd_report, "rebuild the report for a run").add_argument("run")
+    sp = add("compare", cmd_compare, "compare several runs (one per model) in one report")
+    sp.add_argument("runs", nargs="+")
+    sp.add_argument("--out", default="model_comparison", help="report name in reports/")
+    sp.add_argument("--hardware", default=None, help="describe the local hardware for the report")
     add("eval-retrieval", cmd_eval_retrieval, "retrieval accuracy on the query set")
     sp = add("whatif", cmd_whatif, "re-judge past cases under a proposed policy change")
     sp.add_argument("change", help="the proposed rule, in plain English")

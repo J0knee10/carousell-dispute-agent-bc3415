@@ -20,10 +20,31 @@ def _share(n: int, d: int) -> float | None:
     return round(n / d, 3) if d else None
 
 
+def failed_cases(records: list[dict]) -> dict[str, str]:
+    """Cases with an error record and no successful prediction: case_id -> error."""
+    ok = {r["case_id"] for r in records if not r.get("error")}
+    return {r["case_id"]: r["error"] for r in records if r.get("error") and r["case_id"] not in ok}
+
+
 def compute_metrics(records: list[dict], labels: dict[str, dict], meta: dict[str, dict]) -> dict:
-    """records: predictions; labels: case_id -> {outcome, eligible, source}; meta: case_id -> {difficulty, ...}."""
+    """records: predictions; labels: case_id -> {outcome, eligible, source}; meta: case_id -> {difficulty, ...}.
+
+    A case where the model never gave a valid answer (for example invalid JSON
+    twice) counts as a wrong decision and as handed to a person, so a model that
+    fails often cannot look better by being scored on fewer cases.
+    """
     preds = latest_by_case(records)
     rows = []
+    for cid in failed_cases(records):
+        lab = labels.get(cid)
+        if lab and lab.get("outcome"):
+            rows.append({
+                "case_id": cid, "difficulty": meta[cid]["difficulty"], "label": lab["outcome"],
+                "label_eligible": lab["eligible"], "label_source": lab["source"], "pred": None, "pred_eligible": None,
+                "correct": False, "escalate": True, "citations": [], "invalid_citations": [],
+                "raw_invalid_citations": [], "seconds": None, "llm_calls": None, "decided_by": "failed",
+                "tool_calls": [], "tokens_in": None, "tokens_out": None,
+            })
     for cid, p in preds.items():
         lab = labels.get(cid)
         if not lab or not lab.get("outcome"):
@@ -41,9 +62,13 @@ def compute_metrics(records: list[dict], labels: dict[str, dict], meta: dict[str
                 "escalate": bool(p.get("escalate")),
                 "citations": p.get("citations", []),
                 "invalid_citations": p.get("invalid_citations", []),
+                "raw_invalid_citations": p.get("raw_invalid_citations", p.get("invalid_citations", [])),
                 "seconds": p.get("seconds", 0.0),
                 "llm_calls": p.get("llm_calls", 0),
                 "decided_by": p.get("decided_by", "llm"),
+                "tool_calls": p.get("tool_calls", []),
+                "tokens_in": p.get("tokens_in"),
+                "tokens_out": p.get("tokens_out"),
             }
         )
     n = len(rows)
@@ -71,7 +96,11 @@ def compute_metrics(records: list[dict], labels: dict[str, dict], meta: dict[str
         if r["pred"] in OUTCOMES:
             confusion[r["label"]][r["pred"]] += 1
 
-    secs = [r["seconds"] for r in rows]
+    answered = [r for r in rows if r["decided_by"] != "failed"]
+    secs = [r["seconds"] for r in answered] or [0.0]
+    calls = [r["llm_calls"] for r in answered] or [0]
+    tok_in = [r["tokens_in"] for r in answered if r["tokens_in"] is not None]
+    tok_out = [r["tokens_out"] for r in answered if r["tokens_out"] is not None]
     return {
         "n": n,
         "label_sources": dict(Counter(r["label_source"] for r in rows)),
@@ -84,6 +113,18 @@ def compute_metrics(records: list[dict], labels: dict[str, dict], meta: dict[str
         "ineligible_flagged": {"n": len(inel), "share": _share(sum(not r["pred_eligible"] for r in inel), len(inel))},
         "cited_at_least_one_clause": _share(sum(bool(r["citations"]) for r in judged), len(judged)),
         "invented_citation_rate": _share(sum(bool(r["invalid_citations"]) for r in rows), n),
+        # Before the agent's citation check: how often the model itself cited a clause it was not shown.
+        "raw_invented_citation_rate": _share(sum(bool(r["raw_invalid_citations"]) for r in judged), len(judged)),
+        "failed": {"n": n - len(answered), "share": _share(n - len(answered), n)},
+        "tool_use": {
+            "judged": len(judged),
+            "cases_using_search": _share(sum(bool(r["tool_calls"]) for r in judged), len(judged)),
+            "searches": sum(len(r["tool_calls"]) for r in judged),
+        },
+        "tokens_per_case": {
+            "input": round(mean(tok_in)) if tok_in else None,
+            "output": round(mean(tok_out)) if tok_out else None,
+        },
         "escalation": {
             "escalated_share": _share(sum(r["escalate"] for r in rows), n),
             "wrong_decisions_escalated": _share(sum(r["escalate"] for r in wrong), len(wrong)),
@@ -91,7 +132,7 @@ def compute_metrics(records: list[dict], labels: dict[str, dict], meta: dict[str
             "accuracy_when_not_escalated": acc([r for r in rows if not r["escalate"]]),
         },
         "seconds_per_case": {"mean": round(mean(secs), 2), "median": round(median(secs), 2)},
-        "llm_calls_per_case": round(mean(r["llm_calls"] for r in rows), 2),
+        "llm_calls_per_case": round(mean(calls), 2),
         "confusion": confusion,
         "wrong_cases": [{"case_id": r["case_id"], "label": r["label"], "pred": r["pred"], "difficulty": r["difficulty"], "escalated": r["escalate"]} for r in wrong],
     }
