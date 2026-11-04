@@ -2,7 +2,7 @@
   "agent": {
     "n": 10,
     "label_sources": {
-      "provisional": 10
+      "final": 10
     },
     "decision_accuracy": 0.9,
     "accuracy_by_difficulty": {

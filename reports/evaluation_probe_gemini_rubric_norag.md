@@ -3,7 +3,7 @@
 - Cases: test (first 25) split, 25 cases
 - Models: gemini/gemini-flash-lite-latest
 - Confidence threshold for escalation: 0.7
-- Labels used: provisional: 25. 'provisional' means the outcome the case was written for, not yet checked by the labellers.
+- Labels used: final: 25. 'provisional' means the outcome the case was written for, not yet checked by the labellers.
 
 ## Headline numbers
 

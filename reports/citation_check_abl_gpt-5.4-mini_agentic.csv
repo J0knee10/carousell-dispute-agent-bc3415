@@ -1,0 +1,78 @@
+case_id,predicted_outcome,reasons,clause_id,clause_section,clause_text,supports,claude_supports,claude_note
+G006,decline,The listing only promised a top; leggings were never included in the offer. | Incomplete-item claims require missing parts that were part of the listing. | The buyer’s assumption that Lularoe is usually sold as a set is not enough to override the listing.,BPR-02,Eligibility > Dispute Reason,"Under the Buyer Protection and Certified refund policy, buyers may raise a dispute for:
+    Item(s) not received
+    Incomplete item(s)
+    The item is significantly not as described
+    Examples of cases where the item is significantly not as described
+        The item is of a different variation, such as size, colour, model or version
+        The item is incomplete or has missing parts
+        The item is damaged or has one or more undisclosed defect(s)
+        The item received deviates extensively from the listing photo",,,
+G006,decline,The listing only promised a top; leggings were never included in the offer. | Incomplete-item claims require missing parts that were part of the listing. | The buyer’s assumption that Lularoe is usually sold as a set is not enough to override the listing.,DPO-08,Incomplete items,"Subject to Carousell’s determination:
+    the seller may be requested to deliver to the buyer the missing part(s) or such other actions as may be required to make the item or order whole; or
+    it may prescribe a refund (in full or in part) or return and refund (in full or in part).
+For the above-stated scenarios, sellers will be responsible for and requested to cover the additional shipping costs, to be paid to the buyer directly.
+[Item not received]
+Buyer Protection does not cover non-delivery for orders with untracked mail as the method of delivery. To claim for non-delivery of orders, Buyers must opt for tracked delivery.",,,
+G008,full_refund_with_return,"The missing drawer knobs were explicitly included in the listing, so this is a covered incomplete-item issue. | The item is still returnable and the defect is not of the rare type that makes return nonsensical. | The buyer's photos support the claim, though the seller disputes it and provided a pre-pickup photo with the knobs attached.",BPR-02,Eligibility > Dispute Reason,"Under the Buyer Protection and Certified refund policy, buyers may raise a dispute for:
+    Item(s) not received
+    Incomplete item(s)
+    The item is significantly not as described
+    Examples of cases where the item is significantly not as described
+        The item is of a different variation, such as size, colour, model or version
+        The item is incomplete or has missing parts
+        The item is damaged or has one or more undisclosed defect(s)
+        The item received deviates extensively from the listing photo",,,
+G008,full_refund_with_return,"The missing drawer knobs were explicitly included in the listing, so this is a covered incomplete-item issue. | The item is still returnable and the defect is not of the rare type that makes return nonsensical. | The buyer's photos support the claim, though the seller disputes it and provided a pre-pickup photo with the knobs attached.",DPO-08,Incomplete items,"Subject to Carousell’s determination:
+    the seller may be requested to deliver to the buyer the missing part(s) or such other actions as may be required to make the item or order whole; or
+    it may prescribe a refund (in full or in part) or return and refund (in full or in part).
+For the above-stated scenarios, sellers will be responsible for and requested to cover the additional shipping costs, to be paid to the buyer directly.
+[Item not received]
+Buyer Protection does not cover non-delivery for orders with untracked mail as the method of delivery. To claim for non-delivery of orders, Buyers must opt for tracked delivery.",,,
+G008,full_refund_with_return,"The missing drawer knobs were explicitly included in the listing, so this is a covered incomplete-item issue. | The item is still returnable and the defect is not of the rare type that makes return nonsensical. | The buyer's photos support the claim, though the seller disputes it and provided a pre-pickup photo with the knobs attached.",DPO-11,Carousell-supported Dispute Resolution Outcomes > Refund with return process,"In the event that a return is required as part of the resolution decision, buyers and sellers will have to arrange for the item to be returned within 7 days of the decision. Buyers must complete the return process through the app following the steps highlighted in this article: Step-by-step for buyers on how to proceed with a full refund with returns
+Sellers must submit their return address in the app and track the return progress. More details in this article: Step-by-step for sellers after a full refund with returns decision has been ruled
+In the event that the item gets damaged during the return process due to improper packaging, Carousell reserves the right to decide whether a refund should still be issued to the buyer.",,,
+G013,decline,The missing box was expressly disclosed in the listing as 'w/out Box'. | This is not an incomplete-item gap under the policy because the buyer received the item as described on this point. | No other undisclosed defect or major deviation is shown in the evidence.,BPR-02,Eligibility > Dispute Reason,"Under the Buyer Protection and Certified refund policy, buyers may raise a dispute for:
+    Item(s) not received
+    Incomplete item(s)
+    The item is significantly not as described
+    Examples of cases where the item is significantly not as described
+        The item is of a different variation, such as size, colour, model or version
+        The item is incomplete or has missing parts
+        The item is damaged or has one or more undisclosed defect(s)
+        The item received deviates extensively from the listing photo",,,
+G018,full_refund_with_return,"The item was listed as brand new, but the buyer shows cracks, stains, and a half-empty tube. | These are undisclosed defects and a condition mismatch, which are covered under SNAD. | The issues are substantial enough that the item is not materially what was listed. | A return makes sense because the item is still physical product, not worthless or unsafe to return.",BPR-02,Eligibility > Dispute Reason,"Under the Buyer Protection and Certified refund policy, buyers may raise a dispute for:
+    Item(s) not received
+    Incomplete item(s)
+    The item is significantly not as described
+    Examples of cases where the item is significantly not as described
+        The item is of a different variation, such as size, colour, model or version
+        The item is incomplete or has missing parts
+        The item is damaged or has one or more undisclosed defect(s)
+        The item received deviates extensively from the listing photo",,,
+G018,full_refund_with_return,"The item was listed as brand new, but the buyer shows cracks, stains, and a half-empty tube. | These are undisclosed defects and a condition mismatch, which are covered under SNAD. | The issues are substantial enough that the item is not materially what was listed. | A return makes sense because the item is still physical product, not worthless or unsafe to return.",WBP-04,For Buyers,"When you pay via the ‘Buy’ Button, Buyer Protection is applied to your order. It helps ensure safe payments, access to customer support, and gives you the right to claim a refund if your item doesn't arrive or is significantly not as described.
+Listings with the ‘Buy’ button enabled will be applicable for Buyer Protection if you make payment through the Carousell-supported payment methods. Currently, we accept PayNow, DBS PayLah!, Visa/ Mastercard Debit/Credit Cards, Atome and PayLater by Grab*
+*only applicable for selected listings
+With Buyer Protection, you will be able to raise a dispute and it will cover you for the below scenarios:
+    Item Not Received: Covered only if tracked shipping was used. Buyer Protection does not cover non-delivery for untracked mail.
+    Significantly Not As Described (SNAD): An item qualifies for a refund if:",,,
+G019,decline,"The glued boots/legs were clearly disclosed in the listing. | The buyer’s complaint is about visible condition and appearance, which matches a heavily used listing. | There is no undisclosed defect, missing part, or other significant mismatch shown.",BPR-03,Transactions are not eligible for refund,"An item that is materially similar with subjective and non-significant variations from the seller’s listing and description will not be accepted. This includes:
+    ✘   Item with signs of wear but was correctly listed as being in used condition
+    ✘  Non-significant variations, including quality, for example:
+        Item listed as light pink but received as rose pink
+        Item listed as palm-sized but received at 15cm
+        Item listed as 8/10 but receiver claims it is more of a 6/10
+    Buyers change their mind about the item
+    Buyers place the wrong order by mistake
+    Buyers have received a partial or full refund from a separate resolution process not facilitated by Carousell
+    Buyers provide an incorrect or invalid delivery address
+    Buyers receive the item after the suggested delivery date",,,
+G019,decline,"The glued boots/legs were clearly disclosed in the listing. | The buyer’s complaint is about visible condition and appearance, which matches a heavily used listing. | There is no undisclosed defect, missing part, or other significant mismatch shown.",BPR-02,Eligibility > Dispute Reason,"Under the Buyer Protection and Certified refund policy, buyers may raise a dispute for:
+    Item(s) not received
+    Incomplete item(s)
+    The item is significantly not as described
+    Examples of cases where the item is significantly not as described
+        The item is of a different variation, such as size, colour, model or version
+        The item is incomplete or has missing parts
+        The item is damaged or has one or more undisclosed defect(s)
+        The item received deviates extensively from the listing photo",,,

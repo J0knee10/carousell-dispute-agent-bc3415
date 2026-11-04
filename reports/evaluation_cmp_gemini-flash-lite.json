@@ -2,13 +2,13 @@
   "agent": {
     "n": 50,
     "label_sources": {
-      "provisional": 50
+      "final": 50
     },
-    "decision_accuracy": 0.9,
+    "decision_accuracy": 0.94,
     "accuracy_by_difficulty": {
       "borderline": {
         "n": 15,
-        "accuracy": 0.8
+        "accuracy": 0.933
       },
       "clear": {
         "n": 30,
@@ -19,14 +19,14 @@
         "accuracy": 1.0
       }
     },
-    "direction_accuracy": 0.92,
+    "direction_accuracy": 0.96,
     "buyer_win_accuracy": {
-      "n": 24,
-      "accuracy": 0.833
+      "n": 22,
+      "accuracy": 0.909
     },
     "seller_win_accuracy": {
-      "n": 26,
-      "accuracy": 0.962
+      "n": 28,
+      "accuracy": 0.964
     },
     "eligibility_accuracy": 1.0,
     "ineligible_flagged": {
@@ -58,9 +58,9 @@
     },
     "escalation": {
       "escalated_share": 0.06,
-      "wrong_decisions_escalated": 0.4,
-      "right_decisions_escalated": 0.022,
-      "accuracy_when_not_escalated": 0.936
+      "wrong_decisions_escalated": 0.667,
+      "right_decisions_escalated": 0.021,
+      "accuracy_when_not_escalated": 0.979
     },
     "seconds_per_case": {
       "mean": 9.03,
@@ -84,13 +84,13 @@
         "full_refund_with_return": 1,
         "full_refund_without_return": 0,
         "partial_refund": 5,
-        "decline": 2
+        "decline": 0
       },
       "decline": {
         "full_refund_with_return": 0,
         "full_refund_without_return": 0,
         "partial_refund": 1,
-        "decline": 25
+        "decline": 27
       }
     },
     "wrong_cases": [
@@ -114,33 +114,19 @@
         "pred": "partial_refund",
         "difficulty": "borderline",
         "escalated": true
-      },
-      {
-        "case_id": "G129",
-        "label": "partial_refund",
-        "pred": "decline",
-        "difficulty": "borderline",
-        "escalated": false
-      },
-      {
-        "case_id": "G134",
-        "label": "partial_refund",
-        "pred": "decline",
-        "difficulty": "borderline",
-        "escalated": false
       }
     ]
   },
   "baseline": {
     "n": 50,
     "label_sources": {
-      "provisional": 50
+      "final": 50
     },
-    "decision_accuracy": 0.88,
+    "decision_accuracy": 0.84,
     "accuracy_by_difficulty": {
       "borderline": {
         "n": 15,
-        "accuracy": 0.8
+        "accuracy": 0.667
       },
       "clear": {
         "n": 30,
@@ -151,14 +137,14 @@
         "accuracy": 0.6
       }
     },
-    "direction_accuracy": 0.88,
+    "direction_accuracy": 0.84,
     "buyer_win_accuracy": {
-      "n": 24,
-      "accuracy": 0.958
+      "n": 22,
+      "accuracy": 0.955
     },
     "seller_win_accuracy": {
-      "n": 26,
-      "accuracy": 0.808
+      "n": 28,
+      "accuracy": 0.75
     },
     "eligibility_accuracy": 0.68,
     "ineligible_flagged": {
@@ -185,9 +171,9 @@
     },
     "escalation": {
       "escalated_share": 0.04,
-      "wrong_decisions_escalated": 0.167,
-      "right_decisions_escalated": 0.023,
-      "accuracy_when_not_escalated": 0.896
+      "wrong_decisions_escalated": 0.125,
+      "right_decisions_escalated": 0.024,
+      "accuracy_when_not_escalated": 0.854
     },
     "seconds_per_case": {
       "mean": 4.79,
@@ -210,13 +196,13 @@
       "partial_refund": {
         "full_refund_with_return": 0,
         "full_refund_without_return": 0,
-        "partial_refund": 8,
+        "partial_refund": 6,
         "decline": 0
       },
       "decline": {
         "full_refund_with_return": 0,
         "full_refund_without_return": 0,
-        "partial_refund": 5,
+        "partial_refund": 7,
         "decline": 21
       }
     },
@@ -230,6 +216,20 @@
       },
       {
         "case_id": "G125",
+        "label": "decline",
+        "pred": "partial_refund",
+        "difficulty": "borderline",
+        "escalated": false
+      },
+      {
+        "case_id": "G129",
+        "label": "decline",
+        "pred": "partial_refund",
+        "difficulty": "borderline",
+        "escalated": false
+      },
+      {
+        "case_id": "G134",
         "label": "decline",
         "pred": "partial_refund",
         "difficulty": "borderline",
