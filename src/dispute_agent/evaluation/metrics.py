@@ -2,10 +2,28 @@
 
 from __future__ import annotations
 
+import re
 from collections import Counter, defaultdict
 from statistics import mean, median
 
 from ..schemas import OUTCOMES
+
+CLAUSE_ID = re.compile(r"[A-Z]{3}-\d{2}")
+
+
+def split_invalid(citations: list[str], valid: set[str] | None) -> tuple[list[str], list[str]]:
+    """Split citations that failed the exact-ID check into (invented, format errors).
+
+    A format error still contains a real clause ID, e.g. "[BPR-02] The item is
+    significantly not as described": the model copied the heading as well as the ID.
+    An invented citation has no real clause ID in it at all.
+    """
+    if valid is None:
+        return list(citations), []
+    invented, fmt = [], []
+    for c in citations:
+        (fmt if any(i in valid for i in CLAUSE_ID.findall(c)) else invented).append(c)
+    return invented, fmt
 
 
 def latest_by_case(records: list[dict]) -> dict[str, dict]:
@@ -26,7 +44,7 @@ def failed_cases(records: list[dict]) -> dict[str, str]:
     return {r["case_id"]: r["error"] for r in records if r.get("error") and r["case_id"] not in ok}
 
 
-def compute_metrics(records: list[dict], labels: dict[str, dict], meta: dict[str, dict]) -> dict:
+def compute_metrics(records: list[dict], labels: dict[str, dict], meta: dict[str, dict], valid_ids: set[str] | None = None) -> dict:
     """records: predictions; labels: case_id -> {outcome, eligible, source}; meta: case_id -> {difficulty, ...}.
 
     A case where the model never gave a valid answer (for example invalid JSON
@@ -34,6 +52,10 @@ def compute_metrics(records: list[dict], labels: dict[str, dict], meta: dict[str
     fails often cannot look better by being scored on fewer cases.
     """
     preds = latest_by_case(records)
+    if valid_ids is None:
+        from ..rag.chunker import clauses_by_id
+
+        valid_ids = set(clauses_by_id()) | {"PROPOSED-1"}
     rows = []
     for cid in failed_cases(records):
         lab = labels.get(cid)
@@ -96,6 +118,9 @@ def compute_metrics(records: list[dict], labels: dict[str, dict], meta: dict[str
         if r["pred"] in OUTCOMES:
             confusion[r["label"]][r["pred"]] += 1
 
+    for r in rows:
+        r["invented"], r["format_errors"] = split_invalid(r["invalid_citations"], valid_ids)
+        r["raw_invented"], r["raw_format_errors"] = split_invalid(r["raw_invalid_citations"], valid_ids)
     answered = [r for r in rows if r["decided_by"] != "failed"]
     secs = [r["seconds"] for r in answered] or [0.0]
     calls = [r["llm_calls"] for r in answered] or [0]
@@ -112,9 +137,13 @@ def compute_metrics(records: list[dict], labels: dict[str, dict], meta: dict[str
         "eligibility_accuracy": _share(sum(r["pred_eligible"] == r["label_eligible"] for r in rows), n),
         "ineligible_flagged": {"n": len(inel), "share": _share(sum(not r["pred_eligible"] for r in inel), len(inel))},
         "cited_at_least_one_clause": _share(sum(bool(r["citations"]) for r in judged), len(judged)),
-        "invented_citation_rate": _share(sum(bool(r["invalid_citations"]) for r in rows), n),
-        # Before the agent's citation check: how often the model itself cited a clause it was not shown.
-        "raw_invented_citation_rate": _share(sum(bool(r["raw_invalid_citations"]) for r in judged), len(judged)),
+        # Final answer cites a clause ID that does not exist (the agent's check removes these).
+        "invented_citation_rate": _share(sum(bool(r["invented"]) for r in rows), n),
+        # Final answer cites a real clause in the wrong format (ID plus heading text).
+        "citation_format_error_rate": _share(sum(bool(r["format_errors"]) for r in rows), n),
+        # Before the agent's check: how often the model itself cited a clause ID that does
+        # not exist or that it was not shown.
+        "raw_invented_citation_rate": _share(sum(bool(r["raw_invented"]) for r in judged), len(judged)),
         "failed": {"n": n - len(answered), "share": _share(n - len(answered), n)},
         "tool_use": {
             "judged": len(judged),

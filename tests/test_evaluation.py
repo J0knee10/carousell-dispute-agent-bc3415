@@ -68,6 +68,18 @@ def test_raw_invented_citations_and_tool_use_are_reported():
     assert m["tool_use"]["cases_using_search"] == 1.0
 
 
+def test_heading_pasted_after_a_real_id_is_a_format_error_not_invented():
+    labels = {"A": {"outcome": "decline", "eligible": True, "source": "provisional"}}
+    meta = {"A": {"difficulty": "clear"}}
+    rec = {**_rec("A", "decline"), "invalid_citations": ["[BPR-02] The item is significantly not as described", "XYZ-99"]}
+    m = compute_metrics([rec], labels, meta, valid_ids={"BPR-02"})
+    assert m["invented_citation_rate"] == 1.0  # XYZ-99 is invented
+    assert m["citation_format_error_rate"] == 1.0
+    rec["invalid_citations"] = ["[BPR-02] The item is significantly not as described"]
+    m = compute_metrics([rec], labels, meta, valid_ids={"BPR-02"})
+    assert m["invented_citation_rate"] == 0.0 and m["citation_format_error_rate"] == 1.0
+
+
 def test_comparison_report_on_mock_runs(mock_llm, store, seeds):
     from dispute_agent.evaluation.compare import build_comparison
     from dispute_agent.evaluation.harness import run_dir, run_system, write_run_info

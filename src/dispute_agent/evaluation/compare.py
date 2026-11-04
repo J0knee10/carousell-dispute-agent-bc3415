@@ -79,12 +79,14 @@ def build_comparison(runs: list[str], out_name: str = "model_comparison", hardwa
         "",
         "## Reliability",
         "",
-        "Unseen clause: the model cited a clause ID it was never shown. For the agent this is counted "
-        "before the citation check removes it; for the baseline (which has no check) it stays in the answer.",
+        "Unseen clause: the model cited a clause ID that does not exist or that it was never shown. For the agent "
+        "this is counted before the citation check removes it; for the baseline (which has no check) it stays in "
+        "the answer. Format errors (a real ID with the heading text pasted after it) are counted separately.",
         "",
         "| Model | Failed answers (agent / baseline) | Eligibility right (agent / baseline) | Unseen clause cited (agent judge / baseline) "
-        "| Agent escalated | Wrong agent decisions escalated | Agent accuracy when not escalated | Judge called search_policy |",
-        "|---|---|---|---|---|---|---|---|",
+        "| Citation format errors (baseline) | Agent escalated | Wrong agent decisions escalated | Agent accuracy when not escalated "
+        "| Judge called search_policy |",
+        "|---|---|---|---|---|---|---|---|---|",
     ]
     for r in rows:
         lines.append(
@@ -92,6 +94,7 @@ def build_comparison(runs: list[str], out_name: str = "model_comparison", hardwa
             f"| {_cell(r, 'agent', lambda m: str(m['failed']['n']))} / {_cell(r, 'baseline', lambda m: str(m['failed']['n']))} "
             f"| {_cell(r, 'agent', lambda m: _pct(m['eligibility_accuracy']))} / {_cell(r, 'baseline', lambda m: _pct(m['eligibility_accuracy']))} "
             f"| {_cell(r, 'agent', lambda m: _pct(m['raw_invented_citation_rate']))} / {_cell(r, 'baseline', lambda m: _pct(m['invented_citation_rate']))} "
+            f"| {_cell(r, 'baseline', lambda m: _pct(m['citation_format_error_rate']))} "
             f"| {_cell(r, 'agent', lambda m: _pct(m['escalation']['escalated_share']))} "
             f"| {_cell(r, 'agent', lambda m: _pct(m['escalation']['wrong_decisions_escalated']))} "
             f"| {_cell(r, 'agent', lambda m: _pct(m['escalation']['accuracy_when_not_escalated']))} "

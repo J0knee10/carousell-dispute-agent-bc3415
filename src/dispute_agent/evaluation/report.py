@@ -75,6 +75,7 @@ def build_report(run: str) -> tuple[Path, dict]:
         row("Ineligible cases flagged", lambda m: _pct(m["ineligible_flagged"]["share"])),
         row("Judged cases citing a clause", lambda m: _pct(m["cited_at_least_one_clause"])),
         row("Cases with invented clause IDs (final answer)", lambda m: _pct(m["invented_citation_rate"])),
+        row("Cases citing a real clause in the wrong format (final answer)", lambda m: _pct(m.get("citation_format_error_rate"))),
         row("Judged cases where the model cited a clause it was not shown", lambda m: _pct(m.get("raw_invented_citation_rate"))),
         row("Judged cases where the judge called search_policy", lambda m: _pct(m.get("tool_use", {}).get("cases_using_search"))),
         row("Escalated", lambda m: _pct(m["escalation"]["escalated_share"])),
