@@ -59,7 +59,7 @@ def _adj(**kw):
     base = dict(
         gap_assessments=[GapAssessment(gap_id="G1", significance="significant", reasoning="", clause_ids=["BPR-02"])],
         outcome="partial_refund", partial_refund_percent=20, confidence=0.9, reasons=["r"], citations=["BPR-02"],
-        needs_more_evidence=False, follow_up_questions=[], summary_for_staff="",
+        search_policy=[], needs_more_evidence=False, follow_up_questions=[], summary_for_staff="",
     )
     base.update(kw)
     return Adjudication(**base)
@@ -84,3 +84,70 @@ def test_gate_escalates_low_confidence_and_inconsistency():
     assert rec.escalate
     assert any("below" in r for r in rec.escalation_reasons)
     assert any("Declines although" in r for r in rec.escalation_reasons)
+
+
+def test_gate_escalates_when_the_judge_still_wants_policy():
+    rec = review_gate(_adj(), ELIGIBLE, {"BPR-02"}, 0.7, wanted_more_policy=True)
+    assert rec.escalate and "search tool" in rec.escalation_reasons[0]
+
+
+# ------------------------------------------------------- search_policy tool loop
+
+class ScriptedJudge:
+    """Wraps the mock: the judge's first answer calls search_policy, the second decides."""
+
+    def __init__(self, mock, queries):
+        self.mock, self.queries = mock, queries
+        self.name, self.model, self.stats = "scripted", "scripted", mock.stats
+        self.prompts: list[str] = []
+
+    def generate(self, **kw):
+        result = self.mock.generate(**kw)
+        if kw["task"] == "adjudication":
+            self.prompts.append(kw["prompt"])
+            first = len(self.prompts) == 1
+            result = result.model_copy(update={"search_policy": self.queries if first else []})
+        return result
+
+
+def test_judge_calls_search_policy_and_rejudges_with_new_clauses(mock_llm, store, seeds):
+    llm = ScriptedJudge(mock_llm, ["damage during delivery courier"])
+    graph = build_graph(llm, store, decision_logger=None)
+    r = run_to_review(graph, seeds["S01"], llm)
+    st = r.state
+    assert len(st["tool_calls"]) == 1 and st["tool_calls"][0]["tool"] == "search_policy"
+    new = st["tool_calls"][0]["new_clauses"]
+    assert new and set(new) <= {c["clause_id"] for c in st["clauses"]}
+    assert st["judge_rounds"] == 2 and r.llm_calls == 3
+    assert "search_policy (available)" in llm.prompts[0]
+    assert "already used" in llm.prompts[1]
+    assert any(t["step"] == "Policy search tool" for t in r.trace)
+    assert not any("search tool" in e for e in st["recommendation"]["escalation_reasons"])
+
+
+def test_search_that_finds_nothing_new_skips_the_second_judgement(mock_llm, store, seeds):
+    case = seeds["S01"]
+    graph = build_graph(mock_llm, store, decision_logger=None)
+    first = run_to_review(graph, case, mock_llm).state
+    # Repeat the first retrieval query: its top clauses are all retrieved already
+    # (two queries x top 3 stays under the 8-clause cap), so there is nothing new.
+    queries = [first["clauses"][0]["query"]]
+    llm = ScriptedJudge(mock_llm, queries)
+    st = run_to_review(build_graph(llm, store, decision_logger=None), case, llm).state
+    assert st["tool_calls"][0]["new_clauses"] == []
+    assert st["judge_rounds"] == 1
+    assert any("search tool" in e for e in st["recommendation"]["escalation_reasons"])
+
+
+def test_tool_can_be_switched_off(mock_llm, store, seeds):
+    llm = ScriptedJudge(mock_llm, ["damage during delivery"])
+    st = run_to_review(build_graph(llm, store, decision_logger=None, max_tool_rounds=0), seeds["S01"], llm).state
+    assert st.get("tool_calls", []) == [] and st["judge_rounds"] == 1
+    assert "No tools are available" in llm.prompts[0]
+
+
+def test_no_retrieval_ablation_gives_the_judge_no_clauses(mock_llm, store, seeds):
+    graph = build_graph(mock_llm, store, decision_logger=None, use_retrieval=False)
+    st = run_to_review(graph, seeds["S01"], mock_llm).state
+    assert st["clauses"] == []
+    assert st["recommendation"]["escalate"]  # nothing to cite

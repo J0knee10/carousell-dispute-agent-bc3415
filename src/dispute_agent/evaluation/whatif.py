@@ -85,8 +85,9 @@ def run_whatif(
     case_ids: list[str] | None = None,
     llm: LLMClient | None = None,
     progress: Callable[[str], None] = print,
+    model: str | None = None,
 ) -> tuple[Path, dict]:
-    llm = llm or get_llm(provider=provider)
+    llm = llm or get_llm(provider=provider, model=model)
     by_id = cases_by_id()
     ids = case_ids or case_ids_for(split)
     cases = [by_id[i] for i in ids if check_eligibility(by_id[i]).status == "eligible"]

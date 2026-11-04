@@ -174,6 +174,10 @@ class Adjudication(BaseModel):
     confidence: float = Field(description="0 to 1: how sure you are the outcome is right")
     reasons: list[str] = Field(description="2 to 4 short reasons for the outcome")
     citations: list[str] = Field(description="Policy clause IDs that support the outcome")
+    search_policy: list[str] = Field(
+        description="Tool call: short queries for the search_policy tool when a gap depends on a policy rule that none "
+        "of the clauses provided covers. Empty list when the clauses are enough or the tool is not available."
+    )
     needs_more_evidence: bool
     follow_up_questions: list[FollowUpQuestion] = Field(description="Evidence to request if needed; empty list otherwise")
     summary_for_staff: str = Field(description="One or two sentences a support agent can read first")

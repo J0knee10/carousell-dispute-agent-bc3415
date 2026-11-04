@@ -85,7 +85,24 @@ Rules:
 {DECISION_GUIDE}"""
 
 
-def judge_prompt(case: DisputeCase, claims_json: str, clauses: list[RetrievedClause], proposed_rule: str | None = None) -> str:
+SEARCH_TOOL_AVAILABLE = """\
+TOOL: search_policy (available)
+The clauses above were found by searching for each gap. If deciding a gap needs a policy rule that none of them covers, write up to {n} short search queries in search_policy (e.g. "seller sends the missing part", "damage during delivery"). The tool searches the full policy, the clauses it finds are added, and you will be asked again. If the clauses above are enough, which is the usual case, leave search_policy empty and decide now."""
+
+SEARCH_TOOL_USED = """\
+TOOL: search_policy (already used; not available again)
+Clauses found by your searches are included above. Leave search_policy empty and decide with the clauses you have."""
+
+
+def judge_prompt(
+    case: DisputeCase,
+    claims_json: str,
+    clauses: list[RetrievedClause],
+    proposed_rule: str | None = None,
+    tool: str = "none",
+    max_searches: int = 2,
+) -> str:
+    """tool: 'available' (the judge may call search_policy), 'used' (it already did) or 'none'."""
     parts = [
         render_case(case),
         "",
@@ -102,6 +119,12 @@ def judge_prompt(case: DisputeCase, claims_json: str, clauses: list[RetrievedCla
             "Carousell is testing this change. Treat it as in force; where it conflicts with the clauses above, it wins. Cite it as PROPOSED-1 when it applies.",
             proposed_rule,
         ]
+    if tool == "available":
+        parts += ["", SEARCH_TOOL_AVAILABLE.format(n=max_searches)]
+    elif tool == "used":
+        parts += ["", SEARCH_TOOL_USED]
+    else:
+        parts += ["", "No tools are available: leave search_policy empty."]
     parts += ["", "Assess each gap and recommend an outcome."]
     return "\n".join(parts)
 

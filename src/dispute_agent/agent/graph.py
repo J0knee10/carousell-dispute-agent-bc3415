@@ -1,10 +1,15 @@
 """The dispute agent as a LangGraph workflow.
 
-intake -> eligibility --(covered)--> claim matching -> policy retrieval -> judgement -> review gate -> staff review -> message drafts
+intake -> eligibility --(covered)--> claim matching -> policy retrieval -> judgement <-> search_policy tool
+                      |                                                       |
+                      |                                                       v
+                      |                                          confidence and citation check -> staff review -> message drafts
                       \\--(not covered / procedural / out of scope)--> rule-based recommendation -> staff review
 
-The graph pauses at staff review (a LangGraph interrupt) until a person approves
-or overrides the recommendation.
+The judge can call the search_policy tool when the clauses it was given do not
+cover a gap; the graph then loops back to the judge with the new clauses (at
+most `agent.max_tool_rounds` times). The graph pauses at staff review (a
+LangGraph interrupt) until a person approves or overrides the recommendation.
 """
 
 from __future__ import annotations
@@ -60,6 +65,9 @@ class AgentState(TypedDict, total=False):
     decision: dict
     messages: dict
     proposed_rule: str
+    judge_rounds: int
+    search_found: int
+    tool_calls: Annotated[list[dict], operator.add]
     trace: Annotated[list[dict], operator.add]
 
 
@@ -79,9 +87,17 @@ def retrieve_for_gaps(store: PolicyStore, reason: str, claims: ClaimMatchResult,
     return list(seen.values())[:max_clauses]
 
 
-def review_gate(adj: Adjudication, eligibility: EligibilityResult, retrieved_ids: set[str], threshold: float) -> Recommendation:
+def review_gate(
+    adj: Adjudication,
+    eligibility: EligibilityResult,
+    retrieved_ids: set[str],
+    threshold: float,
+    wanted_more_policy: bool = False,
+) -> Recommendation:
     """Code checks on the LLM's judgement: confidence, evidence, citations and consistency."""
     reasons = []
+    if wanted_more_policy:
+        reasons.append("The judge asked for policy the search tool could not supply")
     allowed = retrieved_ids | {"PROPOSED-1"}
     citations = [c for c in adj.citations if c in allowed]
     invented = sorted(set(adj.citations) - allowed)
@@ -156,10 +172,17 @@ def build_graph(
     draft_messages: bool = True,
     confidence_threshold: float | None = None,
     decision_logger: Callable[[dict], None] | None = log_decision,
+    use_retrieval: bool = True,
+    max_tool_rounds: int | None = None,
 ):
+    """use_retrieval=False is the no-RAG ablation: the judge gets no policy clauses and no tool."""
     cfg = load_config()
     threshold = confidence_threshold if confidence_threshold is not None else cfg["agent"]["confidence_threshold"]
     max_clauses = cfg["rag"]["max_clauses"]
+    tool_rounds = cfg["agent"].get("max_tool_rounds", 1) if max_tool_rounds is None else max_tool_rounds
+    if not use_retrieval:
+        tool_rounds = 0
+    max_searches = cfg["agent"].get("max_searches_per_round", 2)
 
     def intake(state: AgentState) -> AgentState:
         t = time.monotonic()
@@ -193,6 +216,8 @@ def build_graph(
 
     def retrieve(state: AgentState) -> AgentState:
         t = time.monotonic()
+        if not use_retrieval:
+            return {"clauses": [], "trace": _step("Policy retrieval", t, "Switched off (no-RAG ablation)")}
         claims_obj = ClaimMatchResult.model_validate(state["claims"])
         found = retrieve_for_gaps(store, state["case"]["dispute"]["reason"], claims_obj, max_clauses)
         return {"clauses": [c.model_dump() for c in found], "trace": _step(
@@ -203,23 +228,66 @@ def build_graph(
         case = DisputeCase.model_validate(state["case"])
         clauses = [RetrievedClause.model_validate(c) for c in state["clauses"]]
         proposed = state.get("proposed_rule")
+        rounds = state.get("judge_rounds", 0)
+        if tool_rounds == 0:
+            tool = "none"
+        else:
+            tool = "available" if rounds < tool_rounds else "used"
         result = llm.generate(
             task="whatif_adjudication" if proposed else "adjudication",
             system=prompts.JUDGE_SYSTEM,
-            prompt=prompts.judge_prompt(case, json.dumps(state["claims"]["gaps"], indent=1), clauses, proposed),
+            prompt=prompts.judge_prompt(
+                case, json.dumps(state["claims"]["gaps"], indent=1), clauses, proposed, tool, max_searches
+            ),
             schema=Adjudication,
-            hints={"case": state["case"], "gaps": state["claims"]["gaps"], "clauses": state["clauses"], "proposed_rule": proposed},
+            hints={"case": state["case"], "gaps": state["claims"]["gaps"], "clauses": state["clauses"],
+                   "proposed_rule": proposed, "tool": tool},
         )
-        return {"adjudication": result.model_dump(), "trace": _step(
-            "Policy judgement", t, f"{result.outcome} (confidence {result.confidence:.2f})")}
+        summary = f"{result.outcome} (confidence {result.confidence:.2f})"
+        if result.search_policy and tool == "available":
+            summary += "; calls search_policy: " + "; ".join(f"'{q}'" for q in result.search_policy[:max_searches])
+        return {"adjudication": result.model_dump(), "judge_rounds": rounds + 1, "trace": _step("Policy judgement", t, summary)}
+
+    def after_judge(state: AgentState) -> str:
+        wants = bool(state["adjudication"].get("search_policy"))
+        return "search" if wants and state.get("judge_rounds", 0) <= tool_rounds else "gate"
+
+    def search(state: AgentState) -> AgentState:
+        """The search_policy tool: run the judge's queries and add clauses it has not seen."""
+        t = time.monotonic()
+        queries = state["adjudication"]["search_policy"][:max_searches]
+        known = {c["clause_id"] for c in state["clauses"]}
+        found: list[dict] = []
+        calls = []
+        for q in queries:
+            new = [c for c in store.retrieve(q) if c.clause_id not in known]
+            known |= {c.clause_id for c in new}
+            found += [c.model_dump() for c in new]
+            calls.append({"tool": "search_policy", "query": q, "new_clauses": [c.clause_id for c in new]})
+        summary = "; ".join(f"'{c['query']}' -> {', '.join(c['new_clauses']) or 'nothing new'}" for c in calls)
+        return {
+            "clauses": state["clauses"] + found,
+            "search_found": len(found),
+            "tool_calls": calls,
+            "trace": _step("Policy search tool", t, summary),
+        }
+
+    def after_search(state: AgentState) -> str:
+        # Nothing new found: the judgement already made stands, with no second LLM call.
+        return "judge" if state.get("search_found") else "gate"
 
     def gate(state: AgentState) -> AgentState:
         t = time.monotonic()
+        adj = Adjudication.model_validate(state["adjudication"])
+        # The final judgement still asks for more policy: the tool was used up,
+        # or its search found nothing new.
+        wanted_more = bool(adj.search_policy) and tool_rounds > 0
         rec = review_gate(
-            Adjudication.model_validate(state["adjudication"]),
+            adj,
             EligibilityResult.model_validate(state["eligibility"]),
             {c["clause_id"] for c in state["clauses"]},
             threshold,
+            wanted_more_policy=wanted_more,
         )
         summary = "Escalate: " + "; ".join(rec.escalation_reasons) if rec.escalate else "Confident; standard review"
         return {"recommendation": rec.model_dump(), "trace": _step("Confidence and citation check", t, summary)}
@@ -279,6 +347,7 @@ def build_graph(
     g.add_node("claims", claims)
     g.add_node("retrieve", retrieve)
     g.add_node("judge", judge)
+    g.add_node("search", search)
     g.add_node("gate", gate)
     g.add_node("staff_review", staff_review)
     g.add_edge(START, "intake")
@@ -286,7 +355,8 @@ def build_graph(
     g.add_conditional_edges("eligibility", route, {"claims": "claims", "rules": "rules"})
     g.add_edge("claims", "retrieve")
     g.add_edge("retrieve", "judge")
-    g.add_edge("judge", "gate")
+    g.add_conditional_edges("judge", after_judge, {"search": "search", "gate": "gate"})
+    g.add_conditional_edges("search", after_search, {"judge": "judge", "gate": "gate"})
     g.add_edge("gate", "staff_review")
     g.add_edge("rules", "staff_review")
     if draft_messages:
@@ -305,6 +375,7 @@ NODE_LABELS = {
     "claims": "Claim matching",
     "retrieve": "Policy retrieval",
     "judge": "Policy judgement",
+    "search": "Policy search tool",
     "gate": "Confidence and citation check",
     "staff_review": "Staff decision",
     "messages": "Message drafts",
