@@ -1,0 +1,579 @@
+case_id,predicted_outcome,reasons,clause_id,clause_section,clause_text,supports,claude_supports,claude_note
+G006,decline,"The listing explicitly offered only the t-shirt, not a set containing leggings. | The buyer's claim is based on an assumption rather than what was stated in the description. | Transactions are not eligible for a refund when buyers claim for something not in the original listing.",BPR-04,Transactions are not eligible for refund (cont.),"Buyers make a claim for something that is not in the original listing/what was agreed upon
+    Buyers raise an issue after the dispute window
+    The item gets stolen/damaged post successful delivery
+        It is the buyer’s responsibility to ensure that the receiving address can receive the item securely
+        Parcel and packaging that has creases, lines, wrinkles or dents as a result of shipping or tempered of packaging upon delivery will not be covered unless the item itself is damaged
+    The items are reported for surface wear and tear that does not affect functionality
+        For “Brand New” items, transactions will be reviewed on a case-by-case basis
+    The items fall under our exclusion list
+    The items are sold in gift bundles such as hampers, goodie bags and mystery boxes unless the constituents in the bundles are clearly described in the listing.",,Y,Claim for something not in the original listing: supports the decline.
+G008,full_refund_with_return,"The listing explicitly stated that 3 rare metal ram head knobs were included. | The buyer received the item with empty holes and no knobs, which constitutes an incomplete item with missing parts. | The buyer's proposed resolution for an incomplete item is a return and refund, which aligns with policy provisions for missing essential parts.",BPR-02,Eligibility > Dispute Reason,"Under the Buyer Protection and Certified refund policy, buyers may raise a dispute for:
+    Item(s) not received
+    Incomplete item(s)
+    The item is significantly not as described
+    Examples of cases where the item is significantly not as described
+        The item is of a different variation, such as size, colour, model or version
+        The item is incomplete or has missing parts
+        The item is damaged or has one or more undisclosed defect(s)
+        The item received deviates extensively from the listing photo",,Y,
+G008,full_refund_with_return,"The listing explicitly stated that 3 rare metal ram head knobs were included. | The buyer received the item with empty holes and no knobs, which constitutes an incomplete item with missing parts. | The buyer's proposed resolution for an incomplete item is a return and refund, which aligns with policy provisions for missing essential parts.",DPO-08,Incomplete items,"Subject to Carousell’s determination:
+    the seller may be requested to deliver to the buyer the missing part(s) or such other actions as may be required to make the item or order whole; or
+    it may prescribe a refund (in full or in part) or return and refund (in full or in part).
+For the above-stated scenarios, sellers will be responsible for and requested to cover the additional shipping costs, to be paid to the buyer directly.
+[Item not received]
+Buyer Protection does not cover non-delivery for orders with untracked mail as the method of delivery. To claim for non-delivery of orders, Buyers must opt for tracked delivery.",,Y,
+G008,full_refund_with_return,"The listing explicitly stated that 3 rare metal ram head knobs were included. | The buyer received the item with empty holes and no knobs, which constitutes an incomplete item with missing parts. | The buyer's proposed resolution for an incomplete item is a return and refund, which aligns with policy provisions for missing essential parts.",DPO-02,Dispute Request,"After the buyer has selected the reason for the dispute, the buyer may
+    request a full refund for items that are not received, or
+    propose a resolution outcome for items that are significantly not as described or incomplete in the form of a (i) return and refund, or (ii) partial refund of a single item without return,
+(each a “Dispute Request”).",,Y,Return and refund is a resolution the policy allows for an incomplete item.
+G013,decline,The listing description explicitly stated the item was sold without a box. | The buyer received exactly what was described in the listing. | Claims about items or parts clearly excluded in the listing are not covered as significant gaps.,BPR-03,Transactions are not eligible for refund,"An item that is materially similar with subjective and non-significant variations from the seller’s listing and description will not be accepted. This includes:
+    ✘   Item with signs of wear but was correctly listed as being in used condition
+    ✘  Non-significant variations, including quality, for example:
+        Item listed as light pink but received as rose pink
+        Item listed as palm-sized but received at 15cm
+        Item listed as 8/10 but receiver claims it is more of a 6/10
+    Buyers change their mind about the item
+    Buyers place the wrong order by mistake
+    Buyers have received a partial or full refund from a separate resolution process not facilitated by Carousell
+    Buyers provide an incorrect or invalid delivery address
+    Buyers receive the item after the suggested delivery date",,N,BPR-03 covers disclosed wear and subjective variations; a claim for a box the listing said was not included is BPR-04 (claim for something not in the listing).
+G018,full_refund_with_return,"The item condition is significantly worse than described, featuring broken caps, stains, and residue on a product sold as brand new. | One of the tubes is only half full, deviating from the promised 1.7 oz volume per tube. | Clear photographic evidence provided by the buyer supports the significant discrepancy from the listing description.",BPR-02,Eligibility > Dispute Reason,"Under the Buyer Protection and Certified refund policy, buyers may raise a dispute for:
+    Item(s) not received
+    Incomplete item(s)
+    The item is significantly not as described
+    Examples of cases where the item is significantly not as described
+        The item is of a different variation, such as size, colour, model or version
+        The item is incomplete or has missing parts
+        The item is damaged or has one or more undisclosed defect(s)
+        The item received deviates extensively from the listing photo",,Y,
+G018,full_refund_with_return,"The item condition is significantly worse than described, featuring broken caps, stains, and residue on a product sold as brand new. | One of the tubes is only half full, deviating from the promised 1.7 oz volume per tube. | Clear photographic evidence provided by the buyer supports the significant discrepancy from the listing description.",DPO-02,Dispute Request,"After the buyer has selected the reason for the dispute, the buyer may
+    request a full refund for items that are not received, or
+    propose a resolution outcome for items that are significantly not as described or incomplete in the form of a (i) return and refund, or (ii) partial refund of a single item without return,
+(each a “Dispute Request”).",,Y,Return and refund is a resolution the policy allows for an item not as described.
+G019,decline,The seller clearly disclosed the condition and the glued legs in the listing description. | The buyer received the item as described and simply changed their mind after realizing the limitations of the glued joints. | Disclosed flaws on heavily used items do not qualify as significantly not as described under policy.,BPR-03,Transactions are not eligible for refund,"An item that is materially similar with subjective and non-significant variations from the seller’s listing and description will not be accepted. This includes:
+    ✘   Item with signs of wear but was correctly listed as being in used condition
+    ✘  Non-significant variations, including quality, for example:
+        Item listed as light pink but received as rose pink
+        Item listed as palm-sized but received at 15cm
+        Item listed as 8/10 but receiver claims it is more of a 6/10
+    Buyers change their mind about the item
+    Buyers place the wrong order by mistake
+    Buyers have received a partial or full refund from a separate resolution process not facilitated by Carousell
+    Buyers provide an incorrect or invalid delivery address
+    Buyers receive the item after the suggested delivery date",,Y,
+G023,full_refund_with_return,The buyer received a size 9 pair of sandals instead of the advertised size 11. | The seller explicitly admitted to packing the wrong item by mistake. | A wrong size variation is a significant deviation covered under the policy.,BPR-02,Eligibility > Dispute Reason,"Under the Buyer Protection and Certified refund policy, buyers may raise a dispute for:
+    Item(s) not received
+    Incomplete item(s)
+    The item is significantly not as described
+    Examples of cases where the item is significantly not as described
+        The item is of a different variation, such as size, colour, model or version
+        The item is incomplete or has missing parts
+        The item is damaged or has one or more undisclosed defect(s)
+        The item received deviates extensively from the listing photo",,Y,
+G023,full_refund_with_return,The buyer received a size 9 pair of sandals instead of the advertised size 11. | The seller explicitly admitted to packing the wrong item by mistake. | A wrong size variation is a significant deviation covered under the policy.,WBP-04,For Buyers,"When you pay via the ‘Buy’ Button, Buyer Protection is applied to your order. It helps ensure safe payments, access to customer support, and gives you the right to claim a refund if your item doesn't arrive or is significantly not as described.
+Listings with the ‘Buy’ button enabled will be applicable for Buyer Protection if you make payment through the Carousell-supported payment methods. Currently, we accept PayNow, DBS PayLah!, Visa/ Mastercard Debit/Credit Cards, Atome and PayLater by Grab*
+*only applicable for selected listings
+With Buyer Protection, you will be able to raise a dispute and it will cover you for the below scenarios:
+    Item Not Received: Covered only if tracked shipping was used. Buyer Protection does not cover non-delivery for untracked mail.
+    Significantly Not As Described (SNAD): An item qualifies for a refund if:",,Y,"Buyer Protection covers items significantly not as described, such as a wrong size."
+G025,full_refund_with_return,The item was listed as like new but arrived with undisclosed yellow stains and loose elastic. | These flaws contradict the stated condition of the listing. | The buyer provided photographic evidence supporting the SNAD claim.,BPR-02,Eligibility > Dispute Reason,"Under the Buyer Protection and Certified refund policy, buyers may raise a dispute for:
+    Item(s) not received
+    Incomplete item(s)
+    The item is significantly not as described
+    Examples of cases where the item is significantly not as described
+        The item is of a different variation, such as size, colour, model or version
+        The item is incomplete or has missing parts
+        The item is damaged or has one or more undisclosed defect(s)
+        The item received deviates extensively from the listing photo",,Y,
+G025,full_refund_with_return,The item was listed as like new but arrived with undisclosed yellow stains and loose elastic. | These flaws contradict the stated condition of the listing. | The buyer provided photographic evidence supporting the SNAD claim.,WBP-05,For Buyers (cont.),"It is a different variation (size, color, model, or version).
+        It has incomplete or missing parts compared to the listing description.
+        For event tickets, it is a different variation in event, date, or seating.
+        The item's condition differs from the listing.
+        The item is damaged or has undisclosed defects affecting its functionality.
+[📝 How to Raise a Dispute]
+Simply raise a dispute/ return request from your Order Details Page in app and our dedicated Support Team will get back to you within 24 hours.
+Updated as of Apr 2026
+Buyer Protection is currently available in the selected categories which you can list with the ‘Buy’ button.",,Y,Condition differs from the listing: covered.
+G030,full_refund_with_return,"The item received is a different size (size L) than what was listed and purchased (size M). | The seller admitted to mixing up the items and sending the wrong size. | A different variation in size is classified as a significant discrepancy under the Buyer Protection policy, qualifying the buyer for a full refund upon returning the item.",BPR-02,Eligibility > Dispute Reason,"Under the Buyer Protection and Certified refund policy, buyers may raise a dispute for:
+    Item(s) not received
+    Incomplete item(s)
+    The item is significantly not as described
+    Examples of cases where the item is significantly not as described
+        The item is of a different variation, such as size, colour, model or version
+        The item is incomplete or has missing parts
+        The item is damaged or has one or more undisclosed defect(s)
+        The item received deviates extensively from the listing photo",,Y,
+G031,full_refund_with_return,The item was listed as like new but arrived with a significant tear at the shoulder seam. | Undisclosed damage on a like new item makes it significantly not as described. | The buyer has provided photographic evidence of the defect.,BPR-02,Eligibility > Dispute Reason,"Under the Buyer Protection and Certified refund policy, buyers may raise a dispute for:
+    Item(s) not received
+    Incomplete item(s)
+    The item is significantly not as described
+    Examples of cases where the item is significantly not as described
+        The item is of a different variation, such as size, colour, model or version
+        The item is incomplete or has missing parts
+        The item is damaged or has one or more undisclosed defect(s)
+        The item received deviates extensively from the listing photo",,Y,
+G031,full_refund_with_return,The item was listed as like new but arrived with a significant tear at the shoulder seam. | Undisclosed damage on a like new item makes it significantly not as described. | The buyer has provided photographic evidence of the defect.,WBP-04,For Buyers,"When you pay via the ‘Buy’ Button, Buyer Protection is applied to your order. It helps ensure safe payments, access to customer support, and gives you the right to claim a refund if your item doesn't arrive or is significantly not as described.
+Listings with the ‘Buy’ button enabled will be applicable for Buyer Protection if you make payment through the Carousell-supported payment methods. Currently, we accept PayNow, DBS PayLah!, Visa/ Mastercard Debit/Credit Cards, Atome and PayLater by Grab*
+*only applicable for selected listings
+With Buyer Protection, you will be able to raise a dispute and it will cover you for the below scenarios:
+    Item Not Received: Covered only if tracked shipping was used. Buyer Protection does not cover non-delivery for untracked mail.
+    Significantly Not As Described (SNAD): An item qualifies for a refund if:",,Y,"Covers items significantly not as described, such as undisclosed damage."
+G041,decline,The seller's listing description did not promise or mention an original box. | Buyer protection does not cover claims about things the listing never promised. | The buyer received the exact item described in the listing.,BPR-03,Transactions are not eligible for refund,"An item that is materially similar with subjective and non-significant variations from the seller’s listing and description will not be accepted. This includes:
+    ✘   Item with signs of wear but was correctly listed as being in used condition
+    ✘  Non-significant variations, including quality, for example:
+        Item listed as light pink but received as rose pink
+        Item listed as palm-sized but received at 15cm
+        Item listed as 8/10 but receiver claims it is more of a 6/10
+    Buyers change their mind about the item
+    Buyers place the wrong order by mistake
+    Buyers have received a partial or full refund from a separate resolution process not facilitated by Carousell
+    Buyers provide an incorrect or invalid delivery address
+    Buyers receive the item after the suggested delivery date",,N,BPR-03 covers disclosed wear and subjective variations; a box the listing never promised is BPR-04.
+G042,decline,The damage to the casing occurred post-delivery after the buyer dropped the item on the floor. | The seller provided clear video evidence showing the item was without cracks when packed. | Policy explicitly states that damage occurring after successful delivery is not covered.,BPR-04,Transactions are not eligible for refund (cont.),"Buyers make a claim for something that is not in the original listing/what was agreed upon
+    Buyers raise an issue after the dispute window
+    The item gets stolen/damaged post successful delivery
+        It is the buyer’s responsibility to ensure that the receiving address can receive the item securely
+        Parcel and packaging that has creases, lines, wrinkles or dents as a result of shipping or tempered of packaging upon delivery will not be covered unless the item itself is damaged
+    The items are reported for surface wear and tear that does not affect functionality
+        For “Brand New” items, transactions will be reviewed on a case-by-case basis
+    The items fall under our exclusion list
+    The items are sold in gift bundles such as hampers, goodie bags and mystery boxes unless the constituents in the bundles are clearly described in the listing.",,Y,
+G043,partial_refund,"The listing explicitly stated that an additional charger was included. | The buyer received only one charger instead of the promised two during meetup. | Since the core item (Fitbit tracker) is functional and as described, a partial refund is more suitable than a full return.",BPR-02,Eligibility > Dispute Reason,"Under the Buyer Protection and Certified refund policy, buyers may raise a dispute for:
+    Item(s) not received
+    Incomplete item(s)
+    The item is significantly not as described
+    Examples of cases where the item is significantly not as described
+        The item is of a different variation, such as size, colour, model or version
+        The item is incomplete or has missing parts
+        The item is damaged or has one or more undisclosed defect(s)
+        The item received deviates extensively from the listing photo",,Y,
+G043,partial_refund,"The listing explicitly stated that an additional charger was included. | The buyer received only one charger instead of the promised two during meetup. | Since the core item (Fitbit tracker) is functional and as described, a partial refund is more suitable than a full return.",DPO-08,Incomplete items,"Subject to Carousell’s determination:
+    the seller may be requested to deliver to the buyer the missing part(s) or such other actions as may be required to make the item or order whole; or
+    it may prescribe a refund (in full or in part) or return and refund (in full or in part).
+For the above-stated scenarios, sellers will be responsible for and requested to cover the additional shipping costs, to be paid to the buyer directly.
+[Item not received]
+Buyer Protection does not cover non-delivery for orders with untracked mail as the method of delivery. To claim for non-delivery of orders, Buyers must opt for tracked delivery.",,Y,
+G043,partial_refund,"The listing explicitly stated that an additional charger was included. | The buyer received only one charger instead of the promised two during meetup. | Since the core item (Fitbit tracker) is functional and as described, a partial refund is more suitable than a full return.",DPO-02,Dispute Request,"After the buyer has selected the reason for the dispute, the buyer may
+    request a full refund for items that are not received, or
+    propose a resolution outcome for items that are significantly not as described or incomplete in the form of a (i) return and refund, or (ii) partial refund of a single item without return,
+(each a “Dispute Request”).",,Y,Establishes a partial refund without return as an allowed outcome.
+G046,full_refund_with_return,The item was listed as brand new but arrived with significant undisclosed defects including stains and fraying. | Undisclosed flaws on an item listed as brand new contradict the listing description and qualify as significantly not as described. | The buyer has provided clear photographic evidence of the damage supporting the dispute.,BPR-02,Eligibility > Dispute Reason,"Under the Buyer Protection and Certified refund policy, buyers may raise a dispute for:
+    Item(s) not received
+    Incomplete item(s)
+    The item is significantly not as described
+    Examples of cases where the item is significantly not as described
+        The item is of a different variation, such as size, colour, model or version
+        The item is incomplete or has missing parts
+        The item is damaged or has one or more undisclosed defect(s)
+        The item received deviates extensively from the listing photo",,Y,
+G051,full_refund_with_return,"The seller admitted to sending the wrong size due to a mix-up. | A different size variation is classified as significantly not as described under policy. | The buyer requested a return and refund, which is appropriate for a wrong variation.",BPR-02,Eligibility > Dispute Reason,"Under the Buyer Protection and Certified refund policy, buyers may raise a dispute for:
+    Item(s) not received
+    Incomplete item(s)
+    The item is significantly not as described
+    Examples of cases where the item is significantly not as described
+        The item is of a different variation, such as size, colour, model or version
+        The item is incomplete or has missing parts
+        The item is damaged or has one or more undisclosed defect(s)
+        The item received deviates extensively from the listing photo",,Y,
+G051,full_refund_with_return,"The seller admitted to sending the wrong size due to a mix-up. | A different size variation is classified as significantly not as described under policy. | The buyer requested a return and refund, which is appropriate for a wrong variation.",WBP-04,For Buyers,"When you pay via the ‘Buy’ Button, Buyer Protection is applied to your order. It helps ensure safe payments, access to customer support, and gives you the right to claim a refund if your item doesn't arrive or is significantly not as described.
+Listings with the ‘Buy’ button enabled will be applicable for Buyer Protection if you make payment through the Carousell-supported payment methods. Currently, we accept PayNow, DBS PayLah!, Visa/ Mastercard Debit/Credit Cards, Atome and PayLater by Grab*
+*only applicable for selected listings
+With Buyer Protection, you will be able to raise a dispute and it will cover you for the below scenarios:
+    Item Not Received: Covered only if tracked shipping was used. Buyer Protection does not cover non-delivery for untracked mail.
+    Significantly Not As Described (SNAD): An item qualifies for a refund if:",,Y,Covers a different size variation.
+G054,decline,The seller clearly disclosed the spots on the pink shirt in the item description. | The item condition matches the lightly used condition stated in the listing. | Subjective dissatisfaction with used clothing quality does not qualify as significantly not as described.,BPR-03,Transactions are not eligible for refund,"An item that is materially similar with subjective and non-significant variations from the seller’s listing and description will not be accepted. This includes:
+    ✘   Item with signs of wear but was correctly listed as being in used condition
+    ✘  Non-significant variations, including quality, for example:
+        Item listed as light pink but received as rose pink
+        Item listed as palm-sized but received at 15cm
+        Item listed as 8/10 but receiver claims it is more of a 6/10
+    Buyers change their mind about the item
+    Buyers place the wrong order by mistake
+    Buyers have received a partial or full refund from a separate resolution process not facilitated by Carousell
+    Buyers provide an incorrect or invalid delivery address
+    Buyers receive the item after the suggested delivery date",,Y,
+G059,decline,The buyer and seller provide conflicting evidence regarding when the major tear occurred. | The seller provided a pre-handover photo showing the poster intact before meetup delivery. | Key evidence regarding unboxing or handling immediately after meetup is missing to verify responsibility for the damage.,RRR-03,Raise to support team,"Sellers are required to furnish more details as evidence to counter buyer’s claims for dispute. The evidence submitted can be in the form of (and not limited to);
+    Photos and condition of the item from seller at the point of shipment
+        Seller’s are advised to test the item before delivery and to keep the evidence as proof of the item’s functionality. Carousell may use this as proof in cases where the item is claimed to be not working /functionally damaged.
+    Proof of adequate packaging measures taken by the seller at the point of shipment
+    Photos of the condition of the received item from buyer
+    Proof of item in misrepresented working condition (if applicable)",,Y,"Seller evidence at shipment counters the buyer's claim, which is what the decline rests on."
+G061,decline,The buyer's concerns about the colour are subjective and non-significant. | Signs of wear are consistent with the correctly stated used condition in the listing. | Transactions with signs of wear matching a correctly stated used condition are not eligible for a refund.,BPR-03,Transactions are not eligible for refund,"An item that is materially similar with subjective and non-significant variations from the seller’s listing and description will not be accepted. This includes:
+    ✘   Item with signs of wear but was correctly listed as being in used condition
+    ✘  Non-significant variations, including quality, for example:
+        Item listed as light pink but received as rose pink
+        Item listed as palm-sized but received at 15cm
+        Item listed as 8/10 but receiver claims it is more of a 6/10
+    Buyers change their mind about the item
+    Buyers place the wrong order by mistake
+    Buyers have received a partial or full refund from a separate resolution process not facilitated by Carousell
+    Buyers provide an incorrect or invalid delivery address
+    Buyers receive the item after the suggested delivery date",,Y,
+G065,full_refund_with_return,"The seller admitted to sending the wrong size variation by mistake. | Receiving a different size variation constitutes a significantly not as described case under policy. | The buyer requested a return and refund, which aligns with the policy for major variation mismatches.",BPR-02,Eligibility > Dispute Reason,"Under the Buyer Protection and Certified refund policy, buyers may raise a dispute for:
+    Item(s) not received
+    Incomplete item(s)
+    The item is significantly not as described
+    Examples of cases where the item is significantly not as described
+        The item is of a different variation, such as size, colour, model or version
+        The item is incomplete or has missing parts
+        The item is damaged or has one or more undisclosed defect(s)
+        The item received deviates extensively from the listing photo",,Y,
+G070,decline,"The damage to the rooster mold was caused by the buyer after delivery, as admitted in the chat. | Post-delivery damage caused by the buyer is excluded from Buyer Protection coverage. | The seller provided evidence showing the item was undamaged during the meet-up.",BPR-04,Transactions are not eligible for refund (cont.),"Buyers make a claim for something that is not in the original listing/what was agreed upon
+    Buyers raise an issue after the dispute window
+    The item gets stolen/damaged post successful delivery
+        It is the buyer’s responsibility to ensure that the receiving address can receive the item securely
+        Parcel and packaging that has creases, lines, wrinkles or dents as a result of shipping or tempered of packaging upon delivery will not be covered unless the item itself is damaged
+    The items are reported for surface wear and tear that does not affect functionality
+        For “Brand New” items, transactions will be reviewed on a case-by-case basis
+    The items fall under our exclusion list
+    The items are sold in gift bundles such as hampers, goodie bags and mystery boxes unless the constituents in the bundles are clearly described in the listing.",,Y,
+G076,decline,The listing description made no mention of a storage bag or pouches. | Missing items not promised or stated in the listing are not considered covered incomplete items. | The buyer assumed inclusions based on expectations rather than listing facts.,BPR-02,Eligibility > Dispute Reason,"Under the Buyer Protection and Certified refund policy, buyers may raise a dispute for:
+    Item(s) not received
+    Incomplete item(s)
+    The item is significantly not as described
+    Examples of cases where the item is significantly not as described
+        The item is of a different variation, such as size, colour, model or version
+        The item is incomplete or has missing parts
+        The item is damaged or has one or more undisclosed defect(s)
+        The item received deviates extensively from the listing photo",,N,"Lists the grounds for a valid dispute, so it argues for the buyer; it does not support a decline."
+G076,decline,The listing description made no mention of a storage bag or pouches. | Missing items not promised or stated in the listing are not considered covered incomplete items. | The buyer assumed inclusions based on expectations rather than listing facts.,WBP-05,For Buyers (cont.),"It is a different variation (size, color, model, or version).
+        It has incomplete or missing parts compared to the listing description.
+        For event tickets, it is a different variation in event, date, or seating.
+        The item's condition differs from the listing.
+        The item is damaged or has undisclosed defects affecting its functionality.
+[📝 How to Raise a Dispute]
+Simply raise a dispute/ return request from your Order Details Page in app and our dedicated Support Team will get back to you within 24 hours.
+Updated as of Apr 2026
+Buyer Protection is currently available in the selected categories which you can list with the ‘Buy’ button.",,N,Lists when an item qualifies for a refund; it does not support a decline.
+G081,full_refund_with_return,"The item was listed as brand new, but arrived with significant packaging stains and a cracked plastic casing. | A brand-new item having physical damage and stains contradicts the listing description and qualifies as significantly not as described. | The buyer has provided clear photographic evidence of the damage and stains.",BPR-02,Eligibility > Dispute Reason,"Under the Buyer Protection and Certified refund policy, buyers may raise a dispute for:
+    Item(s) not received
+    Incomplete item(s)
+    The item is significantly not as described
+    Examples of cases where the item is significantly not as described
+        The item is of a different variation, such as size, colour, model or version
+        The item is incomplete or has missing parts
+        The item is damaged or has one or more undisclosed defect(s)
+        The item received deviates extensively from the listing photo",,Y,
+G081,full_refund_with_return,"The item was listed as brand new, but arrived with significant packaging stains and a cracked plastic casing. | A brand-new item having physical damage and stains contradicts the listing description and qualifies as significantly not as described. | The buyer has provided clear photographic evidence of the damage and stains.",WBP-05,For Buyers (cont.),"It is a different variation (size, color, model, or version).
+        It has incomplete or missing parts compared to the listing description.
+        For event tickets, it is a different variation in event, date, or seating.
+        The item's condition differs from the listing.
+        The item is damaged or has undisclosed defects affecting its functionality.
+[📝 How to Raise a Dispute]
+Simply raise a dispute/ return request from your Order Details Page in app and our dedicated Support Team will get back to you within 24 hours.
+Updated as of Apr 2026
+Buyer Protection is currently available in the selected categories which you can list with the ‘Buy’ button.",,Y,Damage and condition differing from a brand-new listing: covered.
+G084,decline,"The buyer admitted in the chat that they accidentally dropped the soap, causing the breakage. | Damage occurring post delivery is explicitly excluded from coverage under the Buyer Protection policy. | The seller provided evidence that the items were securely packed and shipped in good condition.",BPR-04,Transactions are not eligible for refund (cont.),"Buyers make a claim for something that is not in the original listing/what was agreed upon
+    Buyers raise an issue after the dispute window
+    The item gets stolen/damaged post successful delivery
+        It is the buyer’s responsibility to ensure that the receiving address can receive the item securely
+        Parcel and packaging that has creases, lines, wrinkles or dents as a result of shipping or tempered of packaging upon delivery will not be covered unless the item itself is damaged
+    The items are reported for surface wear and tear that does not affect functionality
+        For “Brand New” items, transactions will be reviewed on a case-by-case basis
+    The items fall under our exclusion list
+    The items are sold in gift bundles such as hampers, goodie bags and mystery boxes unless the constituents in the bundles are clearly described in the listing.",,Y,
+G088,full_refund_with_return,"The item condition significantly differs from the 'like new' and 'great condition' claims in the listing. | The buyer provided clear photographic evidence of undisclosed defects, including a broken hinge and heavy stains. | The seller's pre-shipment photo only shows wrapped items and does not disprove the specific damages reported.",BPR-02,Eligibility > Dispute Reason,"Under the Buyer Protection and Certified refund policy, buyers may raise a dispute for:
+    Item(s) not received
+    Incomplete item(s)
+    The item is significantly not as described
+    Examples of cases where the item is significantly not as described
+        The item is of a different variation, such as size, colour, model or version
+        The item is incomplete or has missing parts
+        The item is damaged or has one or more undisclosed defect(s)
+        The item received deviates extensively from the listing photo",,Y,
+G088,full_refund_with_return,"The item condition significantly differs from the 'like new' and 'great condition' claims in the listing. | The buyer provided clear photographic evidence of undisclosed defects, including a broken hinge and heavy stains. | The seller's pre-shipment photo only shows wrapped items and does not disprove the specific damages reported.",WBP-05,For Buyers (cont.),"It is a different variation (size, color, model, or version).
+        It has incomplete or missing parts compared to the listing description.
+        For event tickets, it is a different variation in event, date, or seating.
+        The item's condition differs from the listing.
+        The item is damaged or has undisclosed defects affecting its functionality.
+[📝 How to Raise a Dispute]
+Simply raise a dispute/ return request from your Order Details Page in app and our dedicated Support Team will get back to you within 24 hours.
+Updated as of Apr 2026
+Buyer Protection is currently available in the selected categories which you can list with the ‘Buy’ button.",,Y,
+G099,partial_refund,"The listing explicitly promised a usb cable which was missing upon receipt, making the item incomplete. | The speaker itself is fully functional and as described. | A partial refund is appropriate as the core item is usable and mostly as described while missing a minor accessory.",BPR-02,Eligibility > Dispute Reason,"Under the Buyer Protection and Certified refund policy, buyers may raise a dispute for:
+    Item(s) not received
+    Incomplete item(s)
+    The item is significantly not as described
+    Examples of cases where the item is significantly not as described
+        The item is of a different variation, such as size, colour, model or version
+        The item is incomplete or has missing parts
+        The item is damaged or has one or more undisclosed defect(s)
+        The item received deviates extensively from the listing photo",,Y,
+G099,partial_refund,"The listing explicitly promised a usb cable which was missing upon receipt, making the item incomplete. | The speaker itself is fully functional and as described. | A partial refund is appropriate as the core item is usable and mostly as described while missing a minor accessory.",DPO-08,Incomplete items,"Subject to Carousell’s determination:
+    the seller may be requested to deliver to the buyer the missing part(s) or such other actions as may be required to make the item or order whole; or
+    it may prescribe a refund (in full or in part) or return and refund (in full or in part).
+For the above-stated scenarios, sellers will be responsible for and requested to cover the additional shipping costs, to be paid to the buyer directly.
+[Item not received]
+Buyer Protection does not cover non-delivery for orders with untracked mail as the method of delivery. To claim for non-delivery of orders, Buyers must opt for tracked delivery.",,Y,
+G099,partial_refund,"The listing explicitly promised a usb cable which was missing upon receipt, making the item incomplete. | The speaker itself is fully functional and as described. | A partial refund is appropriate as the core item is usable and mostly as described while missing a minor accessory.",DPO-02,Dispute Request,"After the buyer has selected the reason for the dispute, the buyer may
+    request a full refund for items that are not received, or
+    propose a resolution outcome for items that are significantly not as described or incomplete in the form of a (i) return and refund, or (ii) partial refund of a single item without return,
+(each a “Dispute Request”).",,Y,Establishes a partial refund without return as an allowed outcome.
+G100,full_refund_with_return,"The seller admitted to sending the wrong item due to a parcel mix-up. | The item received deviates extensively and is of a different model/variation than described. | The gap is significant, qualifying the buyer for a full refund upon returning the incorrect item.",BPR-02,Eligibility > Dispute Reason,"Under the Buyer Protection and Certified refund policy, buyers may raise a dispute for:
+    Item(s) not received
+    Incomplete item(s)
+    The item is significantly not as described
+    Examples of cases where the item is significantly not as described
+        The item is of a different variation, such as size, colour, model or version
+        The item is incomplete or has missing parts
+        The item is damaged or has one or more undisclosed defect(s)
+        The item received deviates extensively from the listing photo",,Y,
+G100,full_refund_with_return,"The seller admitted to sending the wrong item due to a parcel mix-up. | The item received deviates extensively and is of a different model/variation than described. | The gap is significant, qualifying the buyer for a full refund upon returning the incorrect item.",BPR-08,How can I get a refund?,"If you feel that you are entitled to a refund, raise a dispute request in the app. You can find the Return/refund button on your Order details page. We encourage you to raise your issue with your seller as well via Chat to let them know what’s wrong.  Here’s more information on How to raise a return/refund request. To be eligible for a return, your item must be unused and in the same condition and packaging as you received it. Any tags on the item should be intact and not damaged. Please ensure all free gifts, warranties, tags, manuals, and any other accessories that were delivered to you are included in your return. Note that Carousell/ the seller reserves the right to reject the return and any request for a return if the returned item does not meet the above requirements.",,N,"Procedural only: how to raise a refund request and return conditions, not why a refund is due."
+G102,full_refund_with_return,The item was listed as brand new but arrived with undisclosed heavy stains and a chip. | Undisclosed flaws and damage on a brand new item constitute a significantly not as described case. | The buyer provided photo evidence of the heavy staining and chipped rim.,BPR-02,Eligibility > Dispute Reason,"Under the Buyer Protection and Certified refund policy, buyers may raise a dispute for:
+    Item(s) not received
+    Incomplete item(s)
+    The item is significantly not as described
+    Examples of cases where the item is significantly not as described
+        The item is of a different variation, such as size, colour, model or version
+        The item is incomplete or has missing parts
+        The item is damaged or has one or more undisclosed defect(s)
+        The item received deviates extensively from the listing photo",,Y,
+G102,full_refund_with_return,The item was listed as brand new but arrived with undisclosed heavy stains and a chip. | Undisclosed flaws and damage on a brand new item constitute a significantly not as described case. | The buyer provided photo evidence of the heavy staining and chipped rim.,WBP-04,For Buyers,"When you pay via the ‘Buy’ Button, Buyer Protection is applied to your order. It helps ensure safe payments, access to customer support, and gives you the right to claim a refund if your item doesn't arrive or is significantly not as described.
+Listings with the ‘Buy’ button enabled will be applicable for Buyer Protection if you make payment through the Carousell-supported payment methods. Currently, we accept PayNow, DBS PayLah!, Visa/ Mastercard Debit/Credit Cards, Atome and PayLater by Grab*
+*only applicable for selected listings
+With Buyer Protection, you will be able to raise a dispute and it will cover you for the below scenarios:
+    Item Not Received: Covered only if tracked shipping was used. Buyer Protection does not cover non-delivery for untracked mail.
+    Significantly Not As Described (SNAD): An item qualifies for a refund if:",,Y,Covers undisclosed damage on an item significantly not as described.
+G107,full_refund_with_return,The item received is a different size variation than what was stated in the listing. | The seller admitted to mixing up the sheets while packing. | A wrong variation qualifies for a full refund with return.,BPR-02,Eligibility > Dispute Reason,"Under the Buyer Protection and Certified refund policy, buyers may raise a dispute for:
+    Item(s) not received
+    Incomplete item(s)
+    The item is significantly not as described
+    Examples of cases where the item is significantly not as described
+        The item is of a different variation, such as size, colour, model or version
+        The item is incomplete or has missing parts
+        The item is damaged or has one or more undisclosed defect(s)
+        The item received deviates extensively from the listing photo",,Y,
+G109,full_refund_with_return,The item was sold as brand new but arrived with significant undisclosed defects including a large stain and missing sequins. | Such flaws directly contradict the brand new condition claimed in the listing. | The buyer provided clear photographic evidence supporting the existence of the defects.,BPR-02,Eligibility > Dispute Reason,"Under the Buyer Protection and Certified refund policy, buyers may raise a dispute for:
+    Item(s) not received
+    Incomplete item(s)
+    The item is significantly not as described
+    Examples of cases where the item is significantly not as described
+        The item is of a different variation, such as size, colour, model or version
+        The item is incomplete or has missing parts
+        The item is damaged or has one or more undisclosed defect(s)
+        The item received deviates extensively from the listing photo",,Y,
+G111,decline,"The colour variation is a minor, subjective difference caused by lighting conditions rather than a significantly different colour variation. | Non-significant variations such as lighting differences or shade discrepancies do not qualify for a refund under policy. | The item matches the correctly stated description and condition.",BPR-03,Transactions are not eligible for refund,"An item that is materially similar with subjective and non-significant variations from the seller’s listing and description will not be accepted. This includes:
+    ✘   Item with signs of wear but was correctly listed as being in used condition
+    ✘  Non-significant variations, including quality, for example:
+        Item listed as light pink but received as rose pink
+        Item listed as palm-sized but received at 15cm
+        Item listed as 8/10 but receiver claims it is more of a 6/10
+    Buyers change their mind about the item
+    Buyers place the wrong order by mistake
+    Buyers have received a partial or full refund from a separate resolution process not facilitated by Carousell
+    Buyers provide an incorrect or invalid delivery address
+    Buyers receive the item after the suggested delivery date",,Y,
+G116,decline,The buyer's complaint is about a subjective and minor shade variation between pink and peach. | Policy explicitly lists minor color variations (such as light pink to rose pink) as non-significant. | The seller provided evidence showing the correct pink item under proper lighting.,BPR-03,Transactions are not eligible for refund,"An item that is materially similar with subjective and non-significant variations from the seller’s listing and description will not be accepted. This includes:
+    ✘   Item with signs of wear but was correctly listed as being in used condition
+    ✘  Non-significant variations, including quality, for example:
+        Item listed as light pink but received as rose pink
+        Item listed as palm-sized but received at 15cm
+        Item listed as 8/10 but receiver claims it is more of a 6/10
+    Buyers change their mind about the item
+    Buyers place the wrong order by mistake
+    Buyers have received a partial or full refund from a separate resolution process not facilitated by Carousell
+    Buyers provide an incorrect or invalid delivery address
+    Buyers receive the item after the suggested delivery date",,Y,
+G124,partial_refund,"The item was listed as brand new, yet featured an undisclosed cosmetic scratch. | Brand new items with undisclosed flaws are reviewed on a case-by-case basis under the policy. | Since the item is still fully functional and the defect is minor, a partial refund is appropriate rather than a full return.",BPR-02,Eligibility > Dispute Reason,"Under the Buyer Protection and Certified refund policy, buyers may raise a dispute for:
+    Item(s) not received
+    Incomplete item(s)
+    The item is significantly not as described
+    Examples of cases where the item is significantly not as described
+        The item is of a different variation, such as size, colour, model or version
+        The item is incomplete or has missing parts
+        The item is damaged or has one or more undisclosed defect(s)
+        The item received deviates extensively from the listing photo",,Y,
+G124,partial_refund,"The item was listed as brand new, yet featured an undisclosed cosmetic scratch. | Brand new items with undisclosed flaws are reviewed on a case-by-case basis under the policy. | Since the item is still fully functional and the defect is minor, a partial refund is appropriate rather than a full return.",BPR-04,Transactions are not eligible for refund (cont.),"Buyers make a claim for something that is not in the original listing/what was agreed upon
+    Buyers raise an issue after the dispute window
+    The item gets stolen/damaged post successful delivery
+        It is the buyer’s responsibility to ensure that the receiving address can receive the item securely
+        Parcel and packaging that has creases, lines, wrinkles or dents as a result of shipping or tempered of packaging upon delivery will not be covered unless the item itself is damaged
+    The items are reported for surface wear and tear that does not affect functionality
+        For “Brand New” items, transactions will be reviewed on a case-by-case basis
+    The items fall under our exclusion list
+    The items are sold in gift bundles such as hampers, goodie bags and mystery boxes unless the constituents in the bundles are clearly described in the listing.",,Y,Via its line that brand-new items are reviewed case by case.
+G125,partial_refund,The listing explicitly promised the inclusion of the Mary Kay remover. | The seller provided a packing photo showing the remover inside the parcel prior to shipment. | A partial refund is appropriate since the main eyeshadow lot was received as described while the bonus item is disputed.,BPR-02,Eligibility > Dispute Reason,"Under the Buyer Protection and Certified refund policy, buyers may raise a dispute for:
+    Item(s) not received
+    Incomplete item(s)
+    The item is significantly not as described
+    Examples of cases where the item is significantly not as described
+        The item is of a different variation, such as size, colour, model or version
+        The item is incomplete or has missing parts
+        The item is damaged or has one or more undisclosed defect(s)
+        The item received deviates extensively from the listing photo",,Y,Supports that a missing item is a valid dispute; the split-the-difference partial refund is not from the policy.
+G125,partial_refund,The listing explicitly promised the inclusion of the Mary Kay remover. | The seller provided a packing photo showing the remover inside the parcel prior to shipment. | A partial refund is appropriate since the main eyeshadow lot was received as described while the bonus item is disputed.,DPO-08,Incomplete items,"Subject to Carousell’s determination:
+    the seller may be requested to deliver to the buyer the missing part(s) or such other actions as may be required to make the item or order whole; or
+    it may prescribe a refund (in full or in part) or return and refund (in full or in part).
+For the above-stated scenarios, sellers will be responsible for and requested to cover the additional shipping costs, to be paid to the buyer directly.
+[Item not received]
+Buyer Protection does not cover non-delivery for orders with untracked mail as the method of delivery. To claim for non-delivery of orders, Buyers must opt for tracked delivery.",,Y,
+G125,partial_refund,The listing explicitly promised the inclusion of the Mary Kay remover. | The seller provided a packing photo showing the remover inside the parcel prior to shipment. | A partial refund is appropriate since the main eyeshadow lot was received as described while the bonus item is disputed.,DPO-02,Dispute Request,"After the buyer has selected the reason for the dispute, the buyer may
+    request a full refund for items that are not received, or
+    propose a resolution outcome for items that are significantly not as described or incomplete in the form of a (i) return and refund, or (ii) partial refund of a single item without return,
+(each a “Dispute Request”).",,Y,Establishes a partial refund without return as an allowed outcome.
+G126,decline,The item matches the description provided by the seller as burgundy and brown. | Slight colour differences caused by lighting conditions are considered subjective and non-significant variations. | The policy explicitly states that items with subjective or non-significant variations are not eligible for a refund.,BPR-03,Transactions are not eligible for refund,"An item that is materially similar with subjective and non-significant variations from the seller’s listing and description will not be accepted. This includes:
+    ✘   Item with signs of wear but was correctly listed as being in used condition
+    ✘  Non-significant variations, including quality, for example:
+        Item listed as light pink but received as rose pink
+        Item listed as palm-sized but received at 15cm
+        Item listed as 8/10 but receiver claims it is more of a 6/10
+    Buyers change their mind about the item
+    Buyers place the wrong order by mistake
+    Buyers have received a partial or full refund from a separate resolution process not facilitated by Carousell
+    Buyers provide an incorrect or invalid delivery address
+    Buyers receive the item after the suggested delivery date",,Y,
+G129,decline,The reported scratch is a minor cosmetic imperfection on the container rather than a functional defect of the slime. | Policy states that surface wear or minor flaws that do not affect functionality are generally not covered for a full refund. | The core product functions as intended and matches the listing description.,BPR-04,Transactions are not eligible for refund (cont.),"Buyers make a claim for something that is not in the original listing/what was agreed upon
+    Buyers raise an issue after the dispute window
+    The item gets stolen/damaged post successful delivery
+        It is the buyer’s responsibility to ensure that the receiving address can receive the item securely
+        Parcel and packaging that has creases, lines, wrinkles or dents as a result of shipping or tempered of packaging upon delivery will not be covered unless the item itself is damaged
+    The items are reported for surface wear and tear that does not affect functionality
+        For “Brand New” items, transactions will be reviewed on a case-by-case basis
+    The items fall under our exclusion list
+    The items are sold in gift bundles such as hampers, goodie bags and mystery boxes unless the constituents in the bundles are clearly described in the listing.",,Y,
+G134,decline,The issue is limited to a minor scratch on the outer packaging box. | The item itself (the perfume bottle) is brand new and completely undamaged. | Surface wear or packaging flaws that do not affect functionality are not considered significantly not as described.,BPR-04,Transactions are not eligible for refund (cont.),"Buyers make a claim for something that is not in the original listing/what was agreed upon
+    Buyers raise an issue after the dispute window
+    The item gets stolen/damaged post successful delivery
+        It is the buyer’s responsibility to ensure that the receiving address can receive the item securely
+        Parcel and packaging that has creases, lines, wrinkles or dents as a result of shipping or tempered of packaging upon delivery will not be covered unless the item itself is damaged
+    The items are reported for surface wear and tear that does not affect functionality
+        For “Brand New” items, transactions will be reviewed on a case-by-case basis
+    The items fall under our exclusion list
+    The items are sold in gift bundles such as hampers, goodie bags and mystery boxes unless the constituents in the bundles are clearly described in the listing.",,Y,Packaging damage is not covered unless the item itself is damaged.
+G139,partial_refund,The item has an undisclosed small stain despite being listed as like new. | The item remains fully usable for its intended purpose. | A partial refund matches the buyer's requested resolution for a minor flaw on a low-value item.,BPR-02,Eligibility > Dispute Reason,"Under the Buyer Protection and Certified refund policy, buyers may raise a dispute for:
+    Item(s) not received
+    Incomplete item(s)
+    The item is significantly not as described
+    Examples of cases where the item is significantly not as described
+        The item is of a different variation, such as size, colour, model or version
+        The item is incomplete or has missing parts
+        The item is damaged or has one or more undisclosed defect(s)
+        The item received deviates extensively from the listing photo",,Y,
+G144,partial_refund,"The item was listed as brand new but arrived with a small undisclosed stain. | A specific undisclosed flaw on a brand new item is a significant gap under the policy. | The item remains usable, making a partial refund appropriate instead of a full return.",BPR-02,Eligibility > Dispute Reason,"Under the Buyer Protection and Certified refund policy, buyers may raise a dispute for:
+    Item(s) not received
+    Incomplete item(s)
+    The item is significantly not as described
+    Examples of cases where the item is significantly not as described
+        The item is of a different variation, such as size, colour, model or version
+        The item is incomplete or has missing parts
+        The item is damaged or has one or more undisclosed defect(s)
+        The item received deviates extensively from the listing photo",,Y,
+G144,partial_refund,"The item was listed as brand new but arrived with a small undisclosed stain. | A specific undisclosed flaw on a brand new item is a significant gap under the policy. | The item remains usable, making a partial refund appropriate instead of a full return.",BPR-04,Transactions are not eligible for refund (cont.),"Buyers make a claim for something that is not in the original listing/what was agreed upon
+    Buyers raise an issue after the dispute window
+    The item gets stolen/damaged post successful delivery
+        It is the buyer’s responsibility to ensure that the receiving address can receive the item securely
+        Parcel and packaging that has creases, lines, wrinkles or dents as a result of shipping or tempered of packaging upon delivery will not be covered unless the item itself is damaged
+    The items are reported for surface wear and tear that does not affect functionality
+        For “Brand New” items, transactions will be reviewed on a case-by-case basis
+    The items fall under our exclusion list
+    The items are sold in gift bundles such as hampers, goodie bags and mystery boxes unless the constituents in the bundles are clearly described in the listing.",,Y,Only via its line that brand-new items are reviewed case by case; the rest of BPR-04 argues against a refund.
+G146,decline,The color variance reported by the buyer is a subjective and minor variation due to lighting. | The item condition and color match the seller's description for a well-used black blouse. | Policy explicitly excludes non-significant variations such as slight shade differences from being covered under significantly not as described.,BPR-03,Transactions are not eligible for refund,"An item that is materially similar with subjective and non-significant variations from the seller’s listing and description will not be accepted. This includes:
+    ✘   Item with signs of wear but was correctly listed as being in used condition
+    ✘  Non-significant variations, including quality, for example:
+        Item listed as light pink but received as rose pink
+        Item listed as palm-sized but received at 15cm
+        Item listed as 8/10 but receiver claims it is more of a 6/10
+    Buyers change their mind about the item
+    Buyers place the wrong order by mistake
+    Buyers have received a partial or full refund from a separate resolution process not facilitated by Carousell
+    Buyers provide an incorrect or invalid delivery address
+    Buyers receive the item after the suggested delivery date",,Y,
+G147,decline,The item is correctly listed as used with normal surface scratches. | Claims of 6/10 vs 'like new' condition differences involving ordinary wear fall under non-significant subjective variations. | Surface wear and tear that does not affect the functionality of a used item is not covered for a refund.,BPR-03,Transactions are not eligible for refund,"An item that is materially similar with subjective and non-significant variations from the seller’s listing and description will not be accepted. This includes:
+    ✘   Item with signs of wear but was correctly listed as being in used condition
+    ✘  Non-significant variations, including quality, for example:
+        Item listed as light pink but received as rose pink
+        Item listed as palm-sized but received at 15cm
+        Item listed as 8/10 but receiver claims it is more of a 6/10
+    Buyers change their mind about the item
+    Buyers place the wrong order by mistake
+    Buyers have received a partial or full refund from a separate resolution process not facilitated by Carousell
+    Buyers provide an incorrect or invalid delivery address
+    Buyers receive the item after the suggested delivery date",,Y,
+G147,decline,The item is correctly listed as used with normal surface scratches. | Claims of 6/10 vs 'like new' condition differences involving ordinary wear fall under non-significant subjective variations. | Surface wear and tear that does not affect the functionality of a used item is not covered for a refund.,BPR-04,Transactions are not eligible for refund (cont.),"Buyers make a claim for something that is not in the original listing/what was agreed upon
+    Buyers raise an issue after the dispute window
+    The item gets stolen/damaged post successful delivery
+        It is the buyer’s responsibility to ensure that the receiving address can receive the item securely
+        Parcel and packaging that has creases, lines, wrinkles or dents as a result of shipping or tempered of packaging upon delivery will not be covered unless the item itself is damaged
+    The items are reported for surface wear and tear that does not affect functionality
+        For “Brand New” items, transactions will be reviewed on a case-by-case basis
+    The items fall under our exclusion list
+    The items are sold in gift bundles such as hampers, goodie bags and mystery boxes unless the constituents in the bundles are clearly described in the listing.",,Y,Surface wear that does not affect functionality is not covered: supports the decline.
+G148,decline,The seller correctly listed the shoes as well-used and disclosed that they were worn many times. | Policy states that an item with signs of wear is not eligible for refund if it was correctly listed in used condition. | The condition reported by the buyer matches the ordinary wear and tear expected from the description.,BPR-03,Transactions are not eligible for refund,"An item that is materially similar with subjective and non-significant variations from the seller’s listing and description will not be accepted. This includes:
+    ✘   Item with signs of wear but was correctly listed as being in used condition
+    ✘  Non-significant variations, including quality, for example:
+        Item listed as light pink but received as rose pink
+        Item listed as palm-sized but received at 15cm
+        Item listed as 8/10 but receiver claims it is more of a 6/10
+    Buyers change their mind about the item
+    Buyers place the wrong order by mistake
+    Buyers have received a partial or full refund from a separate resolution process not facilitated by Carousell
+    Buyers provide an incorrect or invalid delivery address
+    Buyers receive the item after the suggested delivery date",,Y,
+G155,decline,"The seller provided clear photo evidence showing all three game cartridges inside the open parcel before it was sealed. | The buyer and seller give conflicting accounts regarding the missing item. | Given the seller's packing evidence, there is insufficient proof that the item arrived incomplete from the seller's end.",BPR-02,Eligibility > Dispute Reason,"Under the Buyer Protection and Certified refund policy, buyers may raise a dispute for:
+    Item(s) not received
+    Incomplete item(s)
+    The item is significantly not as described
+    Examples of cases where the item is significantly not as described
+        The item is of a different variation, such as size, colour, model or version
+        The item is incomplete or has missing parts
+        The item is damaged or has one or more undisclosed defect(s)
+        The item received deviates extensively from the listing photo",,N,"Lists the grounds for a valid dispute, so it argues for the buyer; the decline rests on conflicting evidence."
+G155,decline,"The seller provided clear photo evidence showing all three game cartridges inside the open parcel before it was sealed. | The buyer and seller give conflicting accounts regarding the missing item. | Given the seller's packing evidence, there is insufficient proof that the item arrived incomplete from the seller's end.",DPO-08,Incomplete items,"Subject to Carousell’s determination:
+    the seller may be requested to deliver to the buyer the missing part(s) or such other actions as may be required to make the item or order whole; or
+    it may prescribe a refund (in full or in part) or return and refund (in full or in part).
+For the above-stated scenarios, sellers will be responsible for and requested to cover the additional shipping costs, to be paid to the buyer directly.
+[Item not received]
+Buyer Protection does not cover non-delivery for orders with untracked mail as the method of delivery. To claim for non-delivery of orders, Buyers must opt for tracked delivery.",,N,"Says what happens for incomplete items (send the part or refund), so it argues for the buyer."
+G158,decline,The seller explicitly disclosed the chip in the listing description and photos. | The item was correctly listed as heavily used condition. | Disagreements over the exact size or severity of a disclosed flaw on a used item are not considered significant gaps under policy.,BPR-03,Transactions are not eligible for refund,"An item that is materially similar with subjective and non-significant variations from the seller’s listing and description will not be accepted. This includes:
+    ✘   Item with signs of wear but was correctly listed as being in used condition
+    ✘  Non-significant variations, including quality, for example:
+        Item listed as light pink but received as rose pink
+        Item listed as palm-sized but received at 15cm
+        Item listed as 8/10 but receiver claims it is more of a 6/10
+    Buyers change their mind about the item
+    Buyers place the wrong order by mistake
+    Buyers have received a partial or full refund from a separate resolution process not facilitated by Carousell
+    Buyers provide an incorrect or invalid delivery address
+    Buyers receive the item after the suggested delivery date",,Y,
+G163,decline,The item was correctly stated as being in used condition. | Signs of wear that match a correctly stated used condition are excluded from refund eligibility. | The buyer's expectations regarding wear on a used item do not constitute a significantly not as described claim.,BPR-03,Transactions are not eligible for refund,"An item that is materially similar with subjective and non-significant variations from the seller’s listing and description will not be accepted. This includes:
+    ✘   Item with signs of wear but was correctly listed as being in used condition
+    ✘  Non-significant variations, including quality, for example:
+        Item listed as light pink but received as rose pink
+        Item listed as palm-sized but received at 15cm
+        Item listed as 8/10 but receiver claims it is more of a 6/10
+    Buyers change their mind about the item
+    Buyers place the wrong order by mistake
+    Buyers have received a partial or full refund from a separate resolution process not facilitated by Carousell
+    Buyers provide an incorrect or invalid delivery address
+    Buyers receive the item after the suggested delivery date",,Y,
+S06,full_refund_with_return,The item received is a size 6 instead of the ordered size 2. | A different size variation is a covered significant discrepancy under the policy. | The seller admitted to sending the wrong item.,BPR-02,Eligibility > Dispute Reason,"Under the Buyer Protection and Certified refund policy, buyers may raise a dispute for:
+    Item(s) not received
+    Incomplete item(s)
+    The item is significantly not as described
+    Examples of cases where the item is significantly not as described
+        The item is of a different variation, such as size, colour, model or version
+        The item is incomplete or has missing parts
+        The item is damaged or has one or more undisclosed defect(s)
+        The item received deviates extensively from the listing photo",,Y,
+S06,full_refund_with_return,The item received is a size 6 instead of the ordered size 2. | A different size variation is a covered significant discrepancy under the policy. | The seller admitted to sending the wrong item.,DPO-01,Dispute handling,"These terms apply to you if you have filed a dispute through the Carousell Platform in connection with a Buyer Protection or Certified transaction and you agree to comply with the same.
+A dispute can be raised for multiple items in an order, however it can only be raised once. It is the sole responsibility of Buyers to ensure that they have checked and accounted for all the items in their order before submitting a dispute request.
+Refer to this article for information on How to raise a dispute.
+[Eligibility > Dispute Reasons]
+ A dispute can only be raised for any of the following reasons:
+1. The item is significantly not as described / you received the wrong item
+2. Incomplete items
+3. Item not received
+[Dispute Window]
+A dispute must be raised within the dispute / returns window set out under the relevant refund policy. For more details on Carousell’s Refund policies, please refer here.",,Y,Lists a wrong item or one not as described as a valid dispute reason.
+S08,decline,The listing accurately described the item as queen size. | The buyer admits all 8 pieces are present and the item is new. | Ordering the wrong size or changing one's mind does not qualify for a refund under policy.,BPR-03,Transactions are not eligible for refund,"An item that is materially similar with subjective and non-significant variations from the seller’s listing and description will not be accepted. This includes:
+    ✘   Item with signs of wear but was correctly listed as being in used condition
+    ✘  Non-significant variations, including quality, for example:
+        Item listed as light pink but received as rose pink
+        Item listed as palm-sized but received at 15cm
+        Item listed as 8/10 but receiver claims it is more of a 6/10
+    Buyers change their mind about the item
+    Buyers place the wrong order by mistake
+    Buyers have received a partial or full refund from a separate resolution process not facilitated by Carousell
+    Buyers provide an incorrect or invalid delivery address
+    Buyers receive the item after the suggested delivery date",,Y,

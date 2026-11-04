@@ -1,0 +1,92 @@
+{
+  "agent": {
+    "n": 10,
+    "label_sources": {
+      "provisional": 10
+    },
+    "decision_accuracy": 0.9,
+    "accuracy_by_difficulty": {
+      "clear": {
+        "n": 10,
+        "accuracy": 0.9
+      }
+    },
+    "direction_accuracy": 1.0,
+    "buyer_win_accuracy": {
+      "n": 6,
+      "accuracy": 0.833
+    },
+    "seller_win_accuracy": {
+      "n": 4,
+      "accuracy": 1.0
+    },
+    "eligibility_accuracy": 1.0,
+    "ineligible_flagged": {
+      "n": 0,
+      "share": null
+    },
+    "cited_at_least_one_clause": 0.9,
+    "invented_citation_rate": 0.0,
+    "citation_format_error_rate": 0.0,
+    "raw_invented_citation_rate": 0.0,
+    "failed": {
+      "n": 0,
+      "share": 0.0
+    },
+    "tool_use": {
+      "judged": 10,
+      "cases_using_search": 0.3,
+      "searches": 3
+    },
+    "tokens_per_case": {
+      "input": 3135,
+      "output": 756
+    },
+    "escalation": {
+      "escalated_share": 0.1,
+      "wrong_decisions_escalated": 0.0,
+      "right_decisions_escalated": 0.111,
+      "accuracy_when_not_escalated": 0.889
+    },
+    "seconds_per_case": {
+      "mean": 15.92,
+      "median": 14.04
+    },
+    "llm_calls_per_case": 3,
+    "confusion": {
+      "full_refund_with_return": {
+        "full_refund_with_return": 5,
+        "full_refund_without_return": 0,
+        "partial_refund": 0,
+        "decline": 0
+      },
+      "full_refund_without_return": {
+        "full_refund_with_return": 0,
+        "full_refund_without_return": 0,
+        "partial_refund": 0,
+        "decline": 0
+      },
+      "partial_refund": {
+        "full_refund_with_return": 1,
+        "full_refund_without_return": 0,
+        "partial_refund": 0,
+        "decline": 0
+      },
+      "decline": {
+        "full_refund_with_return": 0,
+        "full_refund_without_return": 0,
+        "partial_refund": 0,
+        "decline": 4
+      }
+    },
+    "wrong_cases": [
+      {
+        "case_id": "G008",
+        "label": "partial_refund",
+        "pred": "full_refund_with_return",
+        "difficulty": "clear",
+        "escalated": false
+      }
+    ]
+  }
+}
