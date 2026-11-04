@@ -53,6 +53,25 @@ def evaluate_retrieval(k: int = 3, modes: tuple[str, ...] = ("dense", "lexical",
     return results
 
 
+def format_retrieval_table(by_k: dict[int, dict]) -> str:
+    """One table across several k: hit rates at each k, and MRR over the top 3 (what the agent uses)."""
+    ks = sorted(by_k)
+    first = by_k[ks[0]]
+    lines = [
+        f"Retrieval accuracy on {first['n_queries']} test queries (`data/eval/retrieval_queries.jsonl`). "
+        "Hit@k: the clause that answers the query is in the top k results. MRR: mean of 1 / rank of that clause "
+        "within the top 3 (0 if missing). The agent takes the top 3 per query.",
+        "",
+        "| Mode | " + " | ".join(f"Hit@{k}" for k in ks) + " | MRR (top 3) |",
+        "|---|" + "---|" * (len(ks) + 1),
+    ]
+    mrr_k = 3 if 3 in by_k else ks[-1]
+    for mode in first["modes"]:
+        cells = [f"{by_k[k]['modes'][mode][f'hit@{k}']:.0%}" for k in ks]
+        lines.append(f"| {mode} | " + " | ".join(cells) + f" | {by_k[mrr_k]['modes'][mode]['mrr']:.2f} |")
+    return "\n".join(lines)
+
+
 def format_retrieval(results: dict) -> str:
     k = results["k"]
     lines = [

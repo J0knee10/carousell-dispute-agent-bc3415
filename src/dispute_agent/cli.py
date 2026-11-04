@@ -201,15 +201,11 @@ def cmd_report(args) -> int:
 
 def cmd_eval_retrieval(args) -> int:
     from .config import path
-    from .evaluation.retrieval import evaluate_retrieval, format_retrieval
+    from .evaluation.retrieval import evaluate_retrieval, format_retrieval_table
 
-    lines = []
-    for k in (1, 3, 5):
-        res = evaluate_retrieval(k=k)
-        if k == 3:
-            misses = res["misses"]
-        lines.append(format_retrieval(res))
-    text = "\n\n".join(lines)
+    by_k = {k: evaluate_retrieval(k=k) for k in (1, 3, 5)}
+    misses = by_k[3]["misses"]
+    text = format_retrieval_table(by_k)
     text += "\n\nMisses at k=3 (hybrid):\n" + "\n".join(f"- {m['query']}: expected {m['expected']}, got {m['got']}" for m in misses["hybrid"])
     out = path("outputs.reports_dir") / "retrieval.md"
     out.parent.mkdir(parents=True, exist_ok=True)
