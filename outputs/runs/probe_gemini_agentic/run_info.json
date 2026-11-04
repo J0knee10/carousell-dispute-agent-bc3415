@@ -1,0 +1,18 @@
+{
+  "split": "test (first 10)",
+  "case_ids": [
+    "G006",
+    "G008",
+    "G013",
+    "G018",
+    "G019",
+    "G023",
+    "G025",
+    "G030",
+    "G031",
+    "G041"
+  ],
+  "provider": "gemini",
+  "model": "gemini-flash-lite-latest",
+  "variant": "agent-driven retrieval"
+}

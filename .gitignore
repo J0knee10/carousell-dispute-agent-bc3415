@@ -11,9 +11,13 @@ __pycache__/
 # Large or downloaded data (see README for where to get it)
 data/raw/
 
-# Generated at runtime
+# Generated at runtime. The per-case predictions in outputs/runs/ are kept in
+# git so every number in reports/ can be checked; logs, the decision log,
+# the what-if cache and the OpenAI spend file are not.
 .chroma/
-outputs/
+outputs/*
+!outputs/runs/
+!outputs/runs_discarded/
 
 # Local Claude Code settings
 .claude/settings.local.json

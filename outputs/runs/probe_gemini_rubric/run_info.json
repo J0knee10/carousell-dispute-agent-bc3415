@@ -1,0 +1,33 @@
+{
+  "split": "test (first 25)",
+  "case_ids": [
+    "G006",
+    "G008",
+    "G013",
+    "G018",
+    "G019",
+    "G023",
+    "G025",
+    "G030",
+    "G031",
+    "G041",
+    "G042",
+    "G043",
+    "G046",
+    "G051",
+    "G054",
+    "G059",
+    "G061",
+    "G065",
+    "G070",
+    "G076",
+    "G081",
+    "G084",
+    "G088",
+    "G099",
+    "G100"
+  ],
+  "provider": "gemini",
+  "model": "gemini-flash-lite-latest",
+  "variant": "rubric-only guide"
+}
