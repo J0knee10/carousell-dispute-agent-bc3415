@@ -10,7 +10,7 @@ from .base import CallStats, LLMClient, LLMError, RateLimitError, T
 Role = Literal["judge", "generator"]
 
 __all__ = [
-    "CallStats", "LLMClient", "LLMError", "RateLimitError", "PROVIDERS",
+    "CallStats", "LLMClient", "LLMError", "RateLimitError", "PROVIDERS", "CloudFallbackLLM", "fallback_provider",
     "get_llm", "gemini_available", "openai_available", "local_ollama_available", "available_providers",
 ]
 
@@ -35,10 +35,30 @@ def available_providers() -> list[str]:
     return [p for p in PROVIDERS if p == "mock" or checks[p]()]
 
 
-def get_llm(role: Role = "judge", provider: str | None = None, model: str | None = None) -> LLMClient:
-    """A client for the judge (or the dispute generator). `model` overrides config.yaml."""
+def fallback_provider(provider: str) -> str | None:
+    """The provider the app falls back to for `provider` (config llm.fallback), if its key is set."""
+    fb = (load_config()["llm"].get("fallback") or {}).get(provider)
+    if fb == "openai" and openai_available():
+        return fb
+    if fb == "gemini" and gemini_available():
+        return fb
+    return None
+
+
+def get_llm(
+    role: Role = "judge", provider: str | None = None, model: str | None = None, with_fallback: bool = False
+) -> LLMClient:
+    """A client for the judge (or the dispute generator). `model` overrides config.yaml.
+
+    with_fallback=True (used by the app, never by evaluations) wraps the provider so that a
+    failed call goes to the fallback provider in config.yaml, e.g. Gemini -> OpenAI.
+    """
     cfg = load_config()["llm"]
     provider = provider or cfg["provider"]
+    if with_fallback and role == "judge" and fallback_provider(provider):
+        primary = get_llm(role, provider, model)
+        backup = get_llm(role, fallback_provider(provider))
+        return CloudFallbackLLM(primary, backup, max_backup_calls=cfg.get("fallback_max_calls", 300))
     temperature = cfg["temperature"] if role == "judge" else cfg["generator_temperature"]
     if provider == "mock":
         from .mock import MockLLM
@@ -86,8 +106,72 @@ def get_llm(role: Role = "judge", provider: str | None = None, model: str | None
     raise LLMError(f"Unknown LLM provider '{provider}'. Use one of: {', '.join(PROVIDERS)}.")
 
 
+class CloudFallbackLLM:
+    """Try the primary provider; if a call fails, make that call with the backup.
+
+    A daily-quota error switches to the backup for the rest of the process (the
+    quota will not come back for hours); any other failure falls back for that
+    call only. Backup calls are capped (config llm.fallback_max_calls) so a public
+    app cannot run up the paid provider's bill.
+    """
+
+    def __init__(self, primary, backup, max_backup_calls: int = 300):
+        self.primary, self.backup = primary, backup
+        self.max_backup_calls = max_backup_calls
+        self.backup_calls = 0
+        self.primary_exhausted = False
+        self.last = primary
+        self.stats = CallStats()
+
+    @property
+    def name(self) -> str:
+        return self.last.name
+
+    @property
+    def model(self) -> str:
+        return self.last.model
+
+    @property
+    def using_backup(self) -> bool:
+        return self.last is self.backup
+
+    def _record(self, client, before, task: str) -> None:
+        self.stats.record(
+            task, client.stats.seconds - before[2],
+            tokens_in=client.stats.tokens_in - before[0], tokens_out=client.stats.tokens_out - before[1],
+        )
+
+    def generate(self, **kwargs) -> T:
+        task = kwargs.get("task", "")
+        if not self.primary_exhausted:
+            before = (self.primary.stats.tokens_in, self.primary.stats.tokens_out, self.primary.stats.seconds)
+            try:
+                result = self.primary.generate(**kwargs)
+                self.last = self.primary
+                self._record(self.primary, before, task)
+                return result
+            except RateLimitError as e:
+                self.primary_exhausted = e.daily
+                error: LLMError = e
+            except LLMError as e:
+                error = e
+        else:
+            error = LLMError(f"{self.primary.name} quota exhausted earlier in this session")
+        if self.backup_calls >= self.max_backup_calls:
+            raise RateLimitError(
+                f"{error} The fallback ({self.backup.name}) reached its limit of {self.max_backup_calls} calls for this session.",
+                daily=True, model=self.backup.model,
+            )
+        self.backup_calls += 1
+        before = (self.backup.stats.tokens_in, self.backup.stats.tokens_out, self.backup.stats.seconds)
+        result = self.backup.generate(**kwargs)
+        self.last = self.backup
+        self._record(self.backup, before, task)
+        return result
+
+
 class FallbackLLM:
-    """Use the first model until its quota runs out, then move to the next."""
+    """Use the first model until its quota runs out, then move to the next (dispute generation)."""
 
     def __init__(self, clients: list):
         self.clients = clients

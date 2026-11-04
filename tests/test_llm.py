@@ -87,6 +87,80 @@ def test_get_llm_picks_provider_and_model():
         get_llm(provider="nonsense")
 
 
+class _Fake:
+    """A client that fails with the given errors in turn, then answers."""
+
+    def __init__(self, name, errors=()):
+        from dispute_agent.llm import CallStats
+
+        self.name, self.model, self.stats = name, f"{name}-model", CallStats()
+        self.errors = list(errors)
+        self.calls = 0
+
+    def generate(self, **kw):
+        self.calls += 1
+        if self.errors:
+            raise self.errors.pop(0)
+        self.stats.record(kw.get("task", ""), 0.1)
+        return BaselineJudgement(**GOOD)
+
+
+def _call(llm):
+    return llm.generate(task="baseline", system="s", prompt="p", schema=BaselineJudgement)
+
+
+def test_fallback_uses_the_primary_when_it_works():
+    from dispute_agent.llm import CloudFallbackLLM
+
+    primary, backup = _Fake("gemini"), _Fake("openai")
+    llm = CloudFallbackLLM(primary, backup)
+    _call(llm)
+    assert primary.calls == 1 and backup.calls == 0 and not llm.using_backup and llm.name == "gemini"
+
+
+def test_daily_quota_switches_to_the_backup_for_the_session():
+    from dispute_agent.llm import CloudFallbackLLM, RateLimitError
+
+    primary, backup = _Fake("gemini", [RateLimitError("quota", daily=True)]), _Fake("openai")
+    llm = CloudFallbackLLM(primary, backup)
+    _call(llm)
+    _call(llm)
+    assert primary.calls == 1 and backup.calls == 2 and llm.using_backup and llm.model == "openai-model"
+
+
+def test_other_failures_fall_back_for_one_call_only():
+    from dispute_agent.llm import CloudFallbackLLM, LLMError
+
+    primary, backup = _Fake("gemini", [LLMError("503 overloaded")]), _Fake("openai")
+    llm = CloudFallbackLLM(primary, backup)
+    _call(llm)
+    assert llm.using_backup
+    _call(llm)
+    assert primary.calls == 2 and backup.calls == 1 and not llm.using_backup
+
+
+def test_fallback_calls_are_capped():
+    from dispute_agent.llm import CloudFallbackLLM, RateLimitError
+
+    primary = _Fake("gemini", [RateLimitError("quota", daily=True)])
+    llm = CloudFallbackLLM(primary, _Fake("openai"), max_backup_calls=1)
+    _call(llm)
+    with pytest.raises(RateLimitError, match="limit of 1 calls"):
+        _call(llm)
+
+
+def test_app_gets_the_fallback_only_when_asked_and_keys_are_set(monkeypatch):
+    from dispute_agent.llm import CloudFallbackLLM
+    from dispute_agent.llm.gemini import GeminiClient
+
+    monkeypatch.setenv("GEMINI_API_KEY", "test-gemini-key")
+    monkeypatch.setenv("OPENAI_API_KEY", "sk-test")
+    assert isinstance(get_llm(provider="gemini", with_fallback=True), CloudFallbackLLM)
+    assert isinstance(get_llm(provider="gemini"), GeminiClient)  # evaluations never fall back
+    monkeypatch.delenv("OPENAI_API_KEY")
+    assert isinstance(get_llm(provider="gemini", with_fallback=True), GeminiClient)
+
+
 def test_openai_without_key_is_a_clear_error(monkeypatch):
     monkeypatch.delenv("OPENAI_API_KEY", raising=False)
     with pytest.raises(LLMError, match="OPENAI_API_KEY"):

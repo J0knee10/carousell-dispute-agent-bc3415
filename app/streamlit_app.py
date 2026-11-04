@@ -34,7 +34,7 @@ from dispute_agent.agent.graph import NODE_LABELS, build_graph  # noqa: E402
 from dispute_agent.agent.runner import current_state, new_thread, resume, stream_to_review  # noqa: E402
 from dispute_agent.config import judge_model, load_config, path  # noqa: E402
 from dispute_agent.data.cases import case_ids_for, cases_by_id  # noqa: E402
-from dispute_agent.llm import LLMError, RateLimitError, available_providers, get_llm  # noqa: E402
+from dispute_agent.llm import LLMError, RateLimitError, available_providers, fallback_provider, get_llm  # noqa: E402
 from dispute_agent.llm.ollama import installed_models  # noqa: E402
 from dispute_agent.rag.chunker import clauses_by_id, load_clauses  # noqa: E402
 from dispute_agent.rag.store import get_store  # noqa: E402
@@ -63,7 +63,8 @@ def store():
 
 @st.cache_resource
 def agent(provider: str, model: str | None = None):
-    llm = get_llm(provider=provider, model=model)
+    # The app falls back to the paid provider when the free one fails (config llm.fallback).
+    llm = get_llm(provider=provider, model=model, with_fallback=True)
     return llm, build_graph(llm, store())
 
 
@@ -125,6 +126,9 @@ def sidebar() -> tuple[str, str | None]:
         st.sidebar.warning("Mock mode: answers come from keyword rules, not an LLM.")
     else:
         st.sidebar.caption(f"Judge model: `{judge_model(provider)}`")
+        fb = fallback_provider(provider)
+        if fb:
+            st.sidebar.caption(f"If {provider} fails or its free quota runs out: `{judge_model(fb)}` ({fb}, paid)")
     if "gemini" not in options:
         st.sidebar.info("Add GEMINI_API_KEY to .env (or the app's Streamlit secrets) to use Gemini.")
     return provider, model
@@ -199,6 +203,8 @@ def show_results(state: dict) -> None:
         c1.caption(f"Suggested: {rec['partial_refund_percent']}% of the price (S${amount:.2f})")
     c2.metric("Confidence", f"{rec.get('confidence', 0):.0%}")
     c3.metric("Decided by", "Eligibility rules" if rec.get("decided_by") == "rules" else "Agent")
+    if state.get("judged_by") and rec.get("decided_by") == "llm":
+        st.caption(f"Judged by {state['judged_by']}")
     if rec.get("summary_for_staff"):
         st.info(rec["summary_for_staff"])
     if rec.get("escalate"):
@@ -361,7 +367,10 @@ def page_review(provider: str, model: str | None) -> None:
             st.error(f"The LLM call failed: {e}")
             return
         st.session_state.threads[case_id] = (thread, provider, model)
-        st.session_state.results[case_id] = current_state(graph, thread)
+        result = current_state(graph, thread)
+        # Which model actually answered: the fallback may have stepped in.
+        result["judged_by"] = f"{llm.name} · {llm.model}" + (" (fallback)" if getattr(llm, "using_backup", False) else "")
+        st.session_state.results[case_id] = result
 
     state = st.session_state.results.get(case_id)
     if not state:
