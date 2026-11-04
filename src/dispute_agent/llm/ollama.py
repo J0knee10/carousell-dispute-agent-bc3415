@@ -113,6 +113,9 @@ class OllamaClient:
                 task, time.monotonic() - start,
                 tokens_in=data.get("prompt_eval_count", 0), tokens_out=data.get("eval_count", 0),
             )
+            # Ollama silently drops the start of a prompt that does not fit the window.
+            if (data.get("prompt_eval_count") or 0) + (data.get("eval_count") or 0) >= self.num_ctx:
+                raise LLMError(f"Prompt did not fit {self.model}'s {self.num_ctx}-token window; raise llm.ollama.num_ctx")
             text = (data.get("message", {}).get("content") or "").strip()
             text = re.sub(r"^```(?:json)?\s*|\s*```$", "", text)
             try:

@@ -18,8 +18,9 @@ llm:
   ollama:
     host: http://localhost:11434
     # Context window in tokens. The baseline prompt holds the whole policy
-    # (about 7,000 tokens), more than Ollama's default window.
-    num_ctx: 16384
+    # (up to 6,800 tokens), more than Ollama's default window. A larger window
+    # does not fit an 8B model entirely on an 8 GB GPU and slows it down.
+    num_ctx: 10240
     timeout_seconds: 600
   # Models that write the synthetic disputes, tried in order (the next one is
   # used when one runs out of free quota). Kept different from the judge so the
