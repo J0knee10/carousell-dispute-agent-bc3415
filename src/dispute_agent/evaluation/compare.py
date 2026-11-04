@@ -50,9 +50,12 @@ def load_run(run: str) -> dict:
     }
 
 
-def build_comparison(runs: list[str], out_name: str = "model_comparison", hardware: str = "") -> Path:
+def build_comparison(runs: list[str], out_name: str = "model_comparison", hardware: str = "", notes: Path | None = None) -> Path:
+    """notes: a Markdown file with the written conclusions, placed after the title."""
     rows = [load_run(run) for run in runs]
     lines = ["# Model comparison", ""]
+    if notes:
+        lines += [Path(notes).read_text(encoding="utf-8").strip(), "", "## The numbers", ""]
     if hardware:
         lines.append(f"- Local hardware: {hardware}")
     lines += [

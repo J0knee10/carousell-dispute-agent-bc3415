@@ -178,7 +178,7 @@ def cmd_evaluate(args) -> int:
 def cmd_compare(args) -> int:
     from .evaluation.compare import build_comparison
 
-    out = build_comparison(args.runs, out_name=args.out, hardware=args.hardware or "")
+    out = build_comparison(args.runs, out_name=args.out, hardware=args.hardware or "", notes=args.notes)
     _print(out.read_text(encoding="utf-8"))
     _print(f"Saved to {out}")
     return 0
@@ -298,6 +298,7 @@ def build_parser() -> argparse.ArgumentParser:
     sp.add_argument("runs", nargs="+")
     sp.add_argument("--out", default="model_comparison", help="report name in reports/")
     sp.add_argument("--hardware", default=None, help="describe the local hardware for the report")
+    sp.add_argument("--notes", default=None, help="Markdown file with the written conclusions")
     add("eval-retrieval", cmd_eval_retrieval, "retrieval accuracy on the query set")
     sp = add("whatif", cmd_whatif, "re-judge past cases under a proposed policy change")
     sp.add_argument("change", help="the proposed rule, in plain English")

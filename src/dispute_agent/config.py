@@ -12,7 +12,7 @@ from dotenv import load_dotenv
 
 ROOT = Path(__file__).resolve().parents[2]
 PROVIDERS = ("gemini", "ollama", "openai", "mock")
-DEFAULT_JUDGE_MODELS = {"gemini": "gemini-flash-lite-latest", "ollama": "qwen3:8b", "openai": "gpt-5-mini"}
+DEFAULT_JUDGE_MODELS = {"gemini": "gemini-flash-lite-latest", "ollama": "llama3.1:8b", "openai": "gpt-5-mini"}
 # Environment variables that override the judge model for each provider.
 MODEL_ENV = {"gemini": "GEMINI_MODEL", "ollama": "OLLAMA_MODEL", "openai": "OPENAI_MODEL"}
 

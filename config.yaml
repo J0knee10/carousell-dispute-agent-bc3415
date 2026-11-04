@@ -13,7 +13,7 @@ llm:
   # reports/model_comparison.md explains why these models.
   judge_models:
     gemini: gemini-flash-lite-latest
-    ollama: qwen3:8b
+    ollama: llama3.1:8b
     openai: gpt-5-mini
   ollama:
     host: http://localhost:11434
