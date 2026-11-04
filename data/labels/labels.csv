@@ -147,7 +147,7 @@ G125,test,borderline,conflicting_accounts,Eyeshadow lot with bonus remover!,decl
 G126,test,borderline,minor_shade,Western cross purse,decline,TRUE,,,decline,TRUE,decline,TRUE,,decline,TRUE,Shade difference from lighting.
 G127,dev,borderline,subjective_condition,Ralph Lauren Toddler Shoes,decline,TRUE,,,,,,,,,,
 G128,dev,borderline,wear_disclosed,FINAL PRICE** 2 pairs boys joggers,decline,TRUE,,,,,,,,,,
-G129,test,borderline,cosmetic_undisclosed_minor,8oz FLUFFY Peach Slime!,partial_refund,TRUE,,,partial_refund,TRUE,decline,TRUE,,decline,TRUE,"Judgement call. Scratch is on the container, the slime is unaffected and the seller has a pre-packing photo. The decision guide's like-new rule would allow a partial refund."
+G129,test,borderline,cosmetic_undisclosed_minor,8oz FLUFFY Peach Slime!,partial_refund,TRUE,,,partial_refund,TRUE,partial_refund,TRUE,,decline,TRUE,"Judgement call. Scratch is on the container, the slime is unaffected and the seller has a pre-packing photo. The decision guide's like-new rule would allow a partial refund."
 G130,dev,borderline,conflicting_accounts,Disney Exclusive Star Wars Metal Earth,decline,TRUE,,,,,,,,,,
 G131,dev,borderline,minor_shade,Tote bag,decline,TRUE,,,,,,,,,,
 G132,dev,borderline,subjective_condition,Marilyn Monroe canvas,decline,TRUE,,,,,,,,,,
@@ -164,7 +164,7 @@ G142,dev,borderline,subjective_condition,BREG KNEE BRACE After surgery quality,d
 G144,test,borderline,cosmetic_undisclosed_minor,NFLDallas Cowboys Microfiber Cloth,partial_refund,TRUE,,,partial_refund,TRUE,partial_refund,TRUE,,partial_refund,TRUE,Brand new; specific stain (decision guide: partial refund).
 G145,dev,borderline,conflicting_accounts,Acrylic paint,decline,TRUE,,,,,,,,,,
 G146,test,borderline,minor_shade,"Free People New Romantics Top, Medium",decline,TRUE,,,decline,TRUE,decline,TRUE,,decline,TRUE,Shade difference from lighting.
-G147,test,borderline,subjective_condition,iPhone 5c case.,decline,TRUE,,,partial_refund,TRUE,decline,TRUE,,decline,TRUE,"Judgement call. The buyer's '6/10' complaint matches the policy's own 8/10-vs-6/10 example (BPR-03), though 'like new' plus many scratches could justify a partial refund."
+G147,test,borderline,subjective_condition,iPhone 5c case.,decline,TRUE,,,partial_refund,TRUE,partial_refund,TRUE,,decline,TRUE,"Judgement call. The buyer's '6/10' complaint matches the policy's own 8/10-vs-6/10 example (BPR-03), though 'like new' plus many scratches could justify a partial refund."
 G148,test,borderline,wear_disclosed,Size 9 Nike Roshe Run Black,decline,TRUE,,,decline,TRUE,decline,TRUE,,decline,TRUE,Heavy wear disclosed.
 G149,dev,borderline,cosmetic_undisclosed_minor,Large WOMAN SWEET SWEAT NEOPRENE BELT,partial_refund,TRUE,,,,,,,,,,
 G150,dev,borderline,conflicting_accounts,Acoustic Guitar Pickup,decline,TRUE,,,,,,,,,,
