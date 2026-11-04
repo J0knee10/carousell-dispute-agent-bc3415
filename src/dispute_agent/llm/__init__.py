@@ -45,20 +45,35 @@ def fallback_provider(provider: str) -> str | None:
     return None
 
 
+def _spend_tracker():
+    from ..config import path
+    from .openai_client import SpendTracker
+
+    full = load_config()
+    o = full["llm"].get("openai", {})
+    return SpendTracker(
+        file=path("outputs.openai_spend"),
+        budget_sgd=o.get("app_budget_sgd_per_month", 100),
+        usd_to_sgd=full["data"].get("usd_to_sgd", 1.35),
+        prices=o.get("prices_usd_per_million", {}),
+    )
+
+
 def get_llm(
-    role: Role = "judge", provider: str | None = None, model: str | None = None, with_fallback: bool = False
+    role: Role = "judge", provider: str | None = None, model: str | None = None, for_app: bool = False
 ) -> LLMClient:
     """A client for the judge (or the dispute generator). `model` overrides config.yaml.
 
-    with_fallback=True (used by the app, never by evaluations) wraps the provider so that a
-    failed call goes to the fallback provider in config.yaml, e.g. Gemini -> OpenAI.
+    for_app=True is what the Streamlit app uses (evaluations never do): a failed call goes
+    to the fallback provider in config.yaml (Gemini -> OpenAI), and paid OpenAI calls stop
+    once the month's spend reaches llm.openai.app_budget_sgd_per_month.
     """
     cfg = load_config()["llm"]
     provider = provider or cfg["provider"]
-    if with_fallback and role == "judge" and fallback_provider(provider):
-        primary = get_llm(role, provider, model)
-        backup = get_llm(role, fallback_provider(provider))
-        return CloudFallbackLLM(primary, backup, max_backup_calls=cfg.get("fallback_max_calls", 300))
+    if for_app and role == "judge" and fallback_provider(provider):
+        primary = get_llm(role, provider, model)  # the free provider: no fallback, no budget
+        backup = get_llm(role, fallback_provider(provider), for_app=True)
+        return CloudFallbackLLM(primary, backup)
     temperature = cfg["temperature"] if role == "judge" else cfg["generator_temperature"]
     if provider == "mock":
         from .mock import MockLLM
@@ -78,7 +93,11 @@ def get_llm(
             raise LLMError("OPENAI_API_KEY is not set. Add it to .env, or use another provider.")
         from .openai_client import OpenAIClient
 
-        return OpenAIClient(model=model or judge_model("openai"), api_key=key, temperature=temperature)
+        o = cfg.get("openai", {})
+        return OpenAIClient(
+            model=model or judge_model("openai"), api_key=key, temperature=temperature,
+            reasoning_effort=o.get("reasoning_effort"), spend=_spend_tracker() if for_app else None,
+        )
     if provider == "gemini":
         key = gemini_api_key()
         if not key:
@@ -111,11 +130,11 @@ class CloudFallbackLLM:
 
     A daily-quota error switches to the backup for the rest of the process (the
     quota will not come back for hours); any other failure falls back for that
-    call only. Backup calls are capped (config llm.fallback_max_calls) so a public
-    app cannot run up the paid provider's bill.
+    call only. The paid provider's monthly budget (SpendTracker, S$100 by default)
+    is the main limit; max_backup_calls is an optional extra cap.
     """
 
-    def __init__(self, primary, backup, max_backup_calls: int = 300):
+    def __init__(self, primary, backup, max_backup_calls: int | None = None):
         self.primary, self.backup = primary, backup
         self.max_backup_calls = max_backup_calls
         self.backup_calls = 0
@@ -157,7 +176,7 @@ class CloudFallbackLLM:
                 error = e
         else:
             error = LLMError(f"{self.primary.name} quota exhausted earlier in this session")
-        if self.backup_calls >= self.max_backup_calls:
+        if self.max_backup_calls is not None and self.backup_calls >= self.max_backup_calls:
             raise RateLimitError(
                 f"{error} The fallback ({self.backup.name}) reached its limit of {self.max_backup_calls} calls for this session.",
                 daily=True, model=self.backup.model,

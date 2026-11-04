@@ -64,7 +64,7 @@ def store():
 @st.cache_resource
 def agent(provider: str, model: str | None = None):
     # The app falls back to the paid provider when the free one fails (config llm.fallback).
-    llm = get_llm(provider=provider, model=model, with_fallback=True)
+    llm = get_llm(provider=provider, model=model, for_app=True)
     return llm, build_graph(llm, store())
 
 
@@ -128,7 +128,12 @@ def sidebar() -> tuple[str, str | None]:
         st.sidebar.caption(f"Judge model: `{judge_model(provider)}`")
         fb = fallback_provider(provider)
         if fb:
-            st.sidebar.caption(f"If {provider} fails or its free quota runs out: `{judge_model(fb)}` ({fb}, paid)")
+            budget = load_config()["llm"].get("openai", {}).get("app_budget_sgd_per_month", 100)
+            st.sidebar.caption(f"If {provider} fails or its free quota runs out: `{judge_model(fb)}` ({fb}, paid; "
+                               f"stops at S${budget:.0f} a month)")
+        if provider == "openai":
+            budget = load_config()["llm"].get("openai", {}).get("app_budget_sgd_per_month", 100)
+            st.sidebar.caption(f"Paid: the app stops at S${budget:.0f} of OpenAI usage a month.")
     if "gemini" not in options:
         st.sidebar.info("Add GEMINI_API_KEY to .env (or the app's Streamlit secrets) to use Gemini.")
     return provider, model

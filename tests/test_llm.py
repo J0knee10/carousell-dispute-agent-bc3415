@@ -155,10 +155,46 @@ def test_app_gets_the_fallback_only_when_asked_and_keys_are_set(monkeypatch):
 
     monkeypatch.setenv("GEMINI_API_KEY", "test-gemini-key")
     monkeypatch.setenv("OPENAI_API_KEY", "sk-test")
-    assert isinstance(get_llm(provider="gemini", with_fallback=True), CloudFallbackLLM)
+    llm = get_llm(provider="gemini", for_app=True)
+    assert isinstance(llm, CloudFallbackLLM) and llm.backup.spend is not None  # the app's OpenAI calls are budgeted
     assert isinstance(get_llm(provider="gemini"), GeminiClient)  # evaluations never fall back
+    assert get_llm(provider="openai").spend is None  # nor are they budgeted
     monkeypatch.delenv("OPENAI_API_KEY")
-    assert isinstance(get_llm(provider="gemini", with_fallback=True), GeminiClient)
+    assert isinstance(get_llm(provider="gemini", for_app=True), GeminiClient)
+
+
+def test_spend_tracker_stops_at_the_budget(tmp_path):
+    from dispute_agent.llm import RateLimitError
+    from dispute_agent.llm.openai_client import SpendTracker
+
+    t = SpendTracker(tmp_path / "spend.json", budget_sgd=1.0, usd_to_sgd=1.35, prices={"m": {"input": 1.0, "output": 4.0}})
+    t.check("m")
+    usd = t.add("m", tokens_in=500_000, tokens_out=100_000)  # 0.5 + 0.4 = US$0.90 = S$1.215
+    assert abs(usd - 0.9) < 1e-9 and t.spent_sgd() > 1.0
+    with pytest.raises(RateLimitError, match="budget reached"):
+        t.check("m")
+    with pytest.raises(Exception, match="No price"):
+        t.check("unknown-model")
+
+
+def test_openai_client_counts_spend_and_sends_reasoning_effort(monkeypatch, tmp_path):
+    from types import SimpleNamespace
+
+    from dispute_agent.llm.openai_client import OpenAIClient, SpendTracker
+
+    spend = SpendTracker(tmp_path / "s.json", budget_sgd=100, usd_to_sgd=1.35, prices={"gpt-5.4-mini": {"input": 0.75, "output": 4.5}})
+    client = OpenAIClient(model="gpt-5.4-mini", api_key="sk-test", reasoning_effort="low", spend=spend)
+    calls = []
+
+    def fake_parse(**kwargs):
+        calls.append(kwargs)
+        message = SimpleNamespace(parsed=BaselineJudgement(**GOOD), refusal=None)
+        return SimpleNamespace(choices=[SimpleNamespace(message=message)], usage=SimpleNamespace(prompt_tokens=1_000_000, completion_tokens=0))
+
+    monkeypatch.setattr(client.client.chat.completions, "parse", fake_parse)
+    client.generate(task="baseline", system="s", prompt="p", schema=BaselineJudgement)
+    assert calls[0]["reasoning_effort"] == "low"
+    assert abs(spend.spent_sgd() - 0.75 * 1.35) < 1e-6
 
 
 def test_openai_without_key_is_a_clear_error(monkeypatch):
@@ -172,7 +208,7 @@ def test_openai_client_parses_structured_output(monkeypatch):
 
     from dispute_agent.llm.openai_client import OpenAIClient
 
-    client = OpenAIClient(model="gpt-5-mini", api_key="sk-test")
+    client = OpenAIClient(model="gpt-5.4-mini", api_key="sk-test")
     calls = []
 
     def fake_parse(**kwargs):
