@@ -130,7 +130,9 @@ def cmd_run_case(args) -> int:
         for step in r.trace:
             _print(f"- {step['step']} ({step['seconds']}s): {step['summary']}")
         _print(json.dumps(r.state["recommendation"], indent=2))
-        if args.approve:
+        if args.approve and not r.state["recommendation"].get("outcome"):
+            _print("No outcome to approve: the case is referred to staff. Skipping the message drafts.")
+        elif args.approve:
             final = resume(graph, r.thread_id, {"action": "approve", "staff": "cli"})
             _print(json.dumps(final.get("messages", {}), indent=2))
     except RateLimitError as e:
@@ -161,13 +163,15 @@ def cmd_evaluate(args) -> int:
     cases = [by_id[i] for i in ids]
     retrieval = "none" if args.no_retrieval else args.retrieval
     variant = {"per_gap": "", "agentic": "agent-driven retrieval", "none": "no retrieval"}[retrieval]
+    if args.guide == "rubric":
+        variant = ", ".join(v for v in ("rubric-only guide", variant) if v)
     write_run_info(run, {"split": split, "case_ids": ids, "provider": llm.name, "model": llm.model, "variant": variant})
     systems = ["agent", "baseline"] if args.system == "both" else [args.system]
     threshold = cfg["agent"]["confidence_threshold"]
     try:
         for system in systems:
             run_system(system, cases, llm, get_store(), run, threshold, progress=_print,
-                       retrieval=retrieval, retry_errors=not args.keep_failures)
+                       retrieval=retrieval, retry_errors=not args.keep_failures, guide=args.guide)
     except QuotaExhausted as e:
         _print(f"Done {e.done}, remaining {e.remaining} for this system.")
         build_report(run)
@@ -294,6 +298,8 @@ def build_parser() -> argparse.ArgumentParser:
     sp.add_argument("--retrieval", choices=["per_gap", "agentic", "none"], default="per_gap",
                     help="agent retrieval design: per gap (default), agent-driven via the tool, or none")
     sp.add_argument("--no-retrieval", action="store_true", help="same as --retrieval none")
+    sp.add_argument("--guide", choices=["full", "rubric"], default="full",
+                    help="ablation: 'rubric' drops the policy lists from the judge's decision guide")
     sp.add_argument("--limit", type=int, default=None, help="only the first N cases of the split (a quick probe)")
     sp.add_argument("--keep-failures", action="store_true", help="on resume, do not re-run cases whose answer failed")
     provider(sp)

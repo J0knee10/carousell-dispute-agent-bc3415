@@ -7,11 +7,12 @@ from ..schemas import DisputeCase, RetrievedClause
 # The team's rubric for choosing an outcome. Carousell's policy says what is
 # covered; it does not say when to pick a partial refund over a return, so this
 # part is our own assumption. docs/labelling_guide.md gives labellers the same text.
-DECISION_GUIDE = """\
+SIGNIFICANCE_GUIDE = """\
 Deciding whether a gap is significant (from Carousell's policy):
 - Significant (covered): a different variation (size, colour, model, version, storage); missing parts or accessories that the listing said were included; damage or defects the listing did not disclose, especially ones affecting function; condition clearly worse than the condition stated; a specific undisclosed flaw (a stain, scratch, mark or tear) on an item listed as brand new, like new or flawless, even if it works fine, because it contradicts what the listing claimed; an item that deviates extensively from the listing.
-- Not significant (not covered): wear that matches a correctly stated used condition or flaws the listing disclosed; subjective or minor variations (a slightly different shade, approximate sizes, "8/10 vs 6/10" style condition opinions that describe only ordinary wear and no specific flaw); the buyer changing their mind or ordering the wrong thing; claims about things the listing never promised; damage after delivery; surface wear that does not affect function on an item whose stated used condition allows for it.
+- Not significant (not covered): wear that matches a correctly stated used condition or flaws the listing disclosed; subjective or minor variations (a slightly different shade, approximate sizes, "8/10 vs 6/10" style condition opinions that describe only ordinary wear and no specific flaw); the buyer changing their mind or ordering the wrong thing; claims about things the listing never promised; damage after delivery; surface wear that does not affect function on an item whose stated used condition allows for it."""
 
+OUTCOME_RUBRIC = """\
 Choosing the outcome (team rubric):
 - full_refund_with_return: a significant gap that makes the item substantially not what was bought (wrong variation, defect affecting function, major undisclosed damage). The buyer returns it.
 - partial_refund: a significant gap, but the item is still usable and mostly as described (a missing minor accessory; a small specific flaw on an item listed as brand new, like new or flawless). Suggest a percentage of the item price.
@@ -19,6 +20,8 @@ Choosing the outcome (team rubric):
 - decline: no significant gap.
 
 Confidence: lower it when the buyer and seller give conflicting accounts and neither has clear evidence, when significance is a judgement call, or when key evidence (photos, serial numbers, packing proof) is missing. Ask for that evidence in follow-up questions."""
+
+DECISION_GUIDE = f"{SIGNIFICANCE_GUIDE}\n\n{OUTCOME_RUBRIC}"
 
 
 def render_case(case: DisputeCase) -> str:
@@ -83,6 +86,18 @@ Rules:
 - Assess each gap, then recommend one outcome.
 
 {DECISION_GUIDE}"""
+
+# Ablation (--guide rubric): the judge gets only the team's outcome rubric, so what is
+# and is not covered has to come from the policy clauses it is given.
+JUDGE_SYSTEM_RUBRIC_ONLY = f"""\
+You assist Carousell Singapore's support team in deciding 'significantly not as described' and incomplete-item disputes under the Buyer Protection and Certified Refund Policy. A staff member makes the final decision; you recommend.
+
+Rules:
+- Base every judgement only on the policy clauses provided: they say what counts as significantly not as described and what is not covered. Cite clause IDs exactly as given (e.g. "BPR-02"). Never invent clause IDs.
+- Eligibility (payment method, dispute window) has already been checked and passed. Judge only the substance.
+- Assess each gap as significant (covered), not significant (not covered) or unclear, then recommend one outcome.
+
+{OUTCOME_RUBRIC}"""
 
 
 SEARCH_TOOL_AVAILABLE = """\

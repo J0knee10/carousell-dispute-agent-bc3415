@@ -159,6 +159,25 @@ def test_agent_driven_retrieval_plans_then_searches_then_judges(mock_llm, store,
     assert r.llm_calls == 3 and st["judge_rounds"] == 1  # claims, plan, one judgement
 
 
+def test_rubric_only_guide_drops_the_policy_lists(mock_llm, store, seeds):
+    from dispute_agent.agent import prompts
+
+    seen = []
+
+    class Spy:
+        name, model, stats = "spy", "spy", mock_llm.stats
+
+        def generate(self, **kw):
+            seen.append((kw["task"], kw["system"]))
+            return mock_llm.generate(**kw)
+
+    run_to_review(build_graph(Spy(), store, decision_logger=None, guide="rubric"), seeds["S01"], Spy())
+    judge_system = next(s for t, s in seen if t == "adjudication")
+    assert judge_system == prompts.JUDGE_SYSTEM_RUBRIC_ONLY
+    assert prompts.OUTCOME_RUBRIC in judge_system and prompts.SIGNIFICANCE_GUIDE not in judge_system
+    assert prompts.DECISION_GUIDE == prompts.SIGNIFICANCE_GUIDE + "\n\n" + prompts.OUTCOME_RUBRIC
+
+
 def test_no_retrieval_ablation_gives_the_judge_no_clauses(mock_llm, store, seeds):
     graph = build_graph(mock_llm, store, decision_logger=None, use_retrieval=False)
     st = run_to_review(graph, seeds["S01"], mock_llm).state

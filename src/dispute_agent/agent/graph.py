@@ -186,8 +186,16 @@ def build_graph(
     use_retrieval: bool = True,
     max_tool_rounds: int | None = None,
     retrieval: str = "per_gap",
+    guide: str = "full",
 ):
-    """retrieval: per_gap (default), agentic or none (see RETRIEVAL_MODES). use_retrieval=False means none."""
+    """retrieval: per_gap (default), agentic or none (see RETRIEVAL_MODES). use_retrieval=False means none.
+
+    guide: full (default: the decision guide restates the policy's covered / not-covered lists) or
+    rubric (only the team's outcome rubric, so coverage must come from the retrieved clauses; an ablation).
+    """
+    if guide not in ("full", "rubric"):
+        raise ValueError(f"guide must be 'full' or 'rubric', got {guide!r}")
+    judge_system = prompts.JUDGE_SYSTEM if guide == "full" else prompts.JUDGE_SYSTEM_RUBRIC_ONLY
     cfg = load_config()
     threshold = confidence_threshold if confidence_threshold is not None else cfg["agent"]["confidence_threshold"]
     max_clauses = cfg["rag"]["max_clauses"]
@@ -260,7 +268,7 @@ def build_graph(
             tool = "available" if rounds < tool_rounds else "used"
         result = llm.generate(
             task="whatif_adjudication" if proposed else "adjudication",
-            system=prompts.JUDGE_SYSTEM,
+            system=judge_system,
             prompt=prompts.judge_prompt(
                 case, json.dumps(state["claims"]["gaps"], indent=1), clauses, proposed, tool, max_searches
             ),
