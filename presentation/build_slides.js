@@ -172,7 +172,7 @@ pres.addSection({ title: SEC2 });
     "LangGraph workflow in src/dispute_agent/agent/graph.py. The confidence threshold for escalation is 0.7 (config.yaml).");
   const KIND = {
     code: ["Plain code", C.accent3],
-    llm: ["LLM (Gemini)", C.accent1],
+    llm: ["LLM (judge model)", C.accent1],
     rag: ["Retrieval", C.accent2],
     person: ["Person", C.text1],
   };
@@ -180,7 +180,7 @@ pres.addSection({ title: SEC2 });
     ["Eligibility rules", "Buy button? Inside the window?", "code"],
     ["Claim matching", "Listing’s promises vs the buyer’s report", "llm"],
     ["Policy retrieval", "Clauses for each gap", "rag"],
-    ["Judgement", "Outcome, reasons, clause IDs", "llm"],
+    ["Judgement", "Outcome, clause IDs; can search again", "llm"],
     ["Check", "Citations real? Confident?", "code"],
     ["Staff decides", "Approve or override", "person"],
     ["Message drafts", "To the buyer and the seller", "llm"],
@@ -213,10 +213,10 @@ pres.addSection({ title: SEC2 });
     text(s, `Legend ${key}`, label, { x: lx + 0.32, y: 5.55, w: 1.9, h: 0.36, fontSize: 15, color: C.text1, valign: "middle" });
     lx += 2.3;
   });
-  text(s, "Escalation note", "Unsure, unclear or uncited: the check sends the case to a person, with follow-up questions to ask.", {
+  text(s, "Escalation note", "Missing policy: the judge calls search_policy and decides again. Unsure or uncited: the check sends the case to a person.", {
     x: 0.6, y: 6.1, w: 12.1, h: 0.4, fontSize: 15, italic: true, color: C.text2,
   });
-  s.addNotes(`[0:50] C1: "How does it work? It's a LangGraph workflow. Exact rules are plain code: did the buyer use the Buy button, inside the window? If not, the case goes straight to staff. Judgement goes to an LLM: it matches what the listing promised against what the buyer reports, retrieves the policy clauses for each gap, and recommends an outcome with citations. Code checks the citations, and the workflow pauses until a person decides."`);
+  s.addNotes(`[0:50] C1: "How does it work? It's a LangGraph workflow. Exact rules are plain code: did the buyer use the Buy button, inside the window? If not, the case goes straight to staff. Judgement goes to an LLM: it matches what the listing promised against what the buyer reports, retrieves the policy clauses for each gap, and recommends an outcome with citations. If those clauses don't cover a gap, it can call a policy search tool and decide again. Code checks the citations, and the workflow pauses until a person decides."`);
 }
 
 {
@@ -227,10 +227,10 @@ pres.addSection({ title: SEC2 });
   s.addTable([
     [hdr("Part"), hdr("Tool")],
     row("Workflow, pause for a person", "LangGraph (interrupt)"),
-    row("LLM calls", "Gemini free tier, structured JSON output"),
+    row("Judge model", "Gemini (cloud) or Llama / Qwen (local), JSON output"),
     row("Policy search", "ChromaDB embeddings + BM25 keywords, rank fusion"),
     row("Policy text", "4 Carousell help pages, 37 clauses, copied by hand"),
-    row("Interface", "Streamlit"),
+    row("Interface", "Streamlit, on Community Cloud"),
     row("Environment", "uv with Python 3.12 locked; Docker optional"),
   ], { x: 0.6, y: 1.95, w: 7.3, colW: [2.8, 4.5], rowH: 0.62, fontSize: 16, color: C.text1, valign: "middle", border: { type: "solid", pt: 0.75, color: DIVIDER }, margin: 0.1, objectName: "Stack table" });
 
@@ -245,7 +245,7 @@ pres.addSection({ title: SEC2 });
     text(s, `Bar value ${i + 1}`, `${pct}%`, { x: 8.65 + maxW * pct / 100 + 0.12, y: by + 0.36, w: 1.0, h: 0.38, fontSize: 18, bold: true, fontFace: HEAD, color: C.text1, valign: "middle" });
   });
   text(s, "Retrieval note", "Hybrid has the right clause in its top five 96% of the time.", { x: 8.65, y: 5.6, w: 3.8, h: 0.55, fontSize: 14, color: C.text2 });
-  s.addNotes(`[ends 1:40] C1: "The stack: LangGraph, Gemini's free tier with structured JSON output, ChromaDB plus keyword search, and Streamlit. The search is hybrid because it ranks the right clause first 76% of the time, against 52% for embeddings or keywords alone."`);
+  s.addNotes(`[ends 1:40] C1: "The stack: LangGraph, Gemini's free tier or a local model with structured JSON output, ChromaDB plus keyword search, and Streamlit. The search is hybrid because it ranks the right clause first 76% of the time, against 52% for embeddings or keywords alone."`);
 }
 
 // --- 3. Demo (C4; blank: the screen recording goes over this slide) -------
@@ -316,10 +316,10 @@ pres.addSection({ title: SEC4 });
 
 {
   const s = content(SEC4, "4 · DOES IT WORK", "Level on judgement, ahead on the rules",
-    "Source: reports/evaluation_gemini_test_v2.md, 50 held-out cases, judge gemini-flash-lite-latest. Labels are provisional until two team members finish labelling.");
+    "Source: reports/evaluation_cmp_gemini-flash-lite.md, 50 held-out cases, judge gemini-flash-lite-latest. Labels are provisional until two team members finish labelling.");
   s.addChart(pres.charts.BAR, [
-    { name: "Agent", labels: ["Clear (30)", "Borderline (15)", "Ineligible (5)", "All 50"], values: [93, 73, 100, 88] },
-    { name: "Single-prompt baseline", labels: ["Clear (30)", "Borderline (15)", "Ineligible (5)", "All 50"], values: [97, 73, 60, 86] },
+    { name: "Agent", labels: ["Clear (30)", "Borderline (15)", "Ineligible (5)", "All 50"], values: [93, 80, 100, 90] },
+    { name: "Single-prompt baseline", labels: ["Clear (30)", "Borderline (15)", "Ineligible (5)", "All 50"], values: [97, 80, 60, 88] },
   ], {
     x: 0.6, y: 1.85, w: 7.2, h: 4.85, barDir: "col", barGrouping: "clustered", barGapWidthPct: 60,
     chartColors: [THEME.colors.accent1, THEME.colors.accent6],
@@ -331,9 +331,9 @@ pres.addSection({ title: SEC4 });
     objectName: "Accuracy chart",
   });
   const rows = [
-    ["100%", "vs 74%", "eligibility right: the rules never miss a bank transfer or a late dispute"],
-    ["0", "vs 2 cases", "citing a clause that doesn’t exist"],
-    ["91%", "of 70", "citations support the decision (an AI-assisted check, to be confirmed by hand)"],
+    ["100%", "vs 68%", "eligibility right: the rules never miss a bank transfer or a late dispute"],
+    ["2 of 5", "vs 1 of 6", "wrong answers sent to a person as unsure"],
+    ["90%", "of 68", "citations support the decision (an AI-assisted check, to be confirmed by hand)"],
   ];
   rows.forEach(([num, vs, cap], i) => {
     const y = 1.95 + i * 1.6;
@@ -344,31 +344,41 @@ pres.addSection({ title: SEC4 });
     ], { x: 8.2, y, w: 4.53, h: 0.65, valign: "middle" });
     text(s, `Result caption ${i + 1}`, cap, { x: 8.2, y: y + 0.65, w: 4.53, h: 0.75, fontSize: 15, color: C.text1 });
   });
-  s.addNotes(`C3: "On those 50, the agent gets 88% right and a single prompt with the whole policy pasted in gets 86%. That's one case: a tie on judgement. The gains are on the rules: eligibility is 100% against 74%, and it never cites a clause that doesn't exist. An AI-assisted check found 91% of its citations support the decision."`);
+  s.addNotes(`C3: "On those 50, the agent gets 90% right; a single prompt with the whole policy pasted in gets 88%. That's one case, a tie on judgement. The gain is on the rules: eligibility is 100% against 68%. And 2 of its 5 mistakes go to a person."`);
 }
 
 {
-  const s = content(SEC4, "4 · DOES IT WORK", "Our first test run lost",
-    "Source: reports/evaluation_gemini_test.md (first run), reports/evaluation_dev_borderline_v1.md and _v2.md (the fix, on dev cases), reports/evaluation_gemini_test_v2.md.");
-  const panels = [
-    ["FIRST RUN", C.accent1, "82%", "84%", "Both systems declined every small flaw on items listed as new: two lines of our decision guide contradicted each other."],
-    ["AFTER THE FIX", C.accent2, "88%", "86%", "We clarified the rule using dev cases only, then ran the test set again, once. Both runs stay in the report."],
-  ];
-  const w = 5.9;
-  panels.forEach(([label, color, agent, base, body], i) => {
-    const x = 0.6 + i * (w + 0.33);
-    box(s, `${label} panel`, x, 1.95, w, 3.95, C.background2);
-    text(s, `${label} label`, label, { x: x + 0.4, y: 2.25, w: w - 0.8, h: 0.35, fontSize: 13, bold: true, color, charSpacing: 2 });
-    [["Agent", agent, color], ["Baseline", base, C.accent3]].forEach(([name, num, numColor], j) => {
-      const nx = x + 0.4 + j * 2.6;
-      text(s, `${label} ${name} number`, num, { x: nx, y: 2.7, w: 2.4, h: 0.95, fontSize: 52, bold: true, fontFace: HEAD, color: numColor });
-      text(s, `${label} ${name} caption`, name, { x: nx, y: 3.65, w: 2.4, h: 0.35, fontSize: 16, color: C.text2 });
-    });
-    text(s, `${label} body`, body, { x: x + 0.4, y: 4.3, w: w - 0.8, h: 1.4, fontSize: 17, color: C.text1 });
+  const s = content(SEC4, "4 · DOES IT WORK", "We tried three judge models: Gemini stays",
+    "Source: reports/model_comparison.md, same 50 test cases. Local models ran on our own PC (RTX 4060 Ti, 8 GB GPU memory), which limits them to about 8 billion parameters.");
+  const labels = ["Gemini Flash-Lite (cloud)", "Llama 3.1 8B (local)", "Qwen 3 8B (local)"];
+  s.addChart(pres.charts.BAR, [
+    { name: "Agent", labels, values: [90, 52, 48] },
+    { name: "Single-prompt baseline", labels, values: [88, 34, 44] },
+  ], {
+    x: 0.6, y: 1.85, w: 7.2, h: 4.85, barDir: "col", barGrouping: "clustered", barGapWidthPct: 60,
+    chartColors: [THEME.colors.accent1, THEME.colors.accent6],
+    showTitle: true, title: "Decisions right (%), 50 test cases", titleFontSize: 15, titleColor: THEME.colors.dk1, titleFontFace: BODY,
+    showValue: true, dataLabelPosition: "outEnd", dataLabelFormatCode: '0"%"', dataLabelFontSize: 13, dataLabelColor: THEME.colors.dk1, dataLabelFontFace: BODY,
+    valAxisHidden: true, valAxisMaxVal: 110, valAxisMinVal: 0, valGridLine: { style: "none" }, catGridLine: { style: "none" },
+    catAxisLabelColor: THEME.colors.dk2, catAxisLabelFontSize: 13, catAxisLabelFontFace: BODY, catAxisLineShow: false,
+    showLegend: true, legendPos: "b", legendFontSize: 13, legendFontFace: BODY, legendColor: THEME.colors.dk2,
+    objectName: "Model chart",
   });
-  text(s, "Tie caption", "On 50 cases one case is 2 points, so 88 against 86 is a tie on accuracy.",
-    { x: 0.6, y: 6.15, w: 12.1, h: 0.45, fontSize: 16, color: C.text2 });
-  s.addNotes(`[ends about 3:55] C3: "And our first test run lost, 82 to 84. Both systems declined every small flaw on items listed as new, because two lines of our decision guide contradicted each other. We fixed the rule on dev cases only and re-ran the test set once. Both runs are in the report."`);
+  const rows = [
+    ["+18 pts", "with Llama", "the agent’s gain over a single prompt is largest with a weak model (Gemini: +2)"],
+    ["19 of 21", "for Llama", "cases that should be declined were refunded by the local model (Gemini: 1)"],
+    ["Private", "but slower", "local models keep case data on the PC, at 15 to 19 s a case against 9 s"],
+  ];
+  rows.forEach(([num, vs, cap], i) => {
+    const y = 1.95 + i * 1.6;
+    if (i > 0) s.addShape(S.LINE, { x: 8.2, y: y - 0.1, w: 4.53, h: 0, line: { color: DIVIDER, width: 1 }, objectName: `Model divider ${i}` });
+    text(s, `Model result ${i + 1}`, [
+      { text: num, options: { bold: true, fontFace: HEAD, color: C.accent1, fontSize: 34 } },
+      { text: `  ${vs}`, options: { color: C.text2, fontSize: 17 } },
+    ], { x: 8.2, y, w: 4.53, h: 0.65, valign: "middle" });
+    text(s, `Model caption ${i + 1}`, cap, { x: 8.2, y: y + 0.65, w: 4.53, h: 0.75, fontSize: 15, color: C.text1 });
+  });
+  s.addNotes(`[ends about 3:55] C3: "We also tried two open models on our own 8 GB graphics card, Llama and Qwen. They got only about half right: they refund almost everything, even a change of mind. The agent helped them most, 18 points for Llama, because the rules are code. So Gemini stays the judge; local models keep data private but need bigger hardware."`);
 }
 
 // --- 5. Risks and recommendation (B1) --------------------------------------
@@ -377,7 +387,7 @@ pres.addSection({ title: SEC5 });
 
 {
   const s = content(SEC5, "5 · RISKS", "Where it can go wrong, and what we do",
-    "Source: reports/evaluation_gemini_test_v2.md. Buyer-win cases are those labelled as a refund; seller-win cases, a decline.");
+    "Source: reports/evaluation_cmp_gemini-flash-lite.md and reports/model_comparison.md. Buyer-win cases are those labelled as a refund; seller-win cases, a decline.");
   const hdr = (t) => ({ text: t, options: { bold: true, color: C.background1, fill: { color: C.text1 } } });
   const row = (risk, guard, result) => [
     { text: risk, options: { bold: true } },
@@ -386,12 +396,12 @@ pres.addSection({ title: SEC5 });
   ];
   s.addTable([
     [hdr("Risk"), hdr("Safeguard"), hdr("On the test set")],
-    row("Invented policy", "Every citation must be a clause it retrieved; code drops the rest", "0 invented clause IDs"),
-    row("Leaning to one side", "Accuracy measured separately for buyer wins and seller wins", "92% of seller wins, 83% of buyer wins: it leans to declining"),
+    row("Invented policy", "Every citation must be a clause it retrieved; code drops the rest", "0 invented clause IDs in final answers"),
+    row("Leaning to one side", "Accuracy measured separately for buyer wins and seller wins", "96% of seller wins, 83% of buyer wins: it leans to declining"),
     row("Staff rubber-stamping", "Confidence score, escalation, every override logged", "6% of cases escalated"),
     row("Personal data", "Made-up disputes only", "A deployment would remove personal details first"),
   ], { x: 0.6, y: 1.95, w: 12.13, colW: [2.7, 5.0, 4.43], rowH: 0.85, fontSize: 17, color: C.text1, valign: "middle", border: { type: "solid", pt: 0.75, color: DIVIDER }, margin: 0.12, objectName: "Risk table" });
-  s.addNotes(`[3:55] B1: "The risks. Invented policy: none of its citations were invented. Bias: it gets 92% of seller wins right but 83% of buyer wins, so it leans towards declining, and we track that. Rubber-stamping: unsure cases go to a person, and every override is logged. And our data is made up; a deployment would remove personal details first."`);
+  s.addNotes(`[3:55] B1: "The risks. Invented policy: none of its citations were invented. Bias: it gets 96% of seller wins right but 83% of buyer wins, so it leans towards declining, and we track that. Rubber-stamping: unsure cases go to a person, and every override is logged. And our data is made up; a deployment would remove personal details first."`);
 }
 
 {
