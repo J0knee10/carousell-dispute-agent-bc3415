@@ -71,19 +71,19 @@ If a step gives a different answer from the one expected, keep going: say what t
 
 > "**(next)** Does it work? We sampled 300 real second-hand listings and wrote 200 disputes on top: 20 by hand and 180 with a generator model. The models that write the disputes never judge them. 50 cases are held out as the test set.
 >
-> **(next)** On those 50, the agent gets 90% right; a single prompt with the whole policy pasted in gets 88%. That's one case, a tie on judgement. The gain is on the rules: eligibility is 100% against 68%. And 2 of its 5 mistakes go to a person.
+> **(next)** On those 50, labelled by hand, the agent gets 94% right; a single prompt with the whole policy pasted in gets 84%. The gain is on the hard, borderline cases, 93 against 67, and on the rules: eligibility is 100% against 68%. And 2 of its 3 mistakes go to a person.
 >
-> **(next)** We also tried two open models on our own 8 GB graphics card, Llama and Qwen. They got only about half right: they refund almost everything, even a change of mind. The agent helped them most, 18 points for Llama, because the rules are code. So Gemini stays the judge; local models keep data private but need bigger hardware."
+> **(next)** We also tried two open models on our own 8 GB graphics card, Llama and Qwen. They got only about half right: they refund almost everything, even a change of mind. The agent helped them most, 22 points for Llama, because the rules are code. So Gemini stays the judge; local models keep data private but need bigger hardware."
 
 ## 5. Risks and recommendation (B1, 3:55–4:50)
 
 **Screen:** slide 10 (risks), slide 11 (recommendation) from "So our recommendation", slide 12 (pilot) from "A pilot would measure", slide 13 (team), slide 14 on "Thank you".
 
-> "**(next)** The risks. Invented policy: none of its citations were invented. Bias: it gets 96% of seller wins right but 83% of buyer wins, so it leans towards declining, and we track that. Rubber-stamping: unsure cases go to a person, and every override is logged. And our data is made up; a deployment would remove personal details first.
+> "**(next)** The risks. Invented policy: none of its citations were invented. Bias: it gets 96% of seller wins right and 91% of buyer wins, close to even, and we track that. Rubber-stamping: unsure cases go to a person, and every override is logged. And our data is made up; a deployment would remove personal details first.
 >
 > **(next)** So our recommendation: it's ready for a staff-assist pilot, not for automatic decisions. It gives a cited recommendation in about 9 seconds, and flags 6% of cases for a person.
 >
-> **(next)** A pilot would measure time to resolve a dispute, decisions overturned on appeal, and the share of orders using the Buy button. First, two of us label the test set by hand, and we re-measure.
+> **(next)** A pilot would measure time to resolve a dispute, decisions overturned on appeal, and the share of orders using the Buy button. First, a person checks the citations, and we re-measure on more cases.
 >
 > **(next)** Here's who built what. **(next)** Thank you."
 
@@ -104,13 +104,13 @@ If a step gives a different answer from the one expected, keep going: say what t
 - **G155 changed between runs:** a partial refund in the first test run, a full refund with return in the second, and a decline in the 4 Nov run and in the demo checks on 28 Oct and 4 Nov. It was escalated every time, which is the point of the escalation rule. LLM output varies even at temperature 0.
 
 **The evaluation**
-- **Labels:** provisional, meaning the outcome each case was written for. Two team members (B1 and B2) label the test set by hand (`docs/labelling_guide.md`); then we re-run the evaluation. An AI reviewer (Claude) also labelled the 50 test cases in separate columns and agreed with the provisional labels on 47 (kappa 0.90).
+- **Labels:** the 50 test cases were labelled by hand: B1 took 25 and B2 the other 25 (`docs/labelling_guide.md`), so there is no agreement score between them yet. The hand labels differ from the outcomes the cases were written for on two cases (G129, G134: decline). An AI reviewer (Claude) also labelled them in separate columns and agrees with the hand labels on 49 of 50 (kappa 0.97).
 - **Citation accuracy (90%):** checked by Claude, an AI model separate from every judge model, in the `claude_supports` column of `reports/citation_check_cmp_gemini-flash-lite.csv`. A team member should spot-check it. The 7 "no" answers are mostly procedural clauses (how a return works) or clauses listing what is covered, cited on a decline.
-- **Bias:** the baseline leans the other way: 96% of buyer wins right but 81% of seller wins.
-- **Escalation:** 6% of test cases were escalated, including 2 of the agent's 5 wrong answers (the baseline: 1 of 6).
+- **Bias:** the baseline leans towards refunding: 96% of buyer wins right but 75% of seller wins.
+- **Escalation:** 6% of test cases were escalated, including 2 of the agent's 3 wrong answers (the baseline: 1 of 8). On the cases it does not escalate, the agent is right 98% of the time.
 - **Generator vs judge:** 154 disputes were written by Gemma 4, 26 by Gemini 3 Flash and Gemini 3.5 Flash; the judges are Gemini Flash-Lite, Llama 3.1 8B and Qwen 3 8B. The generator had to quote the listing text each dispute is about.
 - **Time per case:** median 9.1 seconds and 1.8 LLM calls on the test set with Gemini; the baseline takes 4.5 seconds and one call.
-- **The first test run lost, 82 to 84.** Both systems declined every small flaw on items listed as new, because two lines of our decision guide contradicted each other. We fixed the rule on dev cases only and re-ran the test set (88 to 86). We then added the search tool and ran the test set once per model (90 to 88 with Gemini). The test set has now been used three times; nothing was tuned on it, and all runs are in `reports/`.
+- **The first test run lost, 82 to 84.** Both systems declined every small flaw on items listed as new, because two lines of our decision guide contradicted each other. We fixed the rule on dev cases only and re-ran the test set (88 to 86). We then added the search tool and ran the test set once per model; against the hand labels, Gemini's agent gets 94% and the single prompt 84% (7 cases only the agent got right, 2 only the single prompt; McNemar p = 0.18). The early runs were scored against the outcomes the cases were written for. The test set has now been used three times; nothing was tuned on it, and all runs are in `reports/`.
 
 **What-if**
 - **How it works:** each past case keeps its current-policy result (cached), then the judge re-decides it with the proposed rule added as clause PROPOSED-1. The report gives the flips, the before-and-after outcomes and the buyer-win share (`src/dispute_agent/evaluation/whatif.py`).
@@ -118,13 +118,13 @@ If a step gives a different answer from the one expected, keep going: say what t
 
 **The models**
 - **Which models:** `gemini-flash-lite-latest` (Google cloud, free tier), and two open 8B models on our own PC through Ollama: Llama 3.1 8B and Qwen 3 8B (thinking off). Same 50 test cases, prompts and code; only the judge changes.
-- **Results:** agent 90% / 52% / 48%, single prompt 88% / 34% / 44% (Gemini / Llama / Qwen). Of the 21 cases that should be declined and reach the LLM, Gemini refunded 1, Llama 19, Qwen 21.
-- **Why Gemini stays:** the only model accurate enough to save staff time, and the fastest (9 s against 15 and 19 s a case). Llama is the local fallback when data must stay on the machine.
+- **Results:** agent 94% / 52% / 50%, single prompt 84% / 30% / 40% (Gemini / Llama / Qwen); only Llama's gain is statistically significant on 50 cases (p = 0.04). Of the 23 eligible cases that should be declined, Gemini refunded 1, Llama 21, Qwen 22.
+- **Why Gemini stays:** by far the most accurate model we could test (94%), at about 9 s a case. Llama is the local fallback when data must stay on the machine.
 - **Hardware limits:** one PC with an 8 GB RTX 4060 Ti, which limits local models to about 8 billion parameters at 4-bit; a 10,240-token window keeps Llama fully on the GPU (Qwen ran 11% on the CPU). Bigger models would have run mostly on the CPU, and every run had to finish in one night.
 - **Does retrieval change the decisions?** Only a little on our test set. With the policy lists taken out of the prompt, Gemini got 23 of 25 clear cases right with retrieval and 22 without: without it, it declined two missing-accessory claims the policy covers, and it could cite nothing, so every case went to a person. The local models refund almost everything either way. Retrieval's main value is grounding: every recommendation cites a clause staff can check.
-- **OpenAI:** the client is ready (`--provider openai`); the paid key had not arrived when we ran the comparison.
+- **OpenAI:** GPT-5.4 mini is the app's paid fallback when a Gemini call fails, capped at S$100 a month. Its test runs are pending: the key's OpenAI organisation is on the free usage tier (50 requests a day) and the comparison needs about 500.
 
 **Costs and deployment**
 - **Free tier:** about one full test run (agent and baseline on 50 cases) uses the daily quota of `gemini-flash-lite-latest`. A real deployment would use a paid tier, which also stops Google using the prompts to improve its products, or a local model, and would remove personal details before any LLM call.
-- **Cloud demo:** the app runs on Streamlit Community Cloud with Gemini; local models only run on a machine with Ollama.
+- **Cloud demo:** the app runs on Streamlit Community Cloud with Gemini first and OpenAI as the fallback; local models only run on a machine with Ollama.
 - **Scaling:** other second-hand marketplaces (Carousell in other markets, Mercari, Vinted) need their own policy pages loaded into the search; the rules in `eligibility.py` would change with their policies.

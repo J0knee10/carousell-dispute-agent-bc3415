@@ -315,11 +315,11 @@ pres.addSection({ title: SEC4 });
 }
 
 {
-  const s = content(SEC4, "4 · DOES IT WORK", "Level on judgement, ahead on the rules",
-    "Source: reports/evaluation_cmp_gemini-flash-lite.md, 50 held-out cases, judge gemini-flash-lite-latest. Labels are provisional until two team members finish labelling.");
+  const s = content(SEC4, "4 · DOES IT WORK", "Ahead on the hard cases and on the rules",
+    "Source: reports/evaluation_cmp_gemini-flash-lite.md, 50 held-out cases labelled by hand, judge gemini-flash-lite-latest. 7 cases only the agent got right, 2 only the baseline (not significant on 50 cases).");
   s.addChart(pres.charts.BAR, [
-    { name: "Agent", labels: ["Clear (30)", "Borderline (15)", "Ineligible (5)", "All 50"], values: [93, 80, 100, 90] },
-    { name: "Single-prompt baseline", labels: ["Clear (30)", "Borderline (15)", "Ineligible (5)", "All 50"], values: [97, 80, 60, 88] },
+    { name: "Agent", labels: ["Clear (30)", "Borderline (15)", "Ineligible (5)", "All 50"], values: [93, 93, 100, 94] },
+    { name: "Single-prompt baseline", labels: ["Clear (30)", "Borderline (15)", "Ineligible (5)", "All 50"], values: [97, 67, 60, 84] },
   ], {
     x: 0.6, y: 1.85, w: 7.2, h: 4.85, barDir: "col", barGrouping: "clustered", barGapWidthPct: 60,
     chartColors: [THEME.colors.accent1, THEME.colors.accent6],
@@ -332,7 +332,7 @@ pres.addSection({ title: SEC4 });
   });
   const rows = [
     ["100%", "vs 68%", "eligibility right: the rules never miss a bank transfer or a late dispute"],
-    ["2 of 5", "vs 1 of 6", "wrong answers sent to a person as unsure"],
+    ["2 of 3", "vs 1 of 8", "wrong answers sent to a person as unsure"],
     ["90%", "of 68", "citations support the decision (an AI-assisted check, to be confirmed by hand)"],
   ];
   rows.forEach(([num, vs, cap], i) => {
@@ -344,16 +344,16 @@ pres.addSection({ title: SEC4 });
     ], { x: 8.2, y, w: 4.53, h: 0.65, valign: "middle" });
     text(s, `Result caption ${i + 1}`, cap, { x: 8.2, y: y + 0.65, w: 4.53, h: 0.75, fontSize: 15, color: C.text1 });
   });
-  s.addNotes(`C3: "On those 50, the agent gets 90% right; a single prompt with the whole policy pasted in gets 88%. That's one case, a tie on judgement. The gain is on the rules: eligibility is 100% against 68%. And 2 of its 5 mistakes go to a person."`);
+  s.addNotes(`C3: "On those 50, labelled by hand, the agent gets 94% right; a single prompt with the whole policy pasted in gets 84%. The gain is on the hard, borderline cases, 93 against 67, and on the rules: eligibility is 100% against 68%. And 2 of its 3 mistakes go to a person."`);
 }
 
 {
   const s = content(SEC4, "4 · DOES IT WORK", "We tried three judge models: Gemini stays",
-    "Source: reports/model_comparison.md, same 50 test cases. Local models ran on our own PC (RTX 4060 Ti, 8 GB GPU memory), which limits them to about 8 billion parameters.");
+    "Source: reports/model_comparison.md, same 50 test cases, hand labels. Local models ran on our own PC (RTX 4060 Ti, 8 GB GPU memory), so about 8B parameters at most. OpenAI GPT-5.4 mini: pending.");
   const labels = ["Gemini Flash-Lite (cloud)", "Llama 3.1 8B (local)", "Qwen 3 8B (local)"];
   s.addChart(pres.charts.BAR, [
-    { name: "Agent", labels, values: [90, 52, 48] },
-    { name: "Single-prompt baseline", labels, values: [88, 34, 44] },
+    { name: "Agent", labels, values: [94, 52, 50] },
+    { name: "Single-prompt baseline", labels, values: [84, 30, 40] },
   ], {
     x: 0.6, y: 1.85, w: 7.2, h: 4.85, barDir: "col", barGrouping: "clustered", barGapWidthPct: 60,
     chartColors: [THEME.colors.accent1, THEME.colors.accent6],
@@ -365,8 +365,8 @@ pres.addSection({ title: SEC4 });
     objectName: "Model chart",
   });
   const rows = [
-    ["+18 pts", "with Llama", "the agent’s largest gain over a single prompt (Gemini: +2); not significant on 50 cases"],
-    ["19 of 21", "for Llama", "cases that should be declined were refunded by the local model (Gemini: 1)"],
+    ["+22 pts", "with Llama", "the agent’s largest gain over a single prompt (Gemini: +10); significant only for Llama (p = 0.04)"],
+    ["21 of 23", "for Llama", "cases that should be declined were refunded by the local model (Gemini: 1)"],
     ["Private", "but slower", "local models keep case data on the PC, at 15 to 19 s a case against 9 s"],
   ];
   rows.forEach(([num, vs, cap], i) => {
@@ -378,7 +378,7 @@ pres.addSection({ title: SEC4 });
     ], { x: 8.2, y, w: 4.53, h: 0.65, valign: "middle" });
     text(s, `Model caption ${i + 1}`, cap, { x: 8.2, y: y + 0.65, w: 4.53, h: 0.75, fontSize: 15, color: C.text1 });
   });
-  s.addNotes(`[ends about 3:55] C3: "We also tried two open models on our own 8 GB graphics card, Llama and Qwen. They got only about half right: they refund almost everything, even a change of mind. The agent helped them most, 18 points for Llama, because the rules are code. So Gemini stays the judge; local models keep data private but need bigger hardware."`);
+  s.addNotes(`[ends about 3:55] C3: "We also tried two open models on our own 8 GB graphics card, Llama and Qwen. They got only about half right: they refund almost everything, even a change of mind. The agent helped them most, 22 points for Llama, because the rules are code. So Gemini stays the judge; local models keep data private but need bigger hardware."`);
 }
 
 // --- 5. Risks and recommendation (B1) --------------------------------------
@@ -397,11 +397,11 @@ pres.addSection({ title: SEC5 });
   s.addTable([
     [hdr("Risk"), hdr("Safeguard"), hdr("On the test set")],
     row("Invented policy", "Every citation must be a clause it retrieved; code drops the rest", "0 invented clause IDs in final answers"),
-    row("Leaning to one side", "Accuracy measured separately for buyer wins and seller wins", "96% of seller wins, 83% of buyer wins: it leans to declining"),
+    row("Leaning to one side", "Accuracy measured separately for buyer wins and seller wins", "96% of seller wins, 91% of buyer wins: close to even"),
     row("Staff rubber-stamping", "Confidence score, escalation, every override logged", "6% of cases escalated"),
     row("Personal data", "Made-up disputes only", "A deployment would remove personal details first"),
   ], { x: 0.6, y: 1.95, w: 12.13, colW: [2.7, 5.0, 4.43], rowH: 0.85, fontSize: 17, color: C.text1, valign: "middle", border: { type: "solid", pt: 0.75, color: DIVIDER }, margin: 0.12, objectName: "Risk table" });
-  s.addNotes(`[3:55] B1: "The risks. Invented policy: none of its citations were invented. Bias: it gets 96% of seller wins right but 83% of buyer wins, so it leans towards declining, and we track that. Rubber-stamping: unsure cases go to a person, and every override is logged. And our data is made up; a deployment would remove personal details first."`);
+  s.addNotes(`[3:55] B1: "The risks. Invented policy: none of its citations were invented. Bias: it gets 96% of seller wins right and 91% of buyer wins, close to even, and we track that. Rubber-stamping: unsure cases go to a person, and every override is logged. And our data is made up; a deployment would remove personal details first."`);
 }
 
 {
@@ -439,9 +439,9 @@ pres.addSection({ title: SEC5 });
   });
   callout(s, "Before the pilot", 4.9, 1.55, [
     { text: "Before that: ", options: { bold: true, color: C.accent4 } },
-    { text: "two of us label the test set by hand and we re-measure against their labels. The same agent fits other second-hand marketplaces: load their policy pages into the search.", options: { color: C.background1 } },
+    { text: "a person checks the citations, and we re-measure on more cases. The same agent fits other second-hand marketplaces: load their policy pages into the search.", options: { color: C.background1 } },
   ], 19);
-  s.addNotes(`B1: "A pilot would measure time to resolve a dispute, decisions overturned on appeal, and the share of orders using the Buy button. First, two of us label the test set by hand, and we re-measure."`);
+  s.addNotes(`B1: "A pilot would measure time to resolve a dispute, decisions overturned on appeal, and the share of orders using the Buy button. First, a person checks the citations, and we re-measure on more cases."`);
 }
 
 {
