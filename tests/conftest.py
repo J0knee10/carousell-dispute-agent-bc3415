@@ -1,7 +1,10 @@
 import os
 
-# Tests never call a real API.
+import tempfile
+
+# Tests never call a real API, and write their outputs to a temporary folder.
 os.environ["LLM_PROVIDER"] = "mock"
+os.environ["DISPUTE_AGENT_OUTPUT_DIR"] = tempfile.mkdtemp(prefix="dispute_agent_tests_")
 
 import pytest  # noqa: E402
 

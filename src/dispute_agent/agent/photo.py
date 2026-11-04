@@ -2,8 +2,9 @@
 
 Cases currently carry text descriptions of photos, which the claim-matching
 step already reads. A real implementation would send the listing photos and the
-buyer's photos to a vision-capable model and return what differs. Plug one in
-by implementing PhotoChecker and passing it to the agent.
+buyer's photos to a vision-capable model and return what differs. Nothing in
+the graph calls it yet: adding it means implementing PhotoChecker and a graph
+node that passes its findings to claim matching.
 """
 
 from __future__ import annotations

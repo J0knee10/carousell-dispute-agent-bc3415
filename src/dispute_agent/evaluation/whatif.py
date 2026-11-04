@@ -29,6 +29,13 @@ def _cache_file() -> Path:
     return d / "baseline_cache.jsonl"
 
 
+def _prompt_version() -> str:
+    """Changes whenever the claim-matching or judge prompts change."""
+    import hashlib
+
+    return hashlib.sha256((prompts.CLAIMS_SYSTEM + prompts.JUDGE_SYSTEM).encode()).hexdigest()[:12]
+
+
 def _load_cache(model: str) -> dict[str, dict]:
     file = _cache_file()
     if not file.exists():
@@ -37,7 +44,7 @@ def _load_cache(model: str) -> dict[str, dict]:
     with open(file, encoding="utf-8") as f:
         for line in f:
             rec = json.loads(line)
-            if rec["model"] == model:
+            if rec["model"] == model and rec.get("prompt_version") == _prompt_version():
                 out[rec["case_id"]] = rec
     return out
 
@@ -66,6 +73,7 @@ def current_policy_result(llm: LLMClient, case: DisputeCase, cache: dict[str, di
     rec = {
         "case_id": case.case_id,
         "model": llm.model,
+        "prompt_version": _prompt_version(),
         "claims": claims.model_dump(),
         "clauses": [c.model_dump() for c in clauses],
         "outcome": adj.outcome,

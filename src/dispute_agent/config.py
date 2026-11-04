@@ -32,6 +32,11 @@ def load_config() -> dict[str, Any]:
     env_provider = os.getenv("LLM_PROVIDER", "").strip()
     if env_provider:
         llm["provider"] = env_provider
+    out_dir = os.getenv("DISPUTE_AGENT_OUTPUT_DIR", "").strip()
+    if out_dir:  # used by the tests so they never write into outputs/
+        for key, value in cfg["outputs"].items():
+            if str(value).startswith("outputs/"):
+                cfg["outputs"][key] = str(Path(out_dir) / str(value)[len("outputs/"):])
     env_host = os.getenv("OLLAMA_HOST", "").strip()
     llm.setdefault("ollama", {})
     if env_host:

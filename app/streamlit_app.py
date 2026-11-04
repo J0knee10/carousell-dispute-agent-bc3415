@@ -247,7 +247,8 @@ def show_results(state: dict) -> None:
             )
     if state.get("tool_calls"):
         with st.expander(f"Tool calls by the judge ({len(state['tool_calls'])})", expanded=True):
-            st.caption("The judge decided the clauses it was given were not enough and called the search_policy tool.")
+            st.caption("The clauses retrieved so far did not cover a gap, so the agent called the search_policy tool "
+                       "(its request comes back as structured JSON; code runs the search).")
             for call in state["tool_calls"]:
                 found = ", ".join(f"`{c}`" for c in call["new_clauses"]) or "nothing new"
                 st.markdown(f"- `search_policy(\"{call['query']}\")` → {found}")
@@ -284,10 +285,12 @@ def staff_form(case_id: str, state: dict, provider: str, model: str | None) -> N
             decision["outcome"] = outcome
         if (approve and rec.get("outcome") == "partial_refund") or (not approve and outcome == "partial_refund"):
             decision["partial_refund_percent"] = int(pct)
-        llm, graph = agent(provider, model)
+        # Resume with the graph that ran this case, even if the sidebar changed since.
+        thread, run_provider, run_model = st.session_state.threads[case_id]
+        llm, graph = agent(run_provider, run_model)
         try:
             with st.spinner("Recording the decision and drafting messages..."):
-                final = resume(graph, st.session_state.threads[case_id], decision)
+                final = resume(graph, thread, decision)
         except RateLimitError as e:
             st.error(f"API quota reached: {e}. The decision was not recorded; try again later.")
             return
@@ -357,7 +360,7 @@ def page_review(provider: str, model: str | None) -> None:
         except LLMError as e:
             st.error(f"The LLM call failed: {e}")
             return
-        st.session_state.threads[case_id] = thread
+        st.session_state.threads[case_id] = (thread, provider, model)
         st.session_state.results[case_id] = current_state(graph, thread)
 
     state = st.session_state.results.get(case_id)
