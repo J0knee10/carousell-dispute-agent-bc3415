@@ -27,6 +27,9 @@
     },
     "cited_at_least_one_clause": 0.9,
     "invented_citation_rate": 0.0,
+    "escalation_reasons": {
+      "No valid policy citation supports the outcome": 1
+    },
     "citation_format_error_rate": 0.0,
     "raw_invented_citation_rate": 0.0,
     "failed": {

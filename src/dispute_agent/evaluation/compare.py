@@ -39,7 +39,11 @@ def _reasons(m: dict) -> str:
 
 
 def _name(r: dict) -> str:
-    return f"`{r['model']}`" + (f" ({r['variant']})" if r["variant"] else "")
+    n = (r.get("agent") or r.get("baseline") or {}).get("n", 0)
+    extra = [r["variant"]] if r["variant"] else []
+    if n and n < 50:
+        extra.append(f"first {n} cases only")
+    return f"`{r['model']}`" + (f" ({', '.join(extra)})" if extra else "")
 
 
 def mcnemar(b: int, c: int) -> float:

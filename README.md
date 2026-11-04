@@ -14,7 +14,7 @@ BC3415 group project, Option A (working prototype + demo video).
 1. **Eligibility rules (plain code).** Paid with the 'Buy' button? Raised within the dispute window? Tracked delivery for non-receipt? Seller missed the 24-hour reply deadline? These are exact rules, so no LLM is involved, and each check cites the clause it comes from.
 2. **Claim matching (LLM).** Lists what the listing promised and what the buyer reports, and pairs them up as gaps ("listing says it comes with an 8GB SD card; buyer says no card"). It writes a policy search query for each gap.
 3. **Policy retrieval (RAG).** Each gap's query is run over the policy clauses. Search is hybrid: ChromaDB embeddings plus BM25 keyword scores, combined by rank fusion.
-4. **Policy judgement (LLM, with a tool).** Decides whether each gap is significant and recommends one of Carousell's four outcomes: full refund with return, full refund without return, partial refund, or decline. It must cite clause IDs. If the clauses it was given do not cover a gap, it can call the **`search_policy` tool**: code runs the search, adds the new clauses, and the graph loops back to the judge.
+4. **Policy judgement (LLM, with a tool).** Decides whether each gap is significant and recommends one of Carousell's four outcomes: full refund with return, full refund without return, partial refund, or decline. It must cite clause IDs. If the clauses it was given do not cover a gap, it can call the **`search_policy` tool**: the model returns the tool's arguments as structured JSON, code runs the search and adds the new clauses, and the graph loops back to the judge. (A structured-output tool call rather than a provider's native function calling, so it works the same with Gemini, Ollama and OpenAI.)
 5. **Confidence and citation check (code).** Drops citations to clauses that were not retrieved, and escalates low-confidence, unclear, uncited or self-contradicting judgements, with follow-up questions to ask for evidence.
 6. **Staff decision.** The LangGraph workflow pauses until a person approves or overrides. Every decision is logged.
 7. **Message drafts (LLM).** Drafts the decision messages to the buyer and the seller.
@@ -133,8 +133,9 @@ and they continue where they stopped.
 A generator model writes the complaint, the seller's reply and the chat, and
 must quote the listing text the dispute is about. If the quote is not found in
 the listing, it retries or switches to another listing. The generator models
-(`gemini-3-flash-preview`, falling back to `gemma-4-26b-a4b-it`) differ from
-every judge model compared below, so no model grades its own writing.
+(154 disputes by `gemma-4-26b-a4b-it`, 19 by `gemini-3-flash-preview` and 7 by
+`gemini-3.5-flash`, used in turn as each free quota ran out) differ from every
+judge model compared below, so no model grades its own writing.
 
 To rebuild from scratch: download `train.tsv.7z` from Kaggle into `data/raw/`,
 then run `sample-listings`, `generate`, `split` and `export-labels`.
@@ -172,9 +173,11 @@ With Gemini the two are close on overall accuracy: one case is 2 points, so a
 are on eligibility (the plain-code rules never miss a bank transfer, a late
 dispute or a completed order; the baseline called 2 of the 5 ineligible cases
 eligible and marked 14 eligible cases ineligible) and on escalation (it sends
-2 of its 5 wrong answers to a person, the baseline 1 of 6). The baseline leans towards refunding; the agent
-leans towards declining. The gap is much larger with weaker models (next
-section).
+2 of its 5 wrong answers to a person, the baseline 1 of 6). The 100%
+eligibility shows the rules are implemented correctly; on our data it is
+guaranteed, because the cases' order facts were generated from the same rules.
+The baseline leans towards refunding; the agent leans towards declining. The
+gap is larger with weaker models (next section).
 
 **AI-assisted checks (not human).** Claude, an AI model separate from every
 judge model here, did two checks. Its answers are in their own columns and
@@ -189,8 +192,9 @@ never replace the human ones:
   `data/labels/labels.csv`) and agreed with the provisional labels on 47 (94%,
   Cohen's kappa 0.90) and on all 50 eligibility calls. The three differences
   (G059, G129, G134) are judgement calls; all three are among the agent's 5
-  wrong answers. Treat that with caution: Claude had already seen which cases
-  the agent got wrong.
+  wrong answers. Treat both checks with caution: Claude also helped build this
+  project and had already seen which cases the agent got wrong. Neither is a
+  substitute for the human checks, which are not done yet.
 
 ### Model comparison
 
@@ -198,11 +202,14 @@ The professor asked us to try different models. We compared the free cloud
 model with two open models running locally, under the same prompts, cases and
 code ([full tables](reports/model_comparison.md)):
 
-| Judge model | Runs on | Agent | Single prompt | Agent gain | Seconds per case (agent) |
-|---|---|---|---|---|---|
-| `gemini-flash-lite-latest` | Google cloud, free tier | **90%** | 88% | +2 pts | 9 |
-| `llama3.1:8b` | our PC, Ollama | 52% | 34% | +18 pts | 15 |
-| `qwen3:8b` (thinking off) | our PC, Ollama | 48% | 44% | +4 pts | 19 |
+| Judge model | Runs on | Agent | Single prompt | Agent gain | Paired test | Seconds per case (agent) |
+|---|---|---|---|---|---|---|
+| `gemini-flash-lite-latest` | Google cloud, free tier | **90%** | 88% | +2 pts | 5 vs 4 cases, p = 1.00 | 9 (includes free-tier pacing) |
+| `llama3.1:8b` | our PC, Ollama | 52% | 34% | +18 pts | 17 vs 8 cases, p = 0.11 | 15 |
+| `qwen3:8b` (thinking off) | our PC, Ollama | 48% | 44% | +4 pts | 5 vs 3 cases, p = 0.73 | 19 |
+
+Paired test: cases only the agent got right vs cases only the single prompt got
+right, exact McNemar test. Single runs on 50 cases with provisional labels.
 
 **Hardware constraints.** The local models ran on one desktop: Intel Core
 i5-13400F, 32 GB RAM, NVIDIA RTX 4060 Ti with 8 GB of GPU memory, Windows 11.
@@ -216,13 +223,14 @@ kept to two 8B models. Qwen took 6.9 GB at this window and ran 11% on the CPU. E
 **What we found.**
 
 - **Gemini is far better at the judgement.** The local 8B models get about half the cases right, and their failure is one-sided: of the 21 test cases that should be declined and reach the LLM, Gemini refunded 1, Llama 19 and Qwen all 21, including change-of-mind and damage-after-delivery claims. They do not apply the policy's exclusions.
-- **The agent's structure matters most for weak models:** +2 points over the single prompt with Gemini, +18 with Llama, +4 with Qwen. The eligibility rules in code are 100% right with every model (the single prompt: 68%, 86%, 90%), and with every model the agent's final answers cite no invented clause IDs.
-- **Escalation is only as good as the model's confidence:** Gemini's agent escalates 6% of cases and catches 2 of its 5 mistakes; Qwen escalates 22% but catches 27% of its mistakes; Llama escalates 2%.
+- **The agent beats the single prompt with every model, but no gap is statistically significant on 50 cases** (largest: Llama, +18 points, p = 0.11). The eligibility rules in code are 100% right with every model (the single prompt: 68%, 86%, 90%), and on clear cases Llama goes from 37% to 60%. Neither local model is usable either way.
+- **Citations:** the agent's final answers never cite a clause the judge was not shown, with any model. Before that check, Qwen cited BPR-05, a real clause it had not been given, in 10 of 45 judged cases; the check removed it and escalated those cases.
+- **Escalation:** Gemini's agent escalates 6% of cases (mostly asking for more evidence) and 2 of its 5 mistakes are among them. Qwen's 22% is almost entirely those BPR-05 citations, not low confidence; the local models never reported low confidence on their mistakes, so with them escalation protects only against bad citations.
 
 **Our choice and why.** Gemini Flash-Lite stays the default judge: it is the
 only model accurate enough to save a staff member time (90%, and 94% on the
-cases it does not escalate), and it is the fastest. Llama 3.1 8B is the
-default local model (better than Qwen, and it fits fully on our GPU), as a
+cases it does not escalate). Llama 3.1 8B is the default local model
+(slightly better than Qwen, faster, and it fits fully on our GPU), as a
 fallback when case data must stay on the machine, not as a replacement: it
 would refund nearly every dispute, which hurts honest sellers. The OpenAI
 client is ready for when the paid key arrives.
@@ -239,10 +247,28 @@ designs of the agent on the local models and probed Gemini on 10 cases
 | Agent-driven: general clauses only; a planning step calls `search_policy` for the gaps they miss | 54% | 48% |
 | None (ablation) | 60% | 52% |
 
-- **Accuracy barely moves** (differences of 1 to 4 cases out of 50). The decision guide in the prompt carries most of the judgement, and the clauses mostly list what *is* covered, which pushes small models further towards refunds.
-- **Retrieval's value is grounding.** Without clauses nothing can be cited, so the check escalates 90% of cases, and staff could not check the reasoning against the policy.
-- **Tool use.** In the default design no model needed `search_policy` on the test set: the per-gap searches already found the clauses. Offered as an optional field inside the judgement, the tool was never used, even when the per-gap searches were removed (0 of 28 Llama cases, 0 of 10 Gemini cases). With a separate planning step it is: Llama searched in every case, Qwen in 9%, Gemini in 3 of 10 (each time for a gap the general clauses missed), and Gemini matched the per-gap design on those 10 cases.
+- **With our full decision guide, accuracy barely moves** (1 to 4 cases out of 50). The guide in the judge's prompt restates the policy's covered and not-covered lists, so the judge has the rules even without retrieval; the next section removes them.
+- **Without retrieval the citations are made up.** Both models still cited a clause in every case, almost always "BPR-02", the example ID in the prompt (40 of 48 citations for Llama, 45 of 46 for Qwen). The check removes them and escalates the case.
+- **Tool use.** In the default design no model needed `search_policy` on the test set: the per-gap searches already found the clauses. Offered as an optional field inside the judgement, the tool was never used, even when the per-gap searches were removed (0 of 40 judged Llama cases, 0 of 10 Gemini cases; [details](reports/tool_field_experiment.md)). With a separate planning step it is: Llama searched in every case, Qwen in 9%, Gemini in 3 of 10 (each time for a gap the general clauses missed), and Gemini matched the per-gap design on those 10 cases.
 - **Choice:** per-gap retrieval stays the default. It is as accurate, one LLM call cheaper per case, and predictable; the tool stays as a fallback.
+
+### Does retrieval matter when the prompt does not restate the policy?
+
+Our decision guide restates the policy's covered and not-covered lists, so the
+judge has the rules even without retrieval. A **rubric-only** guide
+(`--guide rubric`) keeps only our outcome rubric, so what is covered has to come
+from the retrieved clauses ([details](reports/model_comparison.md)):
+
+| Decision guide, retrieval | Llama 3.1 8B (50 cases) | Qwen 3 8B (50 cases) | Gemini Flash-Lite (first 25 cases, all clear ones) | Where the coverage rules come from |
+|---|---|---|---|---|
+| Full guide, per gap (default) | 52% | 48% | 92% (23 of 25) | The prompt and the retrieved clauses |
+| Full guide, no retrieval | 60% | 52% | not run | The prompt only |
+| Rubric only, per gap | 58% | 50% | 92% (23 of 25) | The retrieved clauses only |
+| Rubric only, no retrieval | 56% | 54% | 88% (22 of 25) | Nowhere: only the outcome rubric and the model's own knowledge |
+
+- **The local models cannot tell us:** every 8B variant lands at 48–60% and refunds almost everything, whatever the prompt holds.
+- **For Gemini, retrieval can replace the restated policy** (23 of 25 either way). Without retrieval it declined two missing-accessory claims (G008, G043) that the policy covers, and it could cite nothing, so every case went to a person.
+- **Conclusion:** on this test set retrieval is not what makes the decisions accurate (Gemini mostly knows the rules); its value is grounding every recommendation in a clause staff can check, putting coverage the model would miss in front of it, and letting a policy change be handled by re-indexing the text. The Gemini probe covers only the first 25 test cases, which are all clear cases (no borderline ones).
 
 ### How we got here
 
@@ -270,7 +296,9 @@ slightly optimistic.
 - When to give a partial refund rather than a return is our own rubric (see `DECISION_GUIDE` in `src/dispute_agent/agent/prompts.py`); Carousell's policy does not spell it out.
 - Free-tier Gemini may use prompts to improve Google's products; all data here is made up or public. A real deployment would remove personal details and use a paid tier or a local model.
 - LLM answers can vary between runs even at temperature 0.
-- The local models were limited by an 8 GB GPU (see [Hardware constraints](#model-comparison)).
+- The local models were limited by an 8 GB GPU (see [Hardware constraints](#model-comparison)), so "cloud vs local" is also "strong small cloud model vs 8B models": the comparison cannot separate the two.
+- Single runs, no repeat runs to measure variation; no human labels or human citation check yet.
+- Paused reviews live in memory (LangGraph `InMemorySaver`), so a restart of the app loses cases waiting for a staff decision; the decision log is a local file.
 
 ## Project layout
 
@@ -291,13 +319,15 @@ presentation/                 demo video slides (build_slides.js) and VIDEO_SCRI
 tests/                        pytest suite (runs offline: mock LLM, faked HTTP)
 ```
 
-Run the tests with `uv run pytest` (56 tests, no network or API key needed).
+Run the tests with `uv run pytest` (59 tests, no network or API key needed; they write their outputs to a temporary folder).
 
 ## Deploying to Streamlit Community Cloud
 
-The app is ready for Community Cloud: it reads the key from Streamlit secrets,
-installs from `requirements.txt` (checked in a clean Python 3.12 environment),
-and hides the Ollama option when no local server is running. Steps:
+Not deployed yet: deployment is a manual step (below). The app is prepared for
+it: it reads the key from Streamlit secrets, installs from `requirements.txt`
+(checked in a clean Python 3.12 environment on Windows; Community Cloud runs
+Linux, so watch the first build log), and hides the Ollama option when no local
+server is running. Steps:
 
 1. Push the repo to GitHub (a private repo works; Streamlit asks for access to it).
 2. Sign in at https://share.streamlit.io with GitHub and click **Create app** → **Deploy a public app from GitHub**.

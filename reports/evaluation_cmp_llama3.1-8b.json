@@ -35,6 +35,9 @@
     },
     "cited_at_least_one_clause": 1.0,
     "invented_citation_rate": 0.0,
+    "escalation_reasons": {
+      "Cited clauses that were not retrieved": 1
+    },
     "citation_format_error_rate": 0.0,
     "raw_invented_citation_rate": 0.022,
     "failed": {
@@ -294,6 +297,7 @@
     },
     "cited_at_least_one_clause": 0.0,
     "invented_citation_rate": 0.0,
+    "escalation_reasons": {},
     "citation_format_error_rate": 1.0,
     "raw_invented_citation_rate": 0.0,
     "failed": {

@@ -35,8 +35,13 @@
     },
     "cited_at_least_one_clause": 0.0,
     "invented_citation_rate": 0.0,
+    "escalation_reasons": {
+      "Cited clauses that were not retrieved": 45,
+      "No valid policy citation supports the outcome": 45,
+      "Refunds although no gap was judged significant": 1
+    },
     "citation_format_error_rate": 0.0,
-    "raw_invented_citation_rate": 0.044,
+    "raw_invented_citation_rate": 1.0,
     "failed": {
       "n": 0,
       "share": 0.0

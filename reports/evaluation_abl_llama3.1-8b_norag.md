@@ -23,7 +23,7 @@
 | Judged cases citing a clause | 0% | n/a |
 | Cases with invented clause IDs (final answer) | 0% | n/a |
 | Cases citing a real clause in the wrong format (final answer) | 0% | n/a |
-| Judged cases where the model cited a clause it was not shown | 4% | n/a |
+| Judged cases where the model cited a clause it was not shown | 100% | n/a |
 | Judged cases where the judge called search_policy | 0% | n/a |
 | Escalated | 90% | n/a |
 | Wrong decisions that were escalated | 100% | n/a |

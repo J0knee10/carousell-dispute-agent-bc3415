@@ -1,0 +1,114 @@
+{
+  "agent": {
+    "n": 25,
+    "label_sources": {
+      "provisional": 25
+    },
+    "decision_accuracy": 0.88,
+    "accuracy_by_difficulty": {
+      "clear": {
+        "n": 25,
+        "accuracy": 0.88
+      }
+    },
+    "direction_accuracy": 0.88,
+    "buyer_win_accuracy": {
+      "n": 15,
+      "accuracy": 0.8
+    },
+    "seller_win_accuracy": {
+      "n": 10,
+      "accuracy": 1.0
+    },
+    "eligibility_accuracy": 1.0,
+    "ineligible_flagged": {
+      "n": 0,
+      "share": null
+    },
+    "cited_at_least_one_clause": 0.0,
+    "invented_citation_rate": 0.0,
+    "escalation_reasons": {
+      "No valid policy citation supports the outcome": 25,
+      "Confidence 0.40": 2,
+      "More evidence needed": 3,
+      "At least one gap is unclear": 3,
+      "Confidence 0.30": 1,
+      "Refunds although no gap was judged significant": 1
+    },
+    "citation_format_error_rate": 0.0,
+    "raw_invented_citation_rate": 0.0,
+    "failed": {
+      "n": 0,
+      "share": 0.0
+    },
+    "tool_use": {
+      "judged": 25,
+      "cases_using_search": 0.0,
+      "searches": 0
+    },
+    "tokens_per_case": {
+      "input": 1434,
+      "output": 631
+    },
+    "escalation": {
+      "escalated_share": 1.0,
+      "wrong_decisions_escalated": 1.0,
+      "right_decisions_escalated": 1.0,
+      "accuracy_when_not_escalated": null
+    },
+    "seconds_per_case": {
+      "mean": 9.97,
+      "median": 9.55
+    },
+    "llm_calls_per_case": 2,
+    "confusion": {
+      "full_refund_with_return": {
+        "full_refund_with_return": 11,
+        "full_refund_without_return": 0,
+        "partial_refund": 0,
+        "decline": 1
+      },
+      "full_refund_without_return": {
+        "full_refund_with_return": 0,
+        "full_refund_without_return": 0,
+        "partial_refund": 0,
+        "decline": 0
+      },
+      "partial_refund": {
+        "full_refund_with_return": 0,
+        "full_refund_without_return": 0,
+        "partial_refund": 1,
+        "decline": 2
+      },
+      "decline": {
+        "full_refund_with_return": 0,
+        "full_refund_without_return": 0,
+        "partial_refund": 0,
+        "decline": 10
+      }
+    },
+    "wrong_cases": [
+      {
+        "case_id": "G008",
+        "label": "partial_refund",
+        "pred": "decline",
+        "difficulty": "clear",
+        "escalated": true
+      },
+      {
+        "case_id": "G043",
+        "label": "partial_refund",
+        "pred": "decline",
+        "difficulty": "clear",
+        "escalated": true
+      },
+      {
+        "case_id": "G059",
+        "label": "full_refund_with_return",
+        "pred": "decline",
+        "difficulty": "clear",
+        "escalated": true
+      }
+    ]
+  }
+}
