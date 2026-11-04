@@ -12,11 +12,13 @@ CLAUSE_ID = re.compile(r"[A-Z]{3}-\d{2}")
 
 
 def split_invalid(citations: list[str], valid: set[str] | None) -> tuple[list[str], list[str]]:
-    """Split citations that failed the exact-ID check into (invented, format errors).
+    """Split citations that failed the exact-ID check into (unseen, format errors).
 
-    A format error still contains a real clause ID, e.g. "[BPR-02] The item is
-    significantly not as described": the model copied the heading as well as the ID.
-    An invented citation has no real clause ID in it at all.
+    `valid` is the set of clause IDs the model was shown: the retrieved clauses for
+    the agent, the whole policy for the baseline. A format error contains one of
+    those IDs, e.g. "[BPR-02] The item is significantly not as described" (the model
+    copied the heading as well). Anything else is unseen: an ID that does not exist,
+    or a real clause the model was never shown (it came from the model's memory).
     """
     if valid is None:
         return list(citations), []
@@ -65,7 +67,8 @@ def compute_metrics(records: list[dict], labels: dict[str, dict], meta: dict[str
                 "label_eligible": lab["eligible"], "label_source": lab["source"], "pred": None, "pred_eligible": None,
                 "correct": False, "escalate": True, "citations": [], "invalid_citations": [],
                 "raw_invalid_citations": [], "seconds": None, "llm_calls": None, "decided_by": "failed",
-                "tool_calls": [], "tokens_in": None, "tokens_out": None,
+                "tool_calls": [], "tokens_in": None, "tokens_out": None, "system": "", "retrieved": [],
+                "llm_seconds": None,
             })
     for cid, p in preds.items():
         lab = labels.get(cid)
@@ -91,6 +94,10 @@ def compute_metrics(records: list[dict], labels: dict[str, dict], meta: dict[str
                 "tool_calls": p.get("tool_calls", []),
                 "tokens_in": p.get("tokens_in"),
                 "tokens_out": p.get("tokens_out"),
+                "system": p.get("system", "agent"),
+                "retrieved": p.get("retrieved", []),
+                "llm_seconds": p.get("llm_seconds"),
+                "escalation_reasons": p.get("escalation_reasons", []),
             }
         )
     n = len(rows)
@@ -119,8 +126,9 @@ def compute_metrics(records: list[dict], labels: dict[str, dict], meta: dict[str
             confusion[r["label"]][r["pred"]] += 1
 
     for r in rows:
-        r["invented"], r["format_errors"] = split_invalid(r["invalid_citations"], valid_ids)
-        r["raw_invented"], r["raw_format_errors"] = split_invalid(r["raw_invalid_citations"], valid_ids)
+        shown = valid_ids if r["system"] != "agent" else set(r["retrieved"]) | {"PROPOSED-1"}
+        r["invented"], r["format_errors"] = split_invalid(r["invalid_citations"], shown)
+        r["raw_invented"], r["raw_format_errors"] = split_invalid(r["raw_invalid_citations"], shown)
     answered = [r for r in rows if r["decided_by"] != "failed"]
     secs = [r["seconds"] for r in answered] or [0.0]
     calls = [r["llm_calls"] for r in answered] or [0]
@@ -137,12 +145,15 @@ def compute_metrics(records: list[dict], labels: dict[str, dict], meta: dict[str
         "eligibility_accuracy": _share(sum(r["pred_eligible"] == r["label_eligible"] for r in rows), n),
         "ineligible_flagged": {"n": len(inel), "share": _share(sum(not r["pred_eligible"] for r in inel), len(inel))},
         "cited_at_least_one_clause": _share(sum(bool(r["citations"]) for r in judged), len(judged)),
-        # Final answer cites a clause ID that does not exist (the agent's check removes these).
+        # Final answer cites a clause ID the model was not shown (the agent's check removes these).
         "invented_citation_rate": _share(sum(bool(r["invented"]) for r in rows), n),
+        # Why judged cases were escalated, by the first words of each reason.
+        "escalation_reasons": dict(Counter(e.split(":")[0].split(" is below")[0] for r in judged if r["escalate"]
+                                           for e in r.get("escalation_reasons", []))),
         # Final answer cites a real clause in the wrong format (ID plus heading text).
         "citation_format_error_rate": _share(sum(bool(r["format_errors"]) for r in rows), n),
-        # Before the agent's check: how often the model itself cited a clause ID that does
-        # not exist or that it was not shown.
+        # Before the agent's check: how often the model itself cited a clause ID it was
+        # not shown (a real clause from its memory, or an ID that does not exist).
         "raw_invented_citation_rate": _share(sum(bool(r["raw_invented"]) for r in judged), len(judged)),
         "failed": {"n": n - len(answered), "share": _share(n - len(answered), n)},
         "tool_use": {

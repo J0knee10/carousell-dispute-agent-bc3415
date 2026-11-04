@@ -105,7 +105,7 @@ class FallbackLLM:
     def generate(self, **kwargs) -> T:
         while True:
             client = self.clients[self.index]
-            before = (client.stats.tokens_in, client.stats.tokens_out)
+            before = (client.stats.tokens_in, client.stats.tokens_out, client.stats.seconds)
             try:
                 result = client.generate(**kwargs)
             except RateLimitError:
@@ -114,7 +114,7 @@ class FallbackLLM:
                 self.index += 1
                 continue
             self.stats.record(
-                kwargs.get("task", ""), 0.0,
+                kwargs.get("task", ""), client.stats.seconds - before[2],
                 tokens_in=client.stats.tokens_in - before[0], tokens_out=client.stats.tokens_out - before[1],
             )
             return result

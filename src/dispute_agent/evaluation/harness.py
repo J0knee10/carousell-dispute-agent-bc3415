@@ -52,6 +52,7 @@ def write_run_info(run: str, info: dict) -> None:
 
 def predict_agent(graph, llm: LLMClient, case: DisputeCase) -> dict:
     tokens = (llm.stats.tokens_in, llm.stats.tokens_out)
+    llm_seconds = llm.stats.seconds
     r = run_to_review(graph, case, llm)
     st = r.state
     rec = st["recommendation"]
@@ -78,6 +79,8 @@ def predict_agent(graph, llm: LLMClient, case: DisputeCase) -> dict:
         "llm_calls": r.llm_calls,
         "tokens_in": llm.stats.tokens_in - tokens[0],
         "tokens_out": llm.stats.tokens_out - tokens[1],
+        # Time inside LLM calls only; `seconds` also includes pacing waits between calls.
+        "llm_seconds": round(llm.stats.seconds - llm_seconds, 2),
     }
 
 
@@ -86,6 +89,7 @@ def predict_baseline(llm: LLMClient, case: DisputeCase, threshold: float) -> dic
     valid = {c.clause_id for c in clauses}
     calls = llm.stats.calls
     tokens = (llm.stats.tokens_in, llm.stats.tokens_out)
+    llm_seconds = llm.stats.seconds
     start = time.monotonic()
     j = llm.generate(
         task="baseline", system=prompts.BASELINE_SYSTEM, prompt=prompts.baseline_prompt(case, clauses),
@@ -112,6 +116,7 @@ def predict_baseline(llm: LLMClient, case: DisputeCase, threshold: float) -> dic
         "llm_calls": llm.stats.calls - calls,
         "tokens_in": llm.stats.tokens_in - tokens[0],
         "tokens_out": llm.stats.tokens_out - tokens[1],
+        "llm_seconds": round(llm.stats.seconds - llm_seconds, 2),
     }
 
 
@@ -126,6 +131,7 @@ def run_system(
     use_retrieval: bool = True,
     retry_errors: bool = True,
     retrieval: str = "per_gap",
+    guide: str = "full",
 ) -> list[dict]:
     """retry_errors=False keeps a case that failed (e.g. invalid JSON) as a failure instead of re-running it."""
     file = run_dir(run) / f"{system}.jsonl"
@@ -134,7 +140,7 @@ def run_system(
     todo = [c for c in cases if c.case_id not in done]
     progress(f"[{system}] {len(done)} done, {len(todo)} to run")
     graph = (
-        build_graph(llm, store, draft_messages=False, decision_logger=None, use_retrieval=use_retrieval, retrieval=retrieval)
+        build_graph(llm, store, draft_messages=False, decision_logger=None, use_retrieval=use_retrieval, retrieval=retrieval, guide=guide)
         if system == "agent" else None
     )
     for i, case in enumerate(todo):

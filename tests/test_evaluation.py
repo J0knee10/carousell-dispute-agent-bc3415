@@ -71,13 +71,29 @@ def test_raw_invented_citations_and_tool_use_are_reported():
 def test_heading_pasted_after_a_real_id_is_a_format_error_not_invented():
     labels = {"A": {"outcome": "decline", "eligible": True, "source": "provisional"}}
     meta = {"A": {"difficulty": "clear"}}
-    rec = {**_rec("A", "decline"), "invalid_citations": ["[BPR-02] The item is significantly not as described", "XYZ-99"]}
+    rec = {**_rec("A", "decline"), "system": "baseline", "invalid_citations": ["[BPR-02] The item is significantly not as described", "XYZ-99"]}
     m = compute_metrics([rec], labels, meta, valid_ids={"BPR-02"})
     assert m["invented_citation_rate"] == 1.0  # XYZ-99 is invented
     assert m["citation_format_error_rate"] == 1.0
     rec["invalid_citations"] = ["[BPR-02] The item is significantly not as described"]
     m = compute_metrics([rec], labels, meta, valid_ids={"BPR-02"})
     assert m["invented_citation_rate"] == 0.0 and m["citation_format_error_rate"] == 1.0
+
+
+def test_a_real_clause_the_agent_was_not_shown_counts_as_unseen():
+    labels = {"A": {"outcome": "decline", "eligible": True, "source": "provisional"}}
+    meta = {"A": {"difficulty": "clear"}}
+    rec = {**_rec("A", "decline"), "system": "agent", "retrieved": ["BPR-02"], "raw_invalid_citations": ["BPR-05"]}
+    m = compute_metrics([rec], labels, meta, valid_ids={"BPR-02", "BPR-05"})
+    assert m["raw_invented_citation_rate"] == 1.0  # BPR-05 exists, but the agent never retrieved it
+
+
+def test_mcnemar_exact():
+    from dispute_agent.evaluation.compare import mcnemar
+
+    assert mcnemar(0, 0) == 1.0
+    assert abs(mcnemar(9, 0) - 2 / 2**9) < 1e-12
+    assert mcnemar(3, 2) == 1.0
 
 
 def test_comparison_report_on_mock_runs(mock_llm, store, seeds):
