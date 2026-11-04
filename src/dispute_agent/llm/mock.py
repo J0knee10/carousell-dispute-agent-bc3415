@@ -134,7 +134,9 @@ class MockLLM:
             outcome, pct, conf = "decline", 0, 0.75
         # Unclear gaps make the mock call the search_policy tool once, so tests cover the loop.
         searches = [f"policy on {g['description'][:60]}" for g in gaps if g["gap_type"] == "other"]
-        if hints.get("tool") != "available":
+        if hints.get("tool") == "available_agentic":
+            searches = [g["retrieval_query"] for g in gaps]
+        elif hints.get("tool") != "available":
             searches = []
         proposed = hints.get("proposed_rule")
         if proposed and outcome == "decline" and "wear" in proposed.lower() and "wear_consistent_with_listing" in types:

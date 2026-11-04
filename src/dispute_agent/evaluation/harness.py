@@ -125,6 +125,7 @@ def run_system(
     progress: Callable[[str], None] = print,
     use_retrieval: bool = True,
     retry_errors: bool = True,
+    retrieval: str = "per_gap",
 ) -> list[dict]:
     """retry_errors=False keeps a case that failed (e.g. invalid JSON) as a failure instead of re-running it."""
     file = run_dir(run) / f"{system}.jsonl"
@@ -133,7 +134,7 @@ def run_system(
     todo = [c for c in cases if c.case_id not in done]
     progress(f"[{system}] {len(done)} done, {len(todo)} to run")
     graph = (
-        build_graph(llm, store, draft_messages=False, decision_logger=None, use_retrieval=use_retrieval)
+        build_graph(llm, store, draft_messages=False, decision_logger=None, use_retrieval=use_retrieval, retrieval=retrieval)
         if system == "agent" else None
     )
     for i, case in enumerate(todo):

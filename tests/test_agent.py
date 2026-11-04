@@ -146,6 +146,16 @@ def test_tool_can_be_switched_off(mock_llm, store, seeds):
     assert "No tools are available" in llm.prompts[0]
 
 
+def test_agent_driven_retrieval_starts_general_and_searches_per_gap(mock_llm, store, seeds):
+    graph = build_graph(mock_llm, store, decision_logger=None, retrieval="agentic")
+    r = run_to_review(graph, seeds["S01"], mock_llm)
+    st = r.state
+    general = {c.clause_id for c in store.retrieve("incomplete item with missing parts: refund or seller sends the missing part")}
+    assert st["tool_calls"], "the judge has to search for the gap itself"
+    assert {c["clause_id"] for c in st["clauses"]} >= general
+    assert any("General clauses only" in t["summary"] for t in r.trace)
+
+
 def test_no_retrieval_ablation_gives_the_judge_no_clauses(mock_llm, store, seeds):
     graph = build_graph(mock_llm, store, decision_logger=None, use_retrieval=False)
     st = run_to_review(graph, seeds["S01"], mock_llm).state

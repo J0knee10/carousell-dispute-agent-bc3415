@@ -48,6 +48,14 @@ REASON_QUERIES = {
     "not_received": "item not received tracked and untracked mail",
 }
 
+# Retrieval designs compared in reports/model_comparison.md:
+#   per_gap: one search per gap found by claim matching (the default), plus the search_policy tool as a fallback
+#   agentic: only a general search on the dispute reason; the judge must call search_policy itself for each gap
+#   none:    no policy clauses at all (ablation)
+RETRIEVAL_MODES = ("per_gap", "agentic", "none")
+AGENTIC_TOOL_ROUNDS = 2
+AGENTIC_SEARCHES_PER_ROUND = 3
+
 PROPOSAL_TO_OUTCOME = {
     "return_and_refund": "full_refund_with_return",
     "partial_refund": "partial_refund",
@@ -174,15 +182,23 @@ def build_graph(
     decision_logger: Callable[[dict], None] | None = log_decision,
     use_retrieval: bool = True,
     max_tool_rounds: int | None = None,
+    retrieval: str = "per_gap",
 ):
-    """use_retrieval=False is the no-RAG ablation: the judge gets no policy clauses and no tool."""
+    """retrieval: per_gap (default), agentic or none (see RETRIEVAL_MODES). use_retrieval=False means none."""
     cfg = load_config()
     threshold = confidence_threshold if confidence_threshold is not None else cfg["agent"]["confidence_threshold"]
     max_clauses = cfg["rag"]["max_clauses"]
+    if not use_retrieval:
+        retrieval = "none"
+    if retrieval not in RETRIEVAL_MODES:
+        raise ValueError(f"retrieval must be one of {RETRIEVAL_MODES}, got {retrieval!r}")
+    use_retrieval = retrieval != "none"
     tool_rounds = cfg["agent"].get("max_tool_rounds", 1) if max_tool_rounds is None else max_tool_rounds
+    max_searches = cfg["agent"].get("max_searches_per_round", 2)
+    if retrieval == "agentic":
+        tool_rounds, max_searches = AGENTIC_TOOL_ROUNDS, AGENTIC_SEARCHES_PER_ROUND
     if not use_retrieval:
         tool_rounds = 0
-    max_searches = cfg["agent"].get("max_searches_per_round", 2)
 
     def intake(state: AgentState) -> AgentState:
         t = time.monotonic()
@@ -218,6 +234,11 @@ def build_graph(
         t = time.monotonic()
         if not use_retrieval:
             return {"clauses": [], "trace": _step("Policy retrieval", t, "Switched off (no-RAG ablation)")}
+        if retrieval == "agentic":
+            reason = state["case"]["dispute"]["reason"]
+            found = store.retrieve(REASON_QUERIES.get(reason, REASON_QUERIES["snad"]))
+            return {"clauses": [c.model_dump() for c in found], "trace": _step(
+                "Policy retrieval", t, "General clauses only (agent-driven retrieval): " + ", ".join(c.clause_id for c in found))}
         claims_obj = ClaimMatchResult.model_validate(state["claims"])
         found = retrieve_for_gaps(store, state["case"]["dispute"]["reason"], claims_obj, max_clauses)
         return {"clauses": [c.model_dump() for c in found], "trace": _step(
@@ -233,6 +254,8 @@ def build_graph(
             tool = "none"
         else:
             tool = "available" if rounds < tool_rounds else "used"
+        if tool == "available" and retrieval == "agentic":
+            tool = "available_agentic"
         result = llm.generate(
             task="whatif_adjudication" if proposed else "adjudication",
             system=prompts.JUDGE_SYSTEM,
@@ -244,7 +267,7 @@ def build_graph(
                    "proposed_rule": proposed, "tool": tool},
         )
         summary = f"{result.outcome} (confidence {result.confidence:.2f})"
-        if result.search_policy and tool == "available":
+        if result.search_policy and tool.startswith("available"):
             summary += "; calls search_policy: " + "; ".join(f"'{q}'" for q in result.search_policy[:max_searches])
         return {"adjudication": result.model_dump(), "judge_rounds": rounds + 1, "trace": _step("Policy judgement", t, summary)}
 

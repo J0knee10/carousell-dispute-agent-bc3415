@@ -156,14 +156,15 @@ def cmd_evaluate(args) -> int:
         ids = [i for i in ids if by_id[i].meta.scenario in args.scenario]
         split += f" ({', '.join(args.scenario)})"
     cases = [by_id[i] for i in ids]
-    variant = "no retrieval" if args.no_retrieval else ""
+    retrieval = "none" if args.no_retrieval else args.retrieval
+    variant = {"per_gap": "", "agentic": "agent-driven retrieval", "none": "no retrieval"}[retrieval]
     write_run_info(run, {"split": split, "case_ids": ids, "provider": llm.name, "model": llm.model, "variant": variant})
     systems = ["agent", "baseline"] if args.system == "both" else [args.system]
     threshold = cfg["agent"]["confidence_threshold"]
     try:
         for system in systems:
             run_system(system, cases, llm, get_store(), run, threshold, progress=_print,
-                       use_retrieval=not args.no_retrieval, retry_errors=not args.keep_failures)
+                       retrieval=retrieval, retry_errors=not args.keep_failures)
     except QuotaExhausted as e:
         _print(f"Done {e.done}, remaining {e.remaining} for this system.")
         build_report(run)
@@ -287,7 +288,9 @@ def build_parser() -> argparse.ArgumentParser:
     sp.add_argument("--split", choices=["test", "dev", "all", "seed", "demo"], default="test")
     sp.add_argument("--run", default=None, help="run name (default <provider>_<split>)")
     sp.add_argument("--scenario", action="append", help="only cases of this scenario (repeatable)")
-    sp.add_argument("--no-retrieval", action="store_true", help="ablation: the agent's judge gets no policy clauses")
+    sp.add_argument("--retrieval", choices=["per_gap", "agentic", "none"], default="per_gap",
+                    help="agent retrieval design: per gap (default), agent-driven via the tool, or none")
+    sp.add_argument("--no-retrieval", action="store_true", help="same as --retrieval none")
     sp.add_argument("--keep-failures", action="store_true", help="on resume, do not re-run cases whose answer failed")
     provider(sp)
     add("report", cmd_report, "rebuild the report for a run").add_argument("run")
