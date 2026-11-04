@@ -4,11 +4,11 @@
     "label_sources": {
       "final": 50
     },
-    "decision_accuracy": 0.52,
+    "decision_accuracy": 0.54,
     "accuracy_by_difficulty": {
       "borderline": {
         "n": 15,
-        "accuracy": 0.2
+        "accuracy": 0.267
       },
       "clear": {
         "n": 30,
@@ -19,14 +19,14 @@
         "accuracy": 1.0
       }
     },
-    "direction_accuracy": 0.56,
+    "direction_accuracy": 0.6,
     "buyer_win_accuracy": {
-      "n": 22,
-      "accuracy": 0.864
+      "n": 24,
+      "accuracy": 0.833
     },
     "seller_win_accuracy": {
-      "n": 28,
-      "accuracy": 0.25
+      "n": 26,
+      "accuracy": 0.269
     },
     "eligibility_accuracy": 1.0,
     "ineligible_flagged": {
@@ -57,8 +57,8 @@
     },
     "escalation": {
       "escalated_share": 0.2,
-      "wrong_decisions_escalated": 0.208,
-      "right_decisions_escalated": 0.192,
+      "wrong_decisions_escalated": 0.174,
+      "right_decisions_escalated": 0.222,
       "accuracy_when_not_escalated": 0.525
     },
     "seconds_per_case": {
@@ -80,15 +80,15 @@
         "decline": 0
       },
       "partial_refund": {
-        "full_refund_with_return": 2,
+        "full_refund_with_return": 3,
         "full_refund_without_return": 0,
-        "partial_refund": 3,
+        "partial_refund": 4,
         "decline": 1
       },
       "decline": {
-        "full_refund_with_return": 14,
+        "full_refund_with_return": 13,
         "full_refund_without_return": 0,
-        "partial_refund": 7,
+        "partial_refund": 6,
         "decline": 7
       }
     },
@@ -207,20 +207,13 @@
       },
       {
         "case_id": "G129",
-        "label": "decline",
+        "label": "partial_refund",
         "pred": "full_refund_with_return",
         "difficulty": "borderline",
         "escalated": false
       },
       {
         "case_id": "G146",
-        "label": "decline",
-        "pred": "partial_refund",
-        "difficulty": "borderline",
-        "escalated": true
-      },
-      {
-        "case_id": "G147",
         "label": "decline",
         "pred": "partial_refund",
         "difficulty": "borderline",

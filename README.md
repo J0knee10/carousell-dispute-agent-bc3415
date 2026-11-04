@@ -14,7 +14,7 @@ BC3415 group project, Option A (working prototype + demo video).
 1. **Eligibility rules (plain code).** Paid with the 'Buy' button? Raised within the dispute window? Tracked delivery for non-receipt? Seller missed the 24-hour reply deadline? These are exact rules, so no LLM is involved, and each check cites the clause it comes from.
 2. **Claim matching (LLM).** Lists what the listing promised and what the buyer reports, and pairs them up as gaps ("listing says it comes with an 8GB SD card; buyer says no card"). It writes a policy search query for each gap.
 3. **Policy retrieval (RAG).** Each gap's query is run over the policy clauses. Search is hybrid: ChromaDB embeddings plus BM25 keyword scores, combined by rank fusion.
-4. **Policy judgement (LLM, with a tool).** Decides whether each gap is significant and recommends one of Carousell's four outcomes: full refund with return, full refund without return, partial refund, or decline. It must cite clause IDs. If the clauses it was given do not cover a gap, it can call the **`search_policy` tool**: the model returns the tool's arguments as structured JSON, code runs the search and adds the new clauses, and the graph loops back to the judge. (A structured-output tool call rather than a provider's native function calling, so it works the same with Gemini, Ollama and OpenAI.)
+4. **Policy judgement (LLM, with a tool).** Decides whether each gap is significant and recommends one of Carousell's four outcomes: full refund with return, full refund without return, partial refund, or decline. It must cite clause IDs. If the clauses it was given do not cover a gap, it can call the **`search_policy` tool**: the model returns the tool's arguments as structured JSON, code runs the search and adds the new clauses, and the graph loops back to the judge. (A structured-output tool call rather than a provider's native function calling, so it works the same with Gemini, Ollama and OpenAI.) It is a fallback: on the test set the per-gap searches always supplied the clauses, so no model needed it; it is used when retrieval is left to the agent (see [Retrieval design](#retrieval-design-per-gap-agent-driven-or-none)).
 5. **Confidence and citation check (code).** Drops citations to clauses that were not retrieved, and escalates low-confidence, unclear, uncited or self-contradicting judgements, with follow-up questions to ask for evidence.
 6. **Staff decision.** The LangGraph workflow pauses until a person approves or overrides. Every decision is logged.
 7. **Message drafts (LLM).** Drafts the decision messages to the buyer and the seller.
@@ -167,7 +167,8 @@ Details on labels are in [docs/labelling_guide.md](docs/labelling_guide.md).
 (`final_outcome` in `data/labels/labels.csv`): B1 labelled 25 test cases and B2
 the other 25, on 4 Nov, after the runs. No case was labelled by both, so there
 is no agreement score between the labellers. The hand labels differ from the
-outcomes the cases were written for on two cases (G129 and G134: decline).
+outcomes the cases were written for on two cases: G134 (decline instead of a
+partial refund) and G147 (a partial refund instead of a decline).
 
 ### Results (judge `gemini-flash-lite-latest`)
 
@@ -175,27 +176,30 @@ Test set, 50 held-out cases ([full report](reports/evaluation_cmp_gemini-flash-l
 
 | Measure | Agent | Single-prompt baseline |
 |---|---|---|
-| Decision accuracy | 94% | 84% |
-| clear / borderline / ineligible | 93% / 93% / 100% | 97% / 67% / 60% |
+| Decision accuracy | 90% | 88% |
+| clear / borderline / ineligible | 93% / 80% / 100% | 97% / 80% / 60% |
 | Eligibility accuracy | 100% | 68% |
 | Cases with invented clause IDs | 0% | 0% |
-| Buyer-win / seller-win cases right | 91% / 96% | 96% / 75% |
-| Wrong decisions escalated to a person | 2 of 3 | 1 of 8 |
-| Accuracy on cases not escalated | 98% | 85% |
+| Buyer-win / seller-win cases right | 83% / 96% | 96% / 81% |
+| Wrong decisions escalated to a person | 2 of 5 | 1 of 6 |
+| Accuracy on cases not escalated | 94% | 90% |
 | Seconds per case (median) | 9.1 | 4.5 |
 | LLM calls per case | 1.8 | 1 |
 
-The agent is 10 points ahead (7 cases only the agent got right against 2 only
-the baseline got right; exact McNemar p = 0.18, so not significant on 50 cases).
-The gain is on borderline cases (93% against 67%), where the single prompt
-refunds small or subjective complaints the policy does not cover, and on
+With Gemini the two are tied on judgement: 90% against 88%, with 5 cases only
+the agent got right and 4 only the baseline got right (exact McNemar p = 1.00).
+They are equal on borderline cases (80%) and the single prompt is slightly
+ahead on clear ones (97% against 93%). The agent's clear gain is on
 eligibility: the plain-code rules never miss a bank transfer, a late dispute or
 a completed order, while the baseline called 2 of the 5 ineligible cases
-eligible and marked 14 eligible cases ineligible. On clear cases the single
-prompt is slightly ahead (97% against 93%). The 100% eligibility shows the rules
-are implemented correctly; on our data it is guaranteed, because the cases'
-order facts were generated from the same rules. The baseline leans towards
-refunding (75% of seller wins right); the agent is close to even (91% of buyer
+eligible and marked 14 eligible cases ineligible. The 100% eligibility shows
+the rules are implemented correctly; on our data it is guaranteed, because the
+cases' order facts were generated from the same rules. The agent's review step
+sends 2 of its 5 mistakes to a person; the baseline has no review step and
+counts as escalated only when its confidence is below 0.7, so those escalation
+figures measure different things, and the 94% on cases not escalated includes
+the 5 ineligible cases the rules decide. The baseline leans towards refunding
+(81% of seller wins right); the agent leans towards declining (83% of buyer
 wins, 96% of seller wins).
 
 **AI-assisted checks (not human).** Claude, an AI model separate from every
@@ -208,9 +212,9 @@ never replace the human ones:
   misses cite a procedural clause (how a return works), or a clause listing
   what *is* covered on a decline. No person has checked the citations yet.
 - *Labels:* Claude also labelled the 50 test cases (`claude_*` in
-  `data/labels/labels.csv`). It agrees with the hand labels on 49 of 50 (Cohen's
-  kappa 0.97); the one difference is G059. Treat this with caution: Claude also
-  helped build this project.
+  `data/labels/labels.csv`). It agrees with the hand labels on 47 of 50 (Cohen's
+  kappa 0.90); the differences are G059, G129 and G147, all judgement calls.
+  Treat this with caution: Claude also helped build this project.
 
 ### Model comparison
 
@@ -220,9 +224,9 @@ code ([full tables and notes](reports/model_comparison.md)):
 
 | Judge model | Runs on | Agent | Single prompt | Agent gain | Paired test | Seconds per case (agent) |
 |---|---|---|---|---|---|---|
-| `gemini-flash-lite-latest` | Google cloud, free tier | **94%** | 84% | +10 pts | 7 vs 2 cases, p = 0.18 | 9 (includes free-tier pacing) |
-| `llama3.1:8b` | our PC, Ollama | 52% | 30% | +22 pts | 17 vs 6 cases, p = 0.04 | 15 |
-| `qwen3:8b` (thinking off) | our PC, Ollama | 50% | 40% | +10 pts | 6 vs 1 cases, p = 0.12 | 19 |
+| `gemini-flash-lite-latest` | Google cloud, free tier | **90%** | 88% | +2 pts | 5 vs 4 cases, p = 1.00 | 9 (includes free-tier pacing) |
+| `llama3.1:8b` | our PC, Ollama | 54% | 34% | +20 pts | 17 vs 7 cases, p = 0.06 | 15 |
+| `qwen3:8b` (thinking off) | our PC, Ollama | 52% | 44% | +8 pts | 6 vs 2 cases, p = 0.29 | 19 |
 | `gpt-5.4-mini` (low reasoning) | OpenAI cloud, paid | pending | pending | | | |
 
 Paired test: cases only the agent got right vs cases only the single prompt got
@@ -244,13 +248,13 @@ Each local run of 50 cases took about 15 to 30 minutes.
 
 **What we found.**
 
-- **Gemini is far better at the judgement.** The local 8B models get about half the cases right, and their failure is one-sided: of the 23 eligible test cases that should be declined, Gemini's agent refunded 1, Llama's 21 and Qwen's 22, including change-of-mind and damage-after-delivery claims. They do not apply the policy's exclusions.
-- **The agent beats the single prompt with every model.** Only Llama's gain is statistically significant on 50 cases (+22 points, p = 0.04). The eligibility rules in code are 100% right with every model (the single prompt: 68%, 86%, 90%), and on clear cases Llama goes from 37% to 60%. Neither local model is usable either way.
+- **Gemini is far better at the judgement.** The local 8B models get about half the cases right, and their failure is one-sided: of the 21 eligible test cases that should be declined, Gemini's agent refunded 1, Llama's 19 and Qwen's 20, including change-of-mind and damage-after-delivery claims. They do not apply the policy's exclusions.
+- **The agent is ahead of the single prompt with every model, but no gap is statistically significant on 50 cases** (largest: Llama, +20 points, p = 0.06; with Gemini it is a tie, p = 1.00). The eligibility rules in code are 100% right with every model (the single prompt: 68%, 86%, 90%), and on clear cases Llama goes from 37% to 60%. Neither local model is usable either way.
 - **Citations:** the agent's final answers never cite a clause the judge was not shown, with any model. Before that check, Qwen cited BPR-05, a real clause it had not been given, in 10 of 45 judged cases; the check removed it and escalated those cases.
-- **Escalation:** Gemini's agent escalates 6% of cases (asking for more evidence, or low confidence) and 2 of its 3 mistakes are among them. Qwen's 22% is almost entirely those BPR-05 citations, not low confidence; the local models never reported low confidence on their mistakes, so with them escalation protects only against bad citations.
+- **Escalation:** Gemini's agent escalates 6% of cases (asking for more evidence, or low confidence) and 2 of its 5 mistakes are among them. Qwen's 22% is almost entirely those BPR-05 citations, not low confidence; the local models never reported low confidence on their mistakes, so with them escalation protects only against bad citations.
 
 **Our choice and why.** Gemini Flash-Lite stays the default judge: it is by far
-the most accurate of the models we could test (94%, and 98% on the cases it does
+the most accurate of the models we could test (90%, and 94% on the cases it does
 not escalate). OpenAI GPT-5.4 mini is the app's fallback when a Gemini call
 fails (capped at S$100 a month); its test numbers are pending. Llama 3.1 8B is
 the default local model (level with Qwen, faster, and it fits fully on our
@@ -265,11 +269,11 @@ designs of the agent on the local models and probed Gemini on 10 cases
 
 | Retrieval design | Llama 3.1 8B | Qwen 3 8B |
 |---|---|---|
-| Per gap (default): one search per gap, `search_policy` as a fallback | 52% | 50% |
-| Agent-driven: general clauses only; a planning step calls `search_policy` for the gaps they miss | 50% | 50% |
-| None (ablation) | 60% | 54% |
+| Per gap (default): one search per gap, `search_policy` as a fallback | 54% | 52% |
+| Agent-driven: general clauses only; a planning step calls `search_policy` for the gaps they miss | 54% | 52% |
+| None (ablation) | 64% | 56% |
 
-- **With our full decision guide, accuracy barely moves** (0 to 4 cases out of 50). The guide in the judge's prompt restates the policy's covered and not-covered lists, so the judge has the rules even without retrieval; the next section removes them.
+- **With our full decision guide, retrieval does not help the local models** (without it Llama gets 5 more cases right and Qwen 2). The guide in the judge's prompt restates the policy's covered and not-covered lists, so the judge has the rules even without retrieval; the next section removes them.
 - **Without retrieval the citations are made up.** Both models still cited a clause in every case, almost always "BPR-02", the example ID in the prompt (40 of 48 citations for Llama, 45 of 46 for Qwen). The check removes them and escalates the case.
 - **Tool use.** In the default design no model needed `search_policy` on the test set: the per-gap searches already found the clauses. Offered as an optional field inside the judgement, the tool was never used, even when the per-gap searches were removed (0 of 40 judged Llama cases, 0 of 10 Gemini cases; [details](reports/tool_field_experiment.md)). With a separate planning step it is: Llama searched in every case, Qwen in 9%, Gemini in 3 of 10 (each time for a gap the general clauses missed), and Gemini matched the per-gap design on those 10 cases.
 - **Choice:** per-gap retrieval stays the default. It is as accurate, one LLM call cheaper per case, and predictable; the tool stays as a fallback.
@@ -283,12 +287,12 @@ from the retrieved clauses ([details](reports/model_comparison.md)):
 
 | Decision guide, retrieval | Llama 3.1 8B (50 cases) | Qwen 3 8B (50 cases) | Gemini Flash-Lite (first 25 cases, all clear ones) | Where the coverage rules come from |
 |---|---|---|---|---|
-| Full guide, per gap (default) | 52% | 50% | 92% (23 of 25) | The prompt and the retrieved clauses |
-| Full guide, no retrieval | 60% | 54% | not run | The prompt only |
-| Rubric only, per gap | 54% | 52% | 92% (23 of 25) | The retrieved clauses only |
-| Rubric only, no retrieval | 56% | 56% | 88% (22 of 25) | Nowhere: only the outcome rubric and the model's own knowledge |
+| Full guide, per gap (default) | 54% | 52% | 92% (23 of 25) | The prompt and the retrieved clauses |
+| Full guide, no retrieval | 64% | 56% | not run | The prompt only |
+| Rubric only, per gap | 58% | 54% | 92% (23 of 25) | The retrieved clauses only |
+| Rubric only, no retrieval | 60% | 58% | 88% (22 of 25) | Nowhere: only the outcome rubric and the model's own knowledge |
 
-- **The local models cannot tell us:** every 8B variant lands at 50–60% (a spread of 5 cases), gets only 21–36% of seller wins right, and refunds almost everything, whatever the prompt holds.
+- **The local models cannot tell us:** every 8B variant lands at 52–64% (a spread of 6 cases), gets only 23–38% of seller wins right, and refunds almost everything, whatever the prompt holds.
 - **For Gemini, retrieval can replace the restated policy** (23 of 25 either way). Without retrieval it declined two missing-accessory claims (G008, G043) that the policy covers, and it could cite nothing, so every case went to a person.
 - **Conclusion:** on this test set retrieval is not what makes the decisions accurate (Gemini mostly knows the rules); its value is grounding every recommendation in a clause staff can check, putting coverage the model would miss in front of it, and letting a policy change be handled by re-indexing the text. The Gemini probe covers only the first 25 test cases, which are all clear cases (no borderline ones).
 
@@ -308,7 +312,8 @@ for, before the hand labels existed.
 **The tool, the model comparison and the hand labels.** We then added the
 `search_policy` tool and ran the test set a third time, now once per judge
 model; the team then labelled the test set by hand, and all current numbers use
-those labels. Nothing was tuned on the test set between these runs, but it has
+those labels (they put Gemini's agent at 90%, the single prompt at 88%).
+Nothing was tuned on the test set between these runs, but it has
 now been used three times, and the default local model was chosen from these
 results, so its test numbers are slightly optimistic.
 

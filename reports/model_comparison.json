@@ -5,20 +5,20 @@
     "model": "gemini-flash-lite-latest",
     "variant": "",
     "paired": {
-      "agent_only": 7,
-      "baseline_only": 2,
-      "p": 0.18
+      "agent_only": 5,
+      "baseline_only": 4,
+      "p": 1.0
     },
     "agent": {
       "n": 50,
       "label_sources": {
         "final": 50
       },
-      "decision_accuracy": 0.94,
+      "decision_accuracy": 0.9,
       "accuracy_by_difficulty": {
         "borderline": {
           "n": 15,
-          "accuracy": 0.933
+          "accuracy": 0.8
         },
         "clear": {
           "n": 30,
@@ -29,14 +29,14 @@
           "accuracy": 1.0
         }
       },
-      "direction_accuracy": 0.96,
+      "direction_accuracy": 0.92,
       "buyer_win_accuracy": {
-        "n": 22,
-        "accuracy": 0.909
+        "n": 24,
+        "accuracy": 0.833
       },
       "seller_win_accuracy": {
-        "n": 28,
-        "accuracy": 0.964
+        "n": 26,
+        "accuracy": 0.962
       },
       "eligibility_accuracy": 1.0,
       "ineligible_flagged": {
@@ -68,9 +68,9 @@
       },
       "escalation": {
         "escalated_share": 0.06,
-        "wrong_decisions_escalated": 0.667,
-        "right_decisions_escalated": 0.021,
-        "accuracy_when_not_escalated": 0.979
+        "wrong_decisions_escalated": 0.4,
+        "right_decisions_escalated": 0.022,
+        "accuracy_when_not_escalated": 0.936
       },
       "seconds_per_case": {
         "mean": 9.03,
@@ -94,13 +94,13 @@
           "full_refund_with_return": 1,
           "full_refund_without_return": 0,
           "partial_refund": 5,
-          "decline": 0
+          "decline": 2
         },
         "decline": {
           "full_refund_with_return": 0,
           "full_refund_without_return": 0,
           "partial_refund": 1,
-          "decline": 27
+          "decline": 25
         }
       },
       "wrong_cases": [
@@ -124,6 +124,20 @@
           "pred": "partial_refund",
           "difficulty": "borderline",
           "escalated": true
+        },
+        {
+          "case_id": "G129",
+          "label": "partial_refund",
+          "pred": "decline",
+          "difficulty": "borderline",
+          "escalated": false
+        },
+        {
+          "case_id": "G147",
+          "label": "partial_refund",
+          "pred": "decline",
+          "difficulty": "borderline",
+          "escalated": false
         }
       ]
     },
@@ -132,11 +146,11 @@
       "label_sources": {
         "final": 50
       },
-      "decision_accuracy": 0.84,
+      "decision_accuracy": 0.88,
       "accuracy_by_difficulty": {
         "borderline": {
           "n": 15,
-          "accuracy": 0.667
+          "accuracy": 0.8
         },
         "clear": {
           "n": 30,
@@ -147,14 +161,14 @@
           "accuracy": 0.6
         }
       },
-      "direction_accuracy": 0.84,
+      "direction_accuracy": 0.88,
       "buyer_win_accuracy": {
-        "n": 22,
-        "accuracy": 0.955
+        "n": 24,
+        "accuracy": 0.958
       },
       "seller_win_accuracy": {
-        "n": 28,
-        "accuracy": 0.75
+        "n": 26,
+        "accuracy": 0.808
       },
       "eligibility_accuracy": 0.68,
       "ineligible_flagged": {
@@ -181,9 +195,9 @@
       },
       "escalation": {
         "escalated_share": 0.04,
-        "wrong_decisions_escalated": 0.125,
-        "right_decisions_escalated": 0.024,
-        "accuracy_when_not_escalated": 0.854
+        "wrong_decisions_escalated": 0.167,
+        "right_decisions_escalated": 0.023,
+        "accuracy_when_not_escalated": 0.896
       },
       "seconds_per_case": {
         "mean": 4.79,
@@ -206,13 +220,13 @@
         "partial_refund": {
           "full_refund_with_return": 0,
           "full_refund_without_return": 0,
-          "partial_refund": 6,
+          "partial_refund": 8,
           "decline": 0
         },
         "decline": {
           "full_refund_with_return": 0,
           "full_refund_without_return": 0,
-          "partial_refund": 7,
+          "partial_refund": 5,
           "decline": 21
         }
       },
@@ -232,21 +246,7 @@
           "escalated": false
         },
         {
-          "case_id": "G129",
-          "label": "decline",
-          "pred": "partial_refund",
-          "difficulty": "borderline",
-          "escalated": false
-        },
-        {
           "case_id": "G134",
-          "label": "decline",
-          "pred": "partial_refund",
-          "difficulty": "borderline",
-          "escalated": false
-        },
-        {
-          "case_id": "G147",
           "label": "decline",
           "pred": "partial_refund",
           "difficulty": "borderline",
@@ -283,19 +283,19 @@
     "variant": "",
     "paired": {
       "agent_only": 17,
-      "baseline_only": 6,
-      "p": 0.035
+      "baseline_only": 7,
+      "p": 0.064
     },
     "agent": {
       "n": 50,
       "label_sources": {
         "final": 50
       },
-      "decision_accuracy": 0.52,
+      "decision_accuracy": 0.54,
       "accuracy_by_difficulty": {
         "borderline": {
           "n": 15,
-          "accuracy": 0.2
+          "accuracy": 0.267
         },
         "clear": {
           "n": 30,
@@ -306,14 +306,14 @@
           "accuracy": 1.0
         }
       },
-      "direction_accuracy": 0.58,
+      "direction_accuracy": 0.62,
       "buyer_win_accuracy": {
-        "n": 22,
-        "accuracy": 0.864
+        "n": 24,
+        "accuracy": 0.833
       },
       "seller_win_accuracy": {
-        "n": 28,
-        "accuracy": 0.25
+        "n": 26,
+        "accuracy": 0.269
       },
       "eligibility_accuracy": 1.0,
       "ineligible_flagged": {
@@ -342,9 +342,9 @@
       },
       "escalation": {
         "escalated_share": 0.02,
-        "wrong_decisions_escalated": 0.042,
+        "wrong_decisions_escalated": 0.043,
         "right_decisions_escalated": 0.0,
-        "accuracy_when_not_escalated": 0.531
+        "accuracy_when_not_escalated": 0.551
       },
       "seconds_per_case": {
         "mean": 15.44,
@@ -365,15 +365,15 @@
           "decline": 0
         },
         "partial_refund": {
-          "full_refund_with_return": 3,
+          "full_refund_with_return": 4,
           "full_refund_without_return": 0,
-          "partial_refund": 3,
+          "partial_refund": 4,
           "decline": 0
         },
         "decline": {
-          "full_refund_with_return": 16,
+          "full_refund_with_return": 15,
           "full_refund_without_return": 0,
-          "partial_refund": 5,
+          "partial_refund": 4,
           "decline": 7
         }
       },
@@ -492,7 +492,7 @@
         },
         {
           "case_id": "G129",
-          "label": "decline",
+          "label": "partial_refund",
           "pred": "full_refund_with_return",
           "difficulty": "borderline",
           "escalated": false
@@ -501,13 +501,6 @@
           "case_id": "G134",
           "label": "decline",
           "pred": "full_refund_with_return",
-          "difficulty": "borderline",
-          "escalated": false
-        },
-        {
-          "case_id": "G147",
-          "label": "decline",
-          "pred": "partial_refund",
           "difficulty": "borderline",
           "escalated": false
         },
@@ -553,11 +546,11 @@
       "label_sources": {
         "final": 50
       },
-      "decision_accuracy": 0.3,
+      "decision_accuracy": 0.34,
       "accuracy_by_difficulty": {
         "borderline": {
           "n": 15,
-          "accuracy": 0.2
+          "accuracy": 0.333
         },
         "clear": {
           "n": 30,
@@ -568,14 +561,14 @@
           "accuracy": 0.2
         }
       },
-      "direction_accuracy": 0.52,
+      "direction_accuracy": 0.56,
       "buyer_win_accuracy": {
-        "n": 22,
-        "accuracy": 0.5
+        "n": 24,
+        "accuracy": 0.542
       },
       "seller_win_accuracy": {
-        "n": 28,
-        "accuracy": 0.143
+        "n": 26,
+        "accuracy": 0.154
       },
       "eligibility_accuracy": 0.86,
       "ineligible_flagged": {
@@ -604,7 +597,7 @@
         "escalated_share": 0.0,
         "wrong_decisions_escalated": 0.0,
         "right_decisions_escalated": 0.0,
-        "accuracy_when_not_escalated": 0.3
+        "accuracy_when_not_escalated": 0.34
       },
       "seconds_per_case": {
         "mean": 3.83,
@@ -627,13 +620,13 @@
         "partial_refund": {
           "full_refund_with_return": 0,
           "full_refund_without_return": 0,
-          "partial_refund": 6,
+          "partial_refund": 8,
           "decline": 0
         },
         "decline": {
           "full_refund_with_return": 0,
           "full_refund_without_return": 0,
-          "partial_refund": 24,
+          "partial_refund": 22,
           "decline": 4
         }
       },
@@ -800,13 +793,6 @@
           "escalated": false
         },
         {
-          "case_id": "G129",
-          "label": "decline",
-          "pred": "partial_refund",
-          "difficulty": "borderline",
-          "escalated": false
-        },
-        {
           "case_id": "G134",
           "label": "decline",
           "pred": "partial_refund",
@@ -815,13 +801,6 @@
         },
         {
           "case_id": "G146",
-          "label": "decline",
-          "pred": "partial_refund",
-          "difficulty": "borderline",
-          "escalated": false
-        },
-        {
-          "case_id": "G147",
           "label": "decline",
           "pred": "partial_refund",
           "difficulty": "borderline",
@@ -893,19 +872,19 @@
     "variant": "",
     "paired": {
       "agent_only": 6,
-      "baseline_only": 1,
-      "p": 0.125
+      "baseline_only": 2,
+      "p": 0.289
     },
     "agent": {
       "n": 50,
       "label_sources": {
         "final": 50
       },
-      "decision_accuracy": 0.5,
+      "decision_accuracy": 0.52,
       "accuracy_by_difficulty": {
         "borderline": {
           "n": 15,
-          "accuracy": 0.2
+          "accuracy": 0.267
         },
         "clear": {
           "n": 30,
@@ -916,14 +895,14 @@
           "accuracy": 1.0
         }
       },
-      "direction_accuracy": 0.56,
+      "direction_accuracy": 0.6,
       "buyer_win_accuracy": {
-        "n": 22,
-        "accuracy": 0.864
+        "n": 24,
+        "accuracy": 0.833
       },
       "seller_win_accuracy": {
-        "n": 28,
-        "accuracy": 0.214
+        "n": 26,
+        "accuracy": 0.231
       },
       "eligibility_accuracy": 1.0,
       "ineligible_flagged": {
@@ -953,8 +932,8 @@
       },
       "escalation": {
         "escalated_share": 0.22,
-        "wrong_decisions_escalated": 0.28,
-        "right_decisions_escalated": 0.16,
+        "wrong_decisions_escalated": 0.25,
+        "right_decisions_escalated": 0.192,
         "accuracy_when_not_escalated": 0.538
       },
       "seconds_per_case": {
@@ -976,15 +955,15 @@
           "decline": 0
         },
         "partial_refund": {
-          "full_refund_with_return": 3,
+          "full_refund_with_return": 4,
           "full_refund_without_return": 0,
-          "partial_refund": 3,
+          "partial_refund": 4,
           "decline": 0
         },
         "decline": {
-          "full_refund_with_return": 17,
+          "full_refund_with_return": 16,
           "full_refund_without_return": 0,
-          "partial_refund": 5,
+          "partial_refund": 4,
           "decline": 6
         }
       },
@@ -1110,7 +1089,7 @@
         },
         {
           "case_id": "G129",
-          "label": "decline",
+          "label": "partial_refund",
           "pred": "full_refund_with_return",
           "difficulty": "borderline",
           "escalated": false
@@ -1121,13 +1100,6 @@
           "pred": "partial_refund",
           "difficulty": "borderline",
           "escalated": false
-        },
-        {
-          "case_id": "G147",
-          "label": "decline",
-          "pred": "partial_refund",
-          "difficulty": "borderline",
-          "escalated": true
         },
         {
           "case_id": "G148",
@@ -1171,11 +1143,11 @@
       "label_sources": {
         "final": 50
       },
-      "decision_accuracy": 0.4,
+      "decision_accuracy": 0.44,
       "accuracy_by_difficulty": {
         "borderline": {
           "n": 15,
-          "accuracy": 0.2
+          "accuracy": 0.333
         },
         "clear": {
           "n": 30,
@@ -1186,13 +1158,13 @@
           "accuracy": 0.0
         }
       },
-      "direction_accuracy": 0.44,
+      "direction_accuracy": 0.48,
       "buyer_win_accuracy": {
-        "n": 22,
-        "accuracy": 0.909
+        "n": 24,
+        "accuracy": 0.917
       },
       "seller_win_accuracy": {
-        "n": 28,
+        "n": 26,
         "accuracy": 0.0
       },
       "eligibility_accuracy": 0.9,
@@ -1222,7 +1194,7 @@
         "escalated_share": 0.0,
         "wrong_decisions_escalated": 0.0,
         "right_decisions_escalated": 0.0,
-        "accuracy_when_not_escalated": 0.4
+        "accuracy_when_not_escalated": 0.44
       },
       "seconds_per_case": {
         "mean": 5.34,
@@ -1245,13 +1217,13 @@
         "partial_refund": {
           "full_refund_with_return": 2,
           "full_refund_without_return": 0,
-          "partial_refund": 4,
+          "partial_refund": 6,
           "decline": 0
         },
         "decline": {
           "full_refund_with_return": 11,
           "full_refund_without_return": 1,
-          "partial_refund": 16,
+          "partial_refund": 14,
           "decline": 0
         }
       },
@@ -1369,13 +1341,6 @@
           "escalated": false
         },
         {
-          "case_id": "G129",
-          "label": "decline",
-          "pred": "partial_refund",
-          "difficulty": "borderline",
-          "escalated": false
-        },
-        {
           "case_id": "G134",
           "label": "decline",
           "pred": "partial_refund",
@@ -1384,13 +1349,6 @@
         },
         {
           "case_id": "G146",
-          "label": "decline",
-          "pred": "partial_refund",
-          "difficulty": "borderline",
-          "escalated": false
-        },
-        {
-          "case_id": "G147",
           "label": "decline",
           "pred": "partial_refund",
           "difficulty": "borderline",
@@ -1480,11 +1438,11 @@
       "label_sources": {
         "final": 50
       },
-      "decision_accuracy": 0.5,
+      "decision_accuracy": 0.54,
       "accuracy_by_difficulty": {
         "borderline": {
           "n": 15,
-          "accuracy": 0.133
+          "accuracy": 0.267
         },
         "clear": {
           "n": 30,
@@ -1495,14 +1453,14 @@
           "accuracy": 1.0
         }
       },
-      "direction_accuracy": 0.56,
+      "direction_accuracy": 0.6,
       "buyer_win_accuracy": {
-        "n": 22,
-        "accuracy": 0.864
+        "n": 24,
+        "accuracy": 0.875
       },
       "seller_win_accuracy": {
-        "n": 28,
-        "accuracy": 0.214
+        "n": 26,
+        "accuracy": 0.231
       },
       "eligibility_accuracy": 1.0,
       "ineligible_flagged": {
@@ -1531,9 +1489,9 @@
       },
       "escalation": {
         "escalated_share": 0.1,
-        "wrong_decisions_escalated": 0.08,
-        "right_decisions_escalated": 0.12,
-        "accuracy_when_not_escalated": 0.489
+        "wrong_decisions_escalated": 0.087,
+        "right_decisions_escalated": 0.111,
+        "accuracy_when_not_escalated": 0.533
       },
       "seconds_per_case": {
         "mean": 16.74,
@@ -1556,13 +1514,13 @@
         "partial_refund": {
           "full_refund_with_return": 3,
           "full_refund_without_return": 0,
-          "partial_refund": 3,
+          "partial_refund": 5,
           "decline": 0
         },
         "decline": {
           "full_refund_with_return": 14,
           "full_refund_without_return": 0,
-          "partial_refund": 8,
+          "partial_refund": 6,
           "decline": 6
         }
       },
@@ -1680,13 +1638,6 @@
           "escalated": false
         },
         {
-          "case_id": "G129",
-          "label": "decline",
-          "pred": "partial_refund",
-          "difficulty": "borderline",
-          "escalated": false
-        },
-        {
           "case_id": "G134",
           "label": "decline",
           "pred": "partial_refund",
@@ -1695,13 +1646,6 @@
         },
         {
           "case_id": "G146",
-          "label": "decline",
-          "pred": "partial_refund",
-          "difficulty": "borderline",
-          "escalated": false
-        },
-        {
-          "case_id": "G147",
           "label": "decline",
           "pred": "partial_refund",
           "difficulty": "borderline",
@@ -1756,11 +1700,11 @@
       "label_sources": {
         "final": 50
       },
-      "decision_accuracy": 0.5,
+      "decision_accuracy": 0.52,
       "accuracy_by_difficulty": {
         "borderline": {
           "n": 15,
-          "accuracy": 0.2
+          "accuracy": 0.267
         },
         "clear": {
           "n": 30,
@@ -1771,14 +1715,14 @@
           "accuracy": 1.0
         }
       },
-      "direction_accuracy": 0.56,
+      "direction_accuracy": 0.6,
       "buyer_win_accuracy": {
-        "n": 22,
-        "accuracy": 0.864
+        "n": 24,
+        "accuracy": 0.833
       },
       "seller_win_accuracy": {
-        "n": 28,
-        "accuracy": 0.214
+        "n": 26,
+        "accuracy": 0.231
       },
       "eligibility_accuracy": 1.0,
       "ineligible_flagged": {
@@ -1807,9 +1751,9 @@
       },
       "escalation": {
         "escalated_share": 0.02,
-        "wrong_decisions_escalated": 0.04,
+        "wrong_decisions_escalated": 0.042,
         "right_decisions_escalated": 0.0,
-        "accuracy_when_not_escalated": 0.51
+        "accuracy_when_not_escalated": 0.531
       },
       "seconds_per_case": {
         "mean": 19.58,
@@ -1830,15 +1774,15 @@
           "decline": 0
         },
         "partial_refund": {
-          "full_refund_with_return": 3,
+          "full_refund_with_return": 4,
           "full_refund_without_return": 0,
-          "partial_refund": 3,
+          "partial_refund": 4,
           "decline": 0
         },
         "decline": {
-          "full_refund_with_return": 16,
+          "full_refund_with_return": 15,
           "full_refund_without_return": 0,
-          "partial_refund": 6,
+          "partial_refund": 5,
           "decline": 6
         }
       },
@@ -1964,20 +1908,13 @@
         },
         {
           "case_id": "G129",
-          "label": "decline",
+          "label": "partial_refund",
           "pred": "full_refund_with_return",
           "difficulty": "borderline",
           "escalated": false
         },
         {
           "case_id": "G146",
-          "label": "decline",
-          "pred": "partial_refund",
-          "difficulty": "borderline",
-          "escalated": false
-        },
-        {
-          "case_id": "G147",
           "label": "decline",
           "pred": "partial_refund",
           "difficulty": "borderline",
@@ -2132,11 +2069,11 @@
       "label_sources": {
         "final": 50
       },
-      "decision_accuracy": 0.6,
+      "decision_accuracy": 0.64,
       "accuracy_by_difficulty": {
         "borderline": {
           "n": 15,
-          "accuracy": 0.4
+          "accuracy": 0.533
         },
         "clear": {
           "n": 30,
@@ -2147,14 +2084,14 @@
           "accuracy": 1.0
         }
       },
-      "direction_accuracy": 0.62,
+      "direction_accuracy": 0.66,
       "buyer_win_accuracy": {
-        "n": 22,
-        "accuracy": 0.909
+        "n": 24,
+        "accuracy": 0.917
       },
       "seller_win_accuracy": {
-        "n": 28,
-        "accuracy": 0.357
+        "n": 26,
+        "accuracy": 0.385
       },
       "eligibility_accuracy": 1.0,
       "ineligible_flagged": {
@@ -2186,7 +2123,7 @@
       "escalation": {
         "escalated_share": 0.9,
         "wrong_decisions_escalated": 1.0,
-        "right_decisions_escalated": 0.833,
+        "right_decisions_escalated": 0.844,
         "accuracy_when_not_escalated": 1.0
       },
       "seconds_per_case": {
@@ -2210,13 +2147,13 @@
         "partial_refund": {
           "full_refund_with_return": 1,
           "full_refund_without_return": 0,
-          "partial_refund": 4,
+          "partial_refund": 6,
           "decline": 1
         },
         "decline": {
           "full_refund_with_return": 8,
           "full_refund_without_return": 0,
-          "partial_refund": 10,
+          "partial_refund": 8,
           "decline": 10
         }
       },
@@ -2306,23 +2243,9 @@
           "escalated": true
         },
         {
-          "case_id": "G129",
-          "label": "decline",
-          "pred": "partial_refund",
-          "difficulty": "borderline",
-          "escalated": true
-        },
-        {
           "case_id": "G139",
           "label": "partial_refund",
           "pred": "decline",
-          "difficulty": "borderline",
-          "escalated": true
-        },
-        {
-          "case_id": "G147",
-          "label": "decline",
-          "pred": "partial_refund",
           "difficulty": "borderline",
           "escalated": true
         },
@@ -2375,11 +2298,11 @@
       "label_sources": {
         "final": 50
       },
-      "decision_accuracy": 0.54,
+      "decision_accuracy": 0.56,
       "accuracy_by_difficulty": {
         "borderline": {
           "n": 15,
-          "accuracy": 0.2
+          "accuracy": 0.267
         },
         "clear": {
           "n": 30,
@@ -2390,14 +2313,14 @@
           "accuracy": 1.0
         }
       },
-      "direction_accuracy": 0.6,
+      "direction_accuracy": 0.64,
       "buyer_win_accuracy": {
-        "n": 22,
-        "accuracy": 0.864
+        "n": 24,
+        "accuracy": 0.833
       },
       "seller_win_accuracy": {
-        "n": 28,
-        "accuracy": 0.286
+        "n": 26,
+        "accuracy": 0.308
       },
       "eligibility_accuracy": 1.0,
       "ineligible_flagged": {
@@ -2430,7 +2353,7 @@
       "escalation": {
         "escalated_share": 0.9,
         "wrong_decisions_escalated": 1.0,
-        "right_decisions_escalated": 0.815,
+        "right_decisions_escalated": 0.821,
         "accuracy_when_not_escalated": 1.0
       },
       "seconds_per_case": {
@@ -2452,15 +2375,15 @@
           "decline": 0
         },
         "partial_refund": {
-          "full_refund_with_return": 3,
+          "full_refund_with_return": 4,
           "full_refund_without_return": 0,
-          "partial_refund": 3,
+          "partial_refund": 4,
           "decline": 0
         },
         "decline": {
-          "full_refund_with_return": 14,
+          "full_refund_with_return": 13,
           "full_refund_without_return": 0,
-          "partial_refund": 6,
+          "partial_refund": 5,
           "decline": 8
         }
       },
@@ -2572,20 +2495,13 @@
         },
         {
           "case_id": "G129",
-          "label": "decline",
+          "label": "partial_refund",
           "pred": "full_refund_with_return",
           "difficulty": "borderline",
           "escalated": true
         },
         {
           "case_id": "G146",
-          "label": "decline",
-          "pred": "partial_refund",
-          "difficulty": "borderline",
-          "escalated": true
-        },
-        {
-          "case_id": "G147",
           "label": "decline",
           "pred": "partial_refund",
           "difficulty": "borderline",
@@ -2640,11 +2556,11 @@
       "label_sources": {
         "final": 50
       },
-      "decision_accuracy": 0.54,
+      "decision_accuracy": 0.58,
       "accuracy_by_difficulty": {
         "borderline": {
           "n": 15,
-          "accuracy": 0.2
+          "accuracy": 0.333
         },
         "clear": {
           "n": 30,
@@ -2655,14 +2571,14 @@
           "accuracy": 1.0
         }
       },
-      "direction_accuracy": 0.58,
+      "direction_accuracy": 0.62,
       "buyer_win_accuracy": {
-        "n": 22,
-        "accuracy": 0.909
+        "n": 24,
+        "accuracy": 0.917
       },
       "seller_win_accuracy": {
-        "n": 28,
-        "accuracy": 0.25
+        "n": 26,
+        "accuracy": 0.269
       },
       "eligibility_accuracy": 1.0,
       "ineligible_flagged": {
@@ -2693,8 +2609,8 @@
       "escalation": {
         "escalated_share": 0.04,
         "wrong_decisions_escalated": 0.0,
-        "right_decisions_escalated": 0.074,
-        "accuracy_when_not_escalated": 0.521
+        "right_decisions_escalated": 0.069,
+        "accuracy_when_not_escalated": 0.562
       },
       "seconds_per_case": {
         "mean": 14.68,
@@ -2717,13 +2633,13 @@
         "partial_refund": {
           "full_refund_with_return": 2,
           "full_refund_without_return": 0,
-          "partial_refund": 4,
+          "partial_refund": 6,
           "decline": 0
         },
         "decline": {
           "full_refund_with_return": 9,
           "full_refund_without_return": 0,
-          "partial_refund": 12,
+          "partial_refund": 10,
           "decline": 7
         }
       },
@@ -2827,13 +2743,6 @@
           "escalated": false
         },
         {
-          "case_id": "G129",
-          "label": "decline",
-          "pred": "partial_refund",
-          "difficulty": "borderline",
-          "escalated": false
-        },
-        {
           "case_id": "G134",
           "label": "decline",
           "pred": "partial_refund",
@@ -2842,13 +2751,6 @@
         },
         {
           "case_id": "G146",
-          "label": "decline",
-          "pred": "partial_refund",
-          "difficulty": "borderline",
-          "escalated": false
-        },
-        {
-          "case_id": "G147",
           "label": "decline",
           "pred": "partial_refund",
           "difficulty": "borderline",
@@ -2903,11 +2805,11 @@
       "label_sources": {
         "final": 50
       },
-      "decision_accuracy": 0.52,
+      "decision_accuracy": 0.54,
       "accuracy_by_difficulty": {
         "borderline": {
           "n": 15,
-          "accuracy": 0.2
+          "accuracy": 0.267
         },
         "clear": {
           "n": 30,
@@ -2918,14 +2820,14 @@
           "accuracy": 1.0
         }
       },
-      "direction_accuracy": 0.56,
+      "direction_accuracy": 0.6,
       "buyer_win_accuracy": {
-        "n": 22,
-        "accuracy": 0.864
+        "n": 24,
+        "accuracy": 0.833
       },
       "seller_win_accuracy": {
-        "n": 28,
-        "accuracy": 0.25
+        "n": 26,
+        "accuracy": 0.269
       },
       "eligibility_accuracy": 1.0,
       "ineligible_flagged": {
@@ -2956,8 +2858,8 @@
       },
       "escalation": {
         "escalated_share": 0.2,
-        "wrong_decisions_escalated": 0.208,
-        "right_decisions_escalated": 0.192,
+        "wrong_decisions_escalated": 0.174,
+        "right_decisions_escalated": 0.222,
         "accuracy_when_not_escalated": 0.525
       },
       "seconds_per_case": {
@@ -2979,15 +2881,15 @@
           "decline": 0
         },
         "partial_refund": {
-          "full_refund_with_return": 2,
+          "full_refund_with_return": 3,
           "full_refund_without_return": 0,
-          "partial_refund": 3,
+          "partial_refund": 4,
           "decline": 1
         },
         "decline": {
-          "full_refund_with_return": 14,
+          "full_refund_with_return": 13,
           "full_refund_without_return": 0,
-          "partial_refund": 7,
+          "partial_refund": 6,
           "decline": 7
         }
       },
@@ -3106,20 +3008,13 @@
         },
         {
           "case_id": "G129",
-          "label": "decline",
+          "label": "partial_refund",
           "pred": "full_refund_with_return",
           "difficulty": "borderline",
           "escalated": false
         },
         {
           "case_id": "G146",
-          "label": "decline",
-          "pred": "partial_refund",
-          "difficulty": "borderline",
-          "escalated": true
-        },
-        {
-          "case_id": "G147",
           "label": "decline",
           "pred": "partial_refund",
           "difficulty": "borderline",
@@ -3285,11 +3180,11 @@
       "label_sources": {
         "final": 50
       },
-      "decision_accuracy": 0.56,
+      "decision_accuracy": 0.6,
       "accuracy_by_difficulty": {
         "borderline": {
           "n": 15,
-          "accuracy": 0.2
+          "accuracy": 0.333
         },
         "clear": {
           "n": 30,
@@ -3300,14 +3195,14 @@
           "accuracy": 1.0
         }
       },
-      "direction_accuracy": 0.58,
+      "direction_accuracy": 0.62,
       "buyer_win_accuracy": {
-        "n": 22,
-        "accuracy": 0.909
+        "n": 24,
+        "accuracy": 0.917
       },
       "seller_win_accuracy": {
-        "n": 28,
-        "accuracy": 0.286
+        "n": 26,
+        "accuracy": 0.308
       },
       "eligibility_accuracy": 1.0,
       "ineligible_flagged": {
@@ -3338,7 +3233,7 @@
       "escalation": {
         "escalated_share": 0.9,
         "wrong_decisions_escalated": 1.0,
-        "right_decisions_escalated": 0.821,
+        "right_decisions_escalated": 0.833,
         "accuracy_when_not_escalated": 1.0
       },
       "seconds_per_case": {
@@ -3362,13 +3257,13 @@
         "partial_refund": {
           "full_refund_with_return": 1,
           "full_refund_without_return": 0,
-          "partial_refund": 4,
+          "partial_refund": 6,
           "decline": 1
         },
         "decline": {
           "full_refund_with_return": 12,
           "full_refund_without_return": 0,
-          "partial_refund": 8,
+          "partial_refund": 6,
           "decline": 8
         }
       },
@@ -3472,21 +3367,7 @@
           "escalated": true
         },
         {
-          "case_id": "G129",
-          "label": "decline",
-          "pred": "partial_refund",
-          "difficulty": "borderline",
-          "escalated": true
-        },
-        {
           "case_id": "G146",
-          "label": "decline",
-          "pred": "partial_refund",
-          "difficulty": "borderline",
-          "escalated": true
-        },
-        {
-          "case_id": "G147",
           "label": "decline",
           "pred": "partial_refund",
           "difficulty": "borderline",
@@ -3541,11 +3422,11 @@
       "label_sources": {
         "final": 50
       },
-      "decision_accuracy": 0.56,
+      "decision_accuracy": 0.58,
       "accuracy_by_difficulty": {
         "borderline": {
           "n": 15,
-          "accuracy": 0.2
+          "accuracy": 0.267
         },
         "clear": {
           "n": 30,
@@ -3556,14 +3437,14 @@
           "accuracy": 1.0
         }
       },
-      "direction_accuracy": 0.62,
+      "direction_accuracy": 0.66,
       "buyer_win_accuracy": {
-        "n": 22,
-        "accuracy": 0.864
+        "n": 24,
+        "accuracy": 0.833
       },
       "seller_win_accuracy": {
-        "n": 28,
-        "accuracy": 0.321
+        "n": 26,
+        "accuracy": 0.346
       },
       "eligibility_accuracy": 1.0,
       "ineligible_flagged": {
@@ -3596,7 +3477,7 @@
       "escalation": {
         "escalated_share": 0.9,
         "wrong_decisions_escalated": 1.0,
-        "right_decisions_escalated": 0.821,
+        "right_decisions_escalated": 0.828,
         "accuracy_when_not_escalated": 1.0
       },
       "seconds_per_case": {
@@ -3618,15 +3499,15 @@
           "decline": 0
         },
         "partial_refund": {
-          "full_refund_with_return": 3,
+          "full_refund_with_return": 4,
           "full_refund_without_return": 0,
-          "partial_refund": 3,
+          "partial_refund": 4,
           "decline": 0
         },
         "decline": {
-          "full_refund_with_return": 12,
+          "full_refund_with_return": 11,
           "full_refund_without_return": 0,
-          "partial_refund": 7,
+          "partial_refund": 6,
           "decline": 9
         }
       },
@@ -3731,20 +3612,13 @@
         },
         {
           "case_id": "G129",
-          "label": "decline",
+          "label": "partial_refund",
           "pred": "full_refund_with_return",
           "difficulty": "borderline",
           "escalated": true
         },
         {
           "case_id": "G146",
-          "label": "decline",
-          "pred": "partial_refund",
-          "difficulty": "borderline",
-          "escalated": true
-        },
-        {
-          "case_id": "G147",
           "label": "decline",
           "pred": "partial_refund",
           "difficulty": "borderline",

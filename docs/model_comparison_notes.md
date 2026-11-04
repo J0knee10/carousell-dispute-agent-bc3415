@@ -17,32 +17,34 @@ Accuracy is measured against the team's hand labels (`final_outcome` in
 `data/labels/labels.csv`): B1 labelled 25 test cases and B2 the other 25, on
 4 Nov, after these runs. No case was labelled by both, so we cannot report
 agreement between the labellers. The hand labels differ from the outcomes the
-cases were written for on two cases (G129 and G134: decline). Every run is a
+cases were written for on two cases: G134 (decline instead of a partial refund)
+and G147 (a partial refund instead of a decline). Every run is a
 single run on 50 cases, so one case is 2 points.
 
 ## Results
 
 | Judge model | Agent | Baseline | Agent gain | Paired test (cases only the agent / only the baseline got right) | Seconds per case (agent) |
 |---|---|---|---|---|---|
-| Gemini Flash-Lite (cloud) | 94% | 84% | +10 pts | 7 vs 2, p = 0.18 | 9 (includes free-tier pacing) |
-| Llama 3.1 8B (local) | 52% | 30% | +22 pts | 17 vs 6, p = 0.04 | 15 |
-| Qwen 3 8B (local) | 50% | 40% | +10 pts | 6 vs 1, p = 0.12 | 19 |
+| Gemini Flash-Lite (cloud) | 90% | 88% | +2 pts | 5 vs 4, p = 1.00 | 9 (includes free-tier pacing) |
+| Llama 3.1 8B (local) | 54% | 34% | +20 pts | 17 vs 7, p = 0.06 | 15 |
+| Qwen 3 8B (local) | 52% | 44% | +8 pts | 6 vs 2, p = 0.29 | 19 |
 | GPT-5.4 mini (cloud, paid) | pending | pending | | | |
 
 **Gemini is far better at the judgement.** The two local models get about half
-the cases right. Their problem is one-sided: of the 23 eligible test cases that
-should be declined, Gemini's agent refunded 1, Llama's 21 and Qwen's 22,
+the cases right. Their problem is one-sided: of the 21 eligible test cases that
+should be declined, Gemini's agent refunded 1, Llama's 19 and Qwen's 20,
 including change-of-mind and damage-after-delivery claims. They do not apply the
 policy's exclusions ("not covered: the buyer changed their mind", "wear on an
 item listed as used"), and their claim matching labels ordinary complaints as
-defects or "condition worse than listed". Qwen's single prompt refunded all 23.
+defects or "condition worse than listed". Qwen's single prompt refunded all 21.
 
-**The agent beats the single prompt with every model.** With Gemini the gain is
-10 points, almost all on borderline cases (93% against 67%) and ineligible ones
-(100% against 60%); on clear cases the single prompt is slightly ahead (97%
-against 93%). Only Llama's gain is statistically significant on 50 cases (17
-cases only the agent got right against 6, exact McNemar p = 0.04); Gemini's is
-not (7 against 2, p = 0.18). Part of every gain is the eligibility rules in
+**The agent is ahead of the single prompt with every model, but no gap is
+statistically significant on 50 cases.** With Gemini the two are tied on
+judgement (90% against 88%; 5 cases only the agent got right, 4 only the single
+prompt; exact McNemar p = 1.00): equal on borderline cases (80%), the single
+prompt slightly ahead on clear ones (97% against 93%), the agent ahead on the
+5 ineligible ones (100% against 60%). The largest gap is Llama's (+20 points;
+17 cases against 7, p = 0.06). Part of every gain is the eligibility rules in
 code: the agent is 100% right on eligibility with every model, while the single
 prompt gets 68% (Gemini), 86% (Llama) and 90% (Qwen). That 100% shows the rules
 are implemented correctly; on our data it is guaranteed, because the cases'
@@ -57,8 +59,11 @@ citation ("[BPR-02] The item is significantly not as described"); that is a real
 clause in the wrong format, counted separately.
 
 **Escalation.** Gemini's agent escalates 6% of cases (asking for more evidence,
-or low confidence), and 2 of its 3 mistakes are among them; on the cases it does
-not escalate it is right 98% of the time. Qwen's 22% is almost entirely the
+or low confidence), and 2 of its 5 mistakes are among them; on the cases it does
+not escalate it is right 94% of the time (that includes the 5 ineligible cases,
+decided by the rules and right by construction). The baseline has no review
+step: it counts as escalated only when its confidence is below 0.7 (1 of its 6
+mistakes), so the two escalation figures measure different mechanisms. Qwen's 22% is almost entirely the
 BPR-05 citations (10 of 11), not low confidence; Llama escalates 2%. The local
 models never reported low confidence on their mistakes, so with them escalation
 protects only against bad citations.
@@ -74,13 +79,13 @@ three designs of the agent on both local models, and a 10-case probe on Gemini:
 
 | Retrieval design | Llama 3.1 8B | Qwen 3 8B | What happens |
 |---|---|---|---|
-| Per gap (default) | 52% | 50% | One search per gap before the judgement; the judge may call `search_policy` as a fallback |
-| Agent-driven | 50% | 50% | Only general clauses up front; a planning step lists which gaps they cover and calls `search_policy` for the rest; then the judge decides (2.7 LLM calls a case instead of 1.8) |
-| None (ablation) | 60% | 54% | No policy clauses at all |
+| Per gap (default) | 54% | 52% | One search per gap before the judgement; the judge may call `search_policy` as a fallback |
+| Agent-driven | 54% | 52% | Only general clauses up front; a planning step lists which gaps they cover and calls `search_policy` for the rest; then the judge decides (2.7 LLM calls a case instead of 1.8) |
+| None (ablation) | 64% | 56% | No policy clauses at all |
 
 - **With our full decision guide, retrieval hardly moves the local models'
-  accuracy**, and removing it even looks slightly better (4 and 2 cases out of
-  50, within noise). The reason is in the prompt: the decision guide restates
+  accuracy**, and removing it even looks better (5 and 2 cases out of 50; the
+  seller wins the 8B models get right rise from 27% to 38% for Llama). The reason is in the prompt: the decision guide restates
   the policy's covered and not-covered lists, so the judge has the rules without
   retrieval. The next section removes them.
 - **Without retrieval the citations are made up.** Both models still cited a
@@ -115,13 +120,13 @@ decline) and is told that what is covered must come from the clauses it is given
 
 | Decision guide, retrieval | Llama 3.1 8B (50 cases) | Qwen 3 8B (50 cases) | Gemini Flash-Lite (first 25 cases, all clear ones) | Where the coverage rules come from |
 |---|---|---|---|---|
-| Full guide, per gap (default) | 52% | 50% | 92% (23 of 25) | The prompt and the retrieved clauses |
-| Full guide, no retrieval | 60% | 54% | not run | The prompt only |
-| Rubric only, per gap | 54% | 52% | 92% (23 of 25) | The retrieved clauses only |
-| Rubric only, no retrieval | 56% | 56% | 88% (22 of 25) | Nowhere: only the outcome rubric and the model's own knowledge |
+| Full guide, per gap (default) | 54% | 52% | 92% (23 of 25) | The prompt and the retrieved clauses |
+| Full guide, no retrieval | 64% | 56% | not run | The prompt only |
+| Rubric only, per gap | 58% | 54% | 92% (23 of 25) | The retrieved clauses only |
+| Rubric only, no retrieval | 60% | 58% | 88% (22 of 25) | Nowhere: only the outcome rubric and the model's own knowledge |
 
-- **The local models cannot tell us.** Every 8B variant lands at 50–60% (a
-  spread of 5 cases) and gets only 21–36% of seller wins right: they refund
+- **The local models cannot tell us.** Every 8B variant lands at 52–64% (a
+  spread of 6 cases) and gets only 23–38% of seller wins right: they refund
   almost everything whatever the prompt holds, so neither the guide nor
   retrieval measurably changes their decisions.
 - **For Gemini, retrieval can replace the restated policy** (rubric only with
@@ -144,9 +149,9 @@ decline) and is told that what is covered must come from the clauses it is given
 
 ## Our choice, and why
 
-1. **Gemini Flash-Lite stays the default judge.** It is by far the most accurate of the models we could test (94%, and 98% on the cases it does not escalate). On the free tier it costs nothing; a deployment would use the paid tier (no training on prompts) after removing personal details.
+1. **Gemini Flash-Lite stays the default judge.** It is by far the most accurate of the models we could test (90%, and 94% on the cases it does not escalate). On the free tier it costs nothing; a deployment would use the paid tier (no training on prompts) after removing personal details.
 2. **OpenAI GPT-5.4 mini is the app's fallback** when a Gemini call fails, capped at S$100 a month. Its test numbers are pending (see above), so for now it is a backup, not a tested judge.
-3. **Llama 3.1 8B is the default local model.** It is level with Qwen 3 8B (52% vs 50%), fits fully on our 8 GB GPU (Qwen spilled 11% onto the CPU) and is faster. It is a fallback for when data must stay on the machine, not a replacement: with it, nearly every dispute would be refunded, which hurts honest sellers.
+3. **Llama 3.1 8B is the default local model.** It is level with Qwen 3 8B (54% vs 52%), fits fully on our 8 GB GPU (Qwen spilled 11% onto the CPU) and is faster. It is a fallback for when data must stay on the machine, not a replacement: with it, nearly every dispute would be refunded, which hurts honest sellers.
 4. **Per-gap retrieval stays the default retrieval design,** with the `search_policy` tool as a fallback: agent-driven retrieval was no more accurate on any model and costs one more LLM call per case.
 
 ## Hardware and other limits
@@ -156,7 +161,7 @@ decline) and is told that what is covered must come from the clauses it is given
 - "Cloud vs local" here is also "a strong small cloud model vs 8B models at 4-bit": the comparison cannot separate the two. 14B-and-larger open models, which might close the gap, would run largely on the CPU, several times slower, and all runs had to finish in one night.
 - Windows ran short of committed memory once while a model was loaded and a test suite ran next to it; that run resumed from where it stopped (the harness saves after every case).
 - The free Gemini quota allows about one full test run a day, so the Gemini rubric-only runs cover the first 25 test cases and the agent-driven run 10; the full-guide no-retrieval run and full-length versions are left for another day. The OpenAI key's free usage tier (50 requests a day) stopped the GPT-5.4 mini runs after 6 cases.
-- Single runs on 50 cases, no repeat runs. The test set has now been used three times and the local default was chosen on it, so the local numbers are slightly optimistic. The hand labels were made after the runs.
+- Single runs on 50 cases, no repeat runs. The test set has now been used three times and the local default was chosen on it, so the local numbers are slightly optimistic. The hand labels were made after the runs, one person per case.
 
 ## What we would try next
 

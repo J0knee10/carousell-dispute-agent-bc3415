@@ -11,13 +11,13 @@
 |---|---|---|
 | Cases scored | 50 | 50 |
 | Failed (no valid answer; counted as wrong) | 0 | 0 |
-| Decision accuracy (4 outcomes) | 94% | 84% |
+| Decision accuracy (4 outcomes) | 90% | 88% |
 |   clear cases | 93% (n=30) | 97% (n=30) |
-|   borderline cases | 93% (n=15) | 67% (n=15) |
+|   borderline cases | 80% (n=15) | 80% (n=15) |
 |   ineligible cases | 100% (n=5) | 60% (n=5) |
-| Direction accuracy (refund vs decline) | 96% | 84% |
-| Buyer-win cases right | 91% (n=22) | 96% (n=22) |
-| Seller-win cases right | 96% (n=28) | 75% (n=28) |
+| Direction accuracy (refund vs decline) | 92% | 88% |
+| Buyer-win cases right | 83% (n=24) | 96% (n=24) |
+| Seller-win cases right | 96% (n=26) | 81% (n=26) |
 | Eligibility accuracy | 100% | 68% |
 | Ineligible cases flagged | 100% | 60% |
 | Judged cases citing a clause | 100% | 100% |
@@ -26,14 +26,14 @@
 | Judged cases where the model cited a clause it was not shown | 0% | 0% |
 | Judged cases where the judge called search_policy | 0% | 0% |
 | Escalated | 6% | 4% |
-| Wrong decisions that were escalated | 67% | 12% |
+| Wrong decisions that were escalated | 40% | 17% |
 | Right decisions that were escalated | 2% | 2% |
-| Accuracy on cases not escalated | 98% | 85% |
+| Accuracy on cases not escalated | 94% | 90% |
 | Seconds per case (median) | 9.12 | 4.47 |
 | LLM calls per case | 1.8 | 1 |
 | Tokens per case (in / out) | 2249 / 590 | 6691 / 153 |
 
-**Gain over baseline:** +10.0 percentage points in decision accuracy.
+**Gain over baseline:** +2.0 percentage points in decision accuracy.
 
 ## Confusion matrix: agent
 
@@ -43,10 +43,10 @@ Rows are the label, columns the prediction.
 |---|---|---|---|---|
 | Full refund with return | 15 | 0 | 0 | 1 |
 | Full refund without return | 0 | 0 | 0 | 0 |
-| Partial refund | 1 | 0 | 5 | 0 |
-| Decline | 0 | 0 | 1 | 27 |
+| Partial refund | 1 | 0 | 5 | 2 |
+| Decline | 0 | 0 | 1 | 25 |
 
-Wrong cases (agent): G008 (partial_refund -> full_refund_with_return), G059 (full_refund_with_return -> decline, escalated), G125 (decline -> partial_refund, escalated)
+Wrong cases (agent): G008 (partial_refund -> full_refund_with_return), G059 (full_refund_with_return -> decline, escalated), G125 (decline -> partial_refund, escalated), G129 (partial_refund -> decline), G147 (partial_refund -> decline)
 
 ## Confusion matrix: baseline
 
@@ -56,10 +56,10 @@ Rows are the label, columns the prediction.
 |---|---|---|---|---|
 | Full refund with return | 15 | 0 | 0 | 1 |
 | Full refund without return | 0 | 0 | 0 | 0 |
-| Partial refund | 0 | 0 | 6 | 0 |
-| Decline | 0 | 0 | 7 | 21 |
+| Partial refund | 0 | 0 | 8 | 0 |
+| Decline | 0 | 0 | 5 | 21 |
 
-Wrong cases (baseline): G025 (full_refund_with_return -> decline), G125 (decline -> partial_refund), G129 (decline -> partial_refund), G134 (decline -> partial_refund), G147 (decline -> partial_refund), G155 (decline -> partial_refund), S17 (decline -> partial_refund, escalated), S18 (decline -> partial_refund)
+Wrong cases (baseline): G025 (full_refund_with_return -> decline), G125 (decline -> partial_refund), G134 (decline -> partial_refund), G155 (decline -> partial_refund), S17 (decline -> partial_refund, escalated), S18 (decline -> partial_refund)
 
 ## Citation check by hand
 
