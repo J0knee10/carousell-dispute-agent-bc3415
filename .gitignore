@@ -18,6 +18,9 @@ data/raw/
 outputs/*
 !outputs/runs/
 !outputs/runs_discarded/
+!outputs/whatif/
+outputs/whatif/*
+!outputs/whatif/whatif_20261028_231316.json
 
 # Local Claude Code settings
 .claude/settings.local.json

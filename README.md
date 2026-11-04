@@ -95,8 +95,9 @@ sidebar lists only the providers that can run on this machine.
 **Gemini first, OpenAI as fallback.** The free Gemini key is the default. If
 both keys are set and a Gemini call fails (free quota used up, or the service
 overloaded), the app makes that call with OpenAI instead: after a daily-quota
-error it stays on OpenAI until the app restarts; after any other error it goes
-back to Gemini on the next call. Each recommendation shows which model judged
+error it stays on OpenAI for the rest of that browser session (a new session
+tries Gemini first again); after any other error it goes back to Gemini on the
+next call. Each recommendation shows which model judged
 it. **Paid usage is capped at S$100 a month**: the app prices every OpenAI call
 from its tokens (`llm.openai.prices_usd_per_million` in `config.yaml`, converted
 at 1.35 SGD per USD) and stops making paid calls when the month's total reaches
@@ -349,7 +350,7 @@ presentation/                 demo video slides (build_slides.js) and VIDEO_SCRI
 tests/                        pytest suite (runs offline: mock LLM, faked HTTP)
 ```
 
-Run the tests with `uv run pytest` (66 tests, no network or API key needed; they write their outputs to a temporary folder).
+Run the tests with `uv run pytest` (67 tests, no network or API key needed; they write their outputs to a temporary folder).
 
 ## Deploying to Streamlit Community Cloud
 

@@ -128,9 +128,9 @@ def get_llm(
 class CloudFallbackLLM:
     """Try the primary provider; if a call fails, make that call with the backup.
 
-    A daily-quota error switches to the backup for the rest of the process (the
-    quota will not come back for hours); any other failure falls back for that
-    call only. The paid provider's monthly budget (SpendTracker, S$100 by default)
+    A daily-quota error switches to the backup for as long as this client lives
+    (the app keeps one per browser session; the quota will not come back for
+    hours); any other failure falls back for that call only. The paid provider's monthly budget (SpendTracker, S$100 by default)
     is the main limit; max_backup_calls is an optional extra cap.
     """
 

@@ -1,0 +1,273 @@
+{
+  "summary": {
+    "change": "If a promised accessory is missing, the buyer gets a full refund with return instead of a partial refund.",
+    "model": "gemini/gemini-flash-lite-latest",
+    "cases": 15,
+    "flipped": 4,
+    "flip_rate": 0.267,
+    "transitions": {
+      "partial_refund -> full_refund_with_return": 3,
+      "decline -> full_refund_with_return": 1
+    },
+    "buyer_win_rate_before": 0.533,
+    "buyer_win_rate_after": 0.6
+  },
+  "rows": [
+    {
+      "case_id": "S01",
+      "title": "PS Vita Slim",
+      "difficulty": "clear",
+      "gaps": [
+        "missing_part"
+      ],
+      "before": "partial_refund",
+      "after": "full_refund_with_return",
+      "flipped": true,
+      "uses_proposed_rule": true,
+      "reasons_after": [
+        "The item is missing a promised accessory (8GB SD card), which is classified as an incomplete item gap.",
+        "Under the tested policy change PROPOSED-1, if a promised accessory is missing, the buyer receives a full refund with return.",
+        "The seller admitted uncertainty about whether it was included, while the buyer provided photographic proof of the empty slot."
+      ]
+    },
+    {
+      "case_id": "S02",
+      "title": "Mint iPhone 6 AT&T 64GB",
+      "difficulty": "clear",
+      "gaps": [
+        "different_variation"
+      ],
+      "before": "full_refund_with_return",
+      "after": "full_refund_with_return",
+      "flipped": false,
+      "uses_proposed_rule": false,
+      "reasons_after": [
+        "The item received has a 16GB storage capacity instead of the 64GB promised in the listing.",
+        "A different storage capacity constitutes a different model or version variation, making the item significantly not as described.",
+        "The buyer requested a return and refund rather than keeping the incorrect item."
+      ]
+    },
+    {
+      "case_id": "S03",
+      "title": "Zte Zmax Pro",
+      "difficulty": "clear",
+      "gaps": [
+        "undisclosed_defect"
+      ],
+      "before": "full_refund_with_return",
+      "after": "full_refund_with_return",
+      "flipped": false,
+      "uses_proposed_rule": false,
+      "reasons_after": [
+        "The phone suffers from an undisclosed functional defect causing it to constantly turn off and restart.",
+        "Undisclosed defects affecting the function of the item qualify as significantly not as described under Buyer Protection.",
+        "A full refund with return is the appropriate outcome for a major functional failure."
+      ]
+    },
+    {
+      "case_id": "S04",
+      "title": "Fitbit Alta",
+      "difficulty": "clear",
+      "gaps": [
+        "missing_part"
+      ],
+      "before": "partial_refund",
+      "after": "full_refund_with_return",
+      "flipped": true,
+      "uses_proposed_rule": true,
+      "reasons_after": [
+        "The item is incomplete because promised accessories (black band and wireless dongle) were missing from the package.",
+        "The seller admitted to leaving the items in their drawer.",
+        "Under PROPOSED-1, missing promised accessories now direct a full refund with return."
+      ]
+    },
+    {
+      "case_id": "S05",
+      "title": "Stunning Vintage Dragon Ring",
+      "difficulty": "clear",
+      "gaps": [
+        "undisclosed_defect"
+      ],
+      "before": "full_refund_with_return",
+      "after": "full_refund_with_return",
+      "flipped": false,
+      "uses_proposed_rule": false,
+      "reasons_after": [
+        "The listing explicitly stated no missing stones, but the item arrived with one eye stone missing.",
+        "A missing part/undisclosed defect on an item described as like new represents a significant gap under Buyer Protection.",
+        "The buyer provided clear macro photographic evidence supporting the complaint."
+      ]
+    },
+    {
+      "case_id": "S06",
+      "title": "Lululemon Size 2 Wunder Under Crop",
+      "difficulty": "clear",
+      "gaps": [
+        "different_variation"
+      ],
+      "before": "full_refund_with_return",
+      "after": "full_refund_with_return",
+      "flipped": false,
+      "uses_proposed_rule": false,
+      "reasons_after": [
+        "The item received is a different size than advertised, which constitutes a significantly not as described issue.",
+        "The seller admitted to sending the wrong size.",
+        "The buyer provided photo evidence of the size tag showing size 6 instead of the ordered size 2."
+      ]
+    },
+    {
+      "case_id": "S07",
+      "title": "Paper Mario Sticker Star game for N 3DS",
+      "difficulty": "clear",
+      "gaps": [
+        "change_of_mind"
+      ],
+      "before": "decline",
+      "after": "decline",
+      "flipped": false,
+      "uses_proposed_rule": false,
+      "reasons_after": [
+        "The buyer stated that the game and case are fine and admitted they just did not find it as fun as expected.",
+        "Buyer remorse and changes of mind are explicitly excluded from Buyer Protection coverage.",
+        "There are no defects, missing parts, or discrepancies compared to the listing description."
+      ]
+    },
+    {
+      "case_id": "S08",
+      "title": "New! Mainstays 8 Piece Bedding Set!",
+      "difficulty": "clear",
+      "gaps": [
+        "deviates_from_listing"
+      ],
+      "before": "decline",
+      "after": "decline",
+      "flipped": false,
+      "uses_proposed_rule": false,
+      "reasons_after": [
+        "The listing clearly stated the item is queen size in both the title and description.",
+        "The buyer admits they actually need a king size and ordered the wrong size.",
+        "Placing the wrong order or changing one's mind is not covered under the Buyer Protection policy."
+      ]
+    },
+    {
+      "case_id": "S09",
+      "title": "Xbox one elite controller",
+      "difficulty": "clear",
+      "gaps": [
+        "not_in_listing"
+      ],
+      "before": "decline",
+      "after": "full_refund_with_return",
+      "flipped": true,
+      "uses_proposed_rule": true,
+      "reasons_after": [
+        "The buyer received an incomplete item as standard accessories were missing.",
+        "Under proposed policy changes for missing accessories, the appropriate remedy is a full refund with return."
+      ]
+    },
+    {
+      "case_id": "S10",
+      "title": "J. Crew French Bulldog Sweater",
+      "difficulty": "borderline",
+      "gaps": [
+        "wear_consistent_with_listing"
+      ],
+      "before": "decline",
+      "after": "decline",
+      "flipped": false,
+      "uses_proposed_rule": false,
+      "reasons_after": [
+        "The buyer reported pilling, but the seller clearly disclosed slight pilling in the listing description and photos.",
+        "Transactions with signs of wear that were correctly listed in used condition are not eligible for a refund under policy.",
+        "No undisclosed defects or significant discrepancies were found."
+      ]
+    },
+    {
+      "case_id": "S11",
+      "title": "Camo Speed Shorts Lululemon 6 Blue Lotus",
+      "difficulty": "borderline",
+      "gaps": [
+        "different_variation"
+      ],
+      "before": "decline",
+      "after": "decline",
+      "flipped": false,
+      "uses_proposed_rule": false,
+      "reasons_after": [
+        "The dispute is based on a subjective and non-significant colour variation.",
+        "The seller used the official Lululemon colour name in the listing.",
+        "Slight colour differences due to lighting or personal perception are not covered under Buyer Protection."
+      ]
+    },
+    {
+      "case_id": "S12",
+      "title": "Nike foamposite",
+      "difficulty": "borderline",
+      "gaps": [
+        "condition_worse_than_listed",
+        "wear_consistent_with_listing"
+      ],
+      "before": "decline",
+      "after": "decline",
+      "flipped": false,
+      "uses_proposed_rule": false,
+      "reasons_after": [
+        "The buyer's complaint concerns subjective condition opinions regarding the shoes' wear rating, which do not qualify as a significant gap.",
+        "The yellowing on the soles was explicitly disclosed by the seller in the listing description.",
+        "Items with signs of wear that match a correctly stated used condition are not eligible for a refund."
+      ]
+    },
+    {
+      "case_id": "S13",
+      "title": "iPhone 4 | SALE HURRY FAST",
+      "difficulty": "borderline",
+      "gaps": [
+        "wear_consistent_with_listing",
+        "wear_consistent_with_listing"
+      ],
+      "before": "decline",
+      "after": "decline",
+      "flipped": false,
+      "uses_proposed_rule": false,
+      "reasons_after": [
+        "The item shows signs of wear that were correctly stated in the listing.",
+        "The flaws reported by the buyer (light scratches and a scratch/crack thing on the back) were fully disclosed by the seller.",
+        "Transactions with signs of wear matching a correctly stated used condition are not eligible for a refund."
+      ]
+    },
+    {
+      "case_id": "S14",
+      "title": "Vintage Nike Sportswear Crewneck",
+      "difficulty": "borderline",
+      "gaps": [
+        "undisclosed_defect"
+      ],
+      "before": "partial_refund",
+      "after": "partial_refund",
+      "flipped": false,
+      "uses_proposed_rule": false,
+      "reasons_after": [
+        "The listing explicitly stated no stains on a like-new item, making the undisclosed 2cm stain a significant gap.",
+        "The item is still completely usable and otherwise as described, making a partial refund appropriate.",
+        "Both the buyer and seller acknowledge the stain, with the seller offering a partial refund of $5."
+      ]
+    },
+    {
+      "case_id": "S15",
+      "title": "Halloween costume",
+      "difficulty": "borderline",
+      "gaps": [
+        "missing_part"
+      ],
+      "before": "partial_refund",
+      "after": "full_refund_with_return",
+      "flipped": true,
+      "uses_proposed_rule": true,
+      "reasons_after": [
+        "The listing explicitly stated that thigh highs were included as part of the costume.",
+        "The buyer claims the thigh highs were missing from the package upon arrival, despite the seller providing pre-packing evidence.",
+        "Under the active policy change PROPOSED-1, missing promised accessories now trigger a full refund with return."
+      ]
+    }
+  ]
+}

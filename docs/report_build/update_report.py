@@ -60,7 +60,7 @@ p.append(fld)
 update_fields_on_open(doc)
 
 # ----------------------------------------------------------------- summary
-set_runs(NORMAL, "We built a working AI agent that helps Carousell Singapore’s support team decide buyer–seller disputes where the buyer says a second-hand item is “significantly not as described”. The agent reads the listing, the order, the buyer’s complaint, the seller’s reply and the chat. It checks the fixed rules in plain code, finds the relevant clauses of Carousell’s Buyer Protection policy with retrieval-augmented generation (RAG), can search the policy again through a tool when those clauses are not enough, and recommends one of Carousell’s four outcomes with reasons and clause citations. A staff member always approves or overrides it. We compared judge models (Gemini in the cloud, Llama and Qwen running locally; OpenAI GPT-5.4 mini is pending) and other retrieval designs, and the team labelled the test set by hand; section 8.5 has the results and our choice.")
+set_runs(NORMAL, "We built a working AI agent that helps Carousell Singapore’s support team decide buyer–seller disputes where the buyer says a second-hand item is “significantly not as described”. The agent reads the listing, the order, the buyer’s complaint, the seller’s reply and the chat. It checks the fixed rules in plain code, finds the relevant clauses of Carousell’s Buyer Protection policy with retrieval-augmented generation (RAG), can search the policy again through a tool if those clauses are not enough (a fallback the test set never needed), and recommends one of Carousell’s four outcomes with reasons and clause citations. A staff member always approves or overrides it. We compared judge models (Gemini in the cloud, Llama and Qwen running locally; OpenAI GPT-5.4 mini is pending) and other retrieval designs, and the team labelled the test set by hand; section 8.5 has the results and our choice.")
 t = table_after(doc, "We built a working AI agent")
 set_cell(t, 3, 1, "A LangGraph agent (Python) with plain-code eligibility rules, an LLM for claim matching and judgement, hybrid policy search (ChromaDB + BM25), a search_policy tool the judge can call, a code check on confidence and citations, a pause for a staff decision, message drafts, a what-if policy test and a Streamlit app. The judge can be Gemini (cloud), a local model through Ollama, or OpenAI.")
 set_cell(t, 4, 1, F["summary_does_it_work"])
@@ -81,7 +81,7 @@ t = table_after(doc, "BC3415 group assignment:")
 set_row(t, 0, ["Criterion (weight)", "How the project meets it", "Where to look"])
 set_row(t, 1, ["Problem relevance and originality (15%)", None, None])
 set_row(t, 2, ["Technical design and implementation (20%)",
-               "Real retrieval over a vector database (ChromaDB) plus BM25; a LangGraph graph with conditional routing, a tool loop (search_policy) and a human-approval pause; rules in code where rules are exact; structured JSON output from three providers; Streamlit app prepared for Community Cloud (not deployed yet); 66 offline tests; resumable jobs.", "Sections 5 and 6"])
+               "Real retrieval over a vector database (ChromaDB) plus BM25; a LangGraph graph with conditional routing, a tool loop (search_policy) and a human-approval pause; rules in code where rules are exact; structured JSON output from three providers; Streamlit app prepared for Community Cloud (not deployed yet); 67 offline tests; resumable jobs.", "Sections 5 and 6"])
 set_row(t, 3, ["Effectiveness of the AI / agent (25%)",
                "Held-out test set of 50 cases against a single-prompt baseline, for three judge models; grounded answers (citations checked by code), tool use, and a fallback (escalation to a person with follow-up questions). Honest about the tie on judgement with the strongest model.", "Section 8"])
 set_row(t, 4, ["Creativity and RAG / GenAI integration (20%)",
@@ -149,12 +149,12 @@ set_row(t, 4, [None, "Gemini, Ollama and OpenAI clients, mock provider, model fa
 set_row(t, 6, [None, "Harness, metrics, report writer, model comparison, retrieval evaluation, what-if"])
 set_row(t, 7, [None, "Command line: run-case, evaluate (with --provider, --model, --retrieval), compare, eval-retrieval, whatif, generate, split, export-labels, agreement, check-llm, wait-for-quota"])
 set_row(t, 9, [None, "Evaluation reports (Markdown and JSON), the model comparison and citation-check sheets"])
-set_row(t, 11, [None, "66 pytest tests that run offline (mock LLM; Ollama and OpenAI calls answered by fakes)"])
+set_row(t, 11, [None, "67 pytest tests that run offline (mock LLM; Ollama and OpenAI calls answered by fakes)"])
 
 p = para(doc, "3.  Put a free Gemini key")
 insert_paragraph_after(p, p, "4.  Optional: install Ollama and run ollama pull llama3.1:8b (the default local model) to use it; choose it in the app’s sidebar or pass --provider ollama. Add OPENAI_API_KEY to .env to enable the paid OpenAI fallback.")
 set_runs(para(doc, "4.  Start the app with"), "5.  Start the app with uv run streamlit run app/streamlit_app.py, or run one case with uv run dispute-agent run-case S01.")
-set_runs(para(doc, "5.  Run the tests with"), "6.  Run the tests with uv run pytest (66 tests, no network needed).")
+set_runs(para(doc, "5.  Run the tests with"), "6.  Run the tests with uv run pytest (67 tests, no network needed).")
 
 # ------------------------------------------------------- 7. data
 set_runs(para(doc, "Provisional labels are the outcomes"), "Labels: the outcome each case was written for is its provisional label. For the 50 test cases the team labelled each case by hand on 4 November (B1 25 cases, B2 the other 25; final_outcome in data/labels/labels.csv), and every result below uses those hand labels. They differ from the provisional labels on two cases: G134 (decline instead of a partial refund) and G147 (a partial refund instead of a decline).")
@@ -259,7 +259,7 @@ set_runs(b, [("Measured:", True), (" about 9 seconds and 1.8 LLM calls per case;
 
 # ------------------------------------------------------- 12. status
 b = para(doc, "Working agent, hybrid retrieval, what-if test")
-set_runs(b, "Working agent with the search_policy tool, hybrid retrieval, what-if test, evaluation harness, Streamlit app, CLI, 66 offline tests, Docker files.")
+set_runs(b, "Working agent with the search_policy tool, hybrid retrieval, what-if test, evaluation harness, Streamlit app, CLI, 67 offline tests, Docker files.")
 b = para(doc, "Two test runs, seed run, dev runs")
 set_runs(b, "Three test runs with Gemini; the model comparison with two local models (Llama 3.1 8B, Qwen 3 8B; OpenAI GPT-5.4 mini pending); retrieval and decision-guide ablations; seed run, dev runs and retrieval evaluation, all in reports/; AI citation and label checks in separate columns.")
 b = para(doc, "GitHub repo linked on this machine (3 Nov).")
@@ -330,7 +330,7 @@ def _heading(prefix, level):
 t = table_after(doc, "We built a working AI agent")
 for i, row in enumerate(t.rows):
     if row.cells[0].text.startswith("What is left"):
-        set_row(t, i, ["Status", "Working prototype with 66 offline tests, evaluated against the team’s hand labels; the GPT-5.4 mini comparison is pending (OpenAI free usage tier); prepared for Streamlit Community Cloud with Gemini first and OpenAI as a paid fallback."])
+        set_row(t, i, ["Status", "Working prototype with 67 offline tests, evaluated against the team’s hand labels; the GPT-5.4 mini comparison is pending (OpenAI free usage tier); prepared for Streamlit Community Cloud with Gemini first and OpenAI as a paid fallback."])
 
 # Summary: the business-case self-assessment
 _remove_from(para(doc, "Our verdict on the business case", "Heading 2"), _heading("2. The assignment", 1))
