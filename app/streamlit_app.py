@@ -484,9 +484,10 @@ def page_about() -> None:
         "The agent is a LangGraph workflow. Fixed rules (payment method, dispute window) are plain code; "
         "the LLM matches the buyer's claims against the listing and judges them against policy clauses "
         "found by hybrid search (ChromaDB embeddings plus BM25). If those clauses do not cover a gap, the judge "
-        "calls the `search_policy` tool and the graph loops back with the new clauses. Code then checks the "
-        "citations and confidence, and every recommendation pauses for a staff decision.\n\n"
-        "The judge can be Gemini (cloud), a local model through Ollama, or OpenAI; "
+        "can call the `search_policy` tool and the graph loops back with the new clauses (a fallback: on the test "
+        "set the per-gap searches always found the clauses). Code then checks the citations and confidence, and "
+        "every recommendation pauses for a staff decision.\n\n"
+        "The judge can be Gemini (cloud, the default), OpenAI (the paid fallback) or a local model through Ollama; "
         "`reports/model_comparison.md` compares them on the held-out test set."
     )
     st.graphviz_chart(

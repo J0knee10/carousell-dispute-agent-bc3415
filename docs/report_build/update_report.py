@@ -98,7 +98,7 @@ for i, row in enumerate(t.rows):
 resize_rows(t, len(t.rows) + 1)
 set_row(t, len(t.rows) - 1, ["4 Nov", "Professor asked us to compare models. Added the search_policy tool, Ollama and OpenAI providers, the model comparison and retrieval ablations; app made ready for Streamlit Cloud", F["timeline_outcome"]])
 resize_rows(t, len(t.rows) + 1)
-set_row(t, len(t.rows) - 1, ["5 Nov", "OpenAI gpt-5.4-mini added as a fourth judge and as the app's paid fallback (capped at S$100 a month)", F["timeline_openai"]])
+set_row(t, len(t.rows) - 1, ["4 Nov (later)", "OpenAI gpt-5.4-mini added as a fourth judge and as the app's paid fallback (capped at S$100 a month)", F["timeline_openai"]])
 
 # ----------------------------------------------------------- 5. solution
 fig_par = [p for p in doc.paragraphs if p._p.xpath(".//w:drawing")][0]
@@ -130,19 +130,17 @@ set_row(t, 2, [None, "Gemini API (free tier, google-genai), OpenAI (gpt-5.4-mini
 set_row(t, 5, [None, "uv (Python 3.12, uv.lock), optional Docker, Streamlit Community Cloud (requirements.txt checked in a clean environment; deployed by hand), GitHub", None])
 t = table_after(doc, "6.2 Models")
 resize_rows(t, 6)
-set_row(t, 5, ["Judge (cloud, paid; the app's fallback)", "gpt-5.4-mini (OpenAI), low reasoning effort", F["model_row_openai"]])
-rows_ = t._tbl.findall(qn("w:tr"))
-rows_[4].addprevious(rows_[5])
+set_row(t, 5, ["Dispute generator", "gemma-4-26b-a4b-it, gemini-3-flash-preview and gemini-3.5-flash", "Different from every judge, so no model grades its own writing. 154 disputes were written by Gemma 4, 19 by gemini-3-flash-preview and 7 by gemini-3.5-flash (each used as the previous one’s free quota ran out)"])
 set_row(t, 1, ["Judge (default, cloud)", "gemini-flash-lite-latest", F["model_row_gemini"]])
 set_row(t, 2, ["Judge (local, compared)", "llama3.1:8b via Ollama", F["model_row_llama"]])
 set_row(t, 3, ["Judge (local, compared)", "qwen3:8b via Ollama (thinking off)", F["model_row_qwen"]])
-set_row(t, 4, ["Dispute generator", "gemma-4-26b-a4b-it, gemini-3-flash-preview and gemini-3.5-flash", "Different from every judge, so no model grades its own writing. 154 disputes were written by Gemma 4, 19 by gemini-3-flash-preview and 7 by gemini-3.5-flash (each used as the previous one’s free quota ran out)"])
+set_row(t, 4, ["Judge (cloud, paid; the app's fallback)", "gpt-5.4-mini (OpenAI), low reasoning effort", F["model_row_openai"]])
 p = para(doc, "Calls are paced (at least 4.5 seconds apart).")
 set_runs(p, "Gemini calls are paced (at least 4.5 seconds apart). Short rate-limit waits are retried; if the daily quota runs out, long jobs stop with exit code 75 and resume where they stopped. wait-for-quota waits until the quota is back. Local models need no pacing; a prompt that would not fit the model’s context window is refused rather than silently cut.")
 insert_paragraph_after(p, NORMAL, [("Hardware. ", True), (F["hardware"], False)])
 
 b = para(doc, "Why hybrid:")
-set_runs(b, lead("Why hybrid: on 25 test queries it puts the right clause first 76% of the time, against 52% for either method alone (section 8.4). Section 8.6 tests whether retrieval changes the decisions, not just the citations.", ": "))
+set_runs(b, lead("Why hybrid: on 25 test queries it puts the right clause first 76% of the time, against 52% for either method alone, and has the best mean reciprocal rank (0.81, against 0.67 for embeddings and 0.71 for keywords). Within the top 3 that the agent uses, keyword search alone finds slightly more (92% against 88%); hybrid finds the most within the top 5 (96%). Section 8.6 tests whether retrieval changes the decisions, not just the citations.", ": "))
 
 t = table_after(doc, "6.4 Code layout")
 set_row(t, 1, [None, "Staff app: review a dispute (with the judge’s tool calls), what-if policy test, evaluation results and model comparison, policy library, how it works. Provider and local-model picker in the sidebar", ])
@@ -154,14 +152,14 @@ set_row(t, 9, [None, "Evaluation reports (Markdown and JSON), the model comparis
 set_row(t, 11, [None, "66 pytest tests that run offline (mock LLM; Ollama and OpenAI calls answered by fakes)"])
 
 p = para(doc, "3.  Put a free Gemini key")
-insert_paragraph_after(p, p, "4.  Optional: install Ollama and run ollama pull qwen3:8b (or llama3.1:8b) to use a local model; choose it in the app’s sidebar or pass --provider ollama --model qwen3:8b.")
+insert_paragraph_after(p, p, "4.  Optional: install Ollama and run ollama pull llama3.1:8b (the default local model) to use it; choose it in the app’s sidebar or pass --provider ollama. Add OPENAI_API_KEY to .env to enable the paid OpenAI fallback.")
 set_runs(para(doc, "4.  Start the app with"), "5.  Start the app with uv run streamlit run app/streamlit_app.py, or run one case with uv run dispute-agent run-case S01.")
 set_runs(para(doc, "5.  Run the tests with"), "6.  Run the tests with uv run pytest (66 tests, no network needed).")
 
 # ------------------------------------------------------- 7. data
-set_runs(para(doc, "Provisional labels are the outcomes"), "Labels: the outcome each case was written for is its provisional label. For the 50 test cases the team labelled each case by hand on 4 November (B1 25 cases, B2 the other 25; final_outcome in data/labels/labels.csv), and every result below uses those hand labels. They differ from the provisional labels on G129 and G134 (decline).")
+set_runs(para(doc, "Provisional labels are the outcomes"), "Labels: the outcome each case was written for is its provisional label. For the 50 test cases the team labelled each case by hand on 4 November (B1 25 cases, B2 the other 25; final_outcome in data/labels/labels.csv), and every result below uses those hand labels. They differ from the provisional labels on two cases: G134 (decline instead of a partial refund) and G147 (a partial refund instead of a decline).")
 set_runs(para(doc, "Human labels: B1 and B2 each label"), "Labelling guide: docs/labelling_guide.md. Each test case was labelled by one person, so there is no agreement score between labellers; uv run dispute-agent agreement reports it once some cases are labelled by both.")
-set_runs(para(doc, "AI reviewer: Claude"), "AI reviewer: Claude (separate from every judge model) also labelled the 50 test cases in its own claude_* columns. It agrees with the hand labels on 49 of 50 (Cohen’s kappa 0.97); the one difference is G059. These columns never replace the human labels.")
+set_runs(para(doc, "AI reviewer: Claude"), "AI reviewer: Claude (separate from every judge model) also labelled the 50 test cases in its own claude_* columns. It agrees with the hand labels on 47 of 50 (Cohen’s kappa 0.90); the differences are G059, G129 and G147, all judgement calls. These columns never replace the human labels.")
 b = para(doc, "Generator and judge are different models")
 set_runs(b, "Generator and judge are different models (true for all three judges compared), so no model grades its own writing.")
 
@@ -180,9 +178,10 @@ t = table_after(doc, "8.3 Where the agent went wrong")
 resize_rows(t, 1 + len(G["wrong"]))
 for i, row in enumerate(G["wrong"], start=1):
     set_row(t, i, row)
-set_runs(para(doc, "G059, G129, G134 and G147 are the cases"), "G059, G129, G134 and G147 are the cases where reasonable people could disagree. The hand labels changed G129 and G134 to decline (they were written as partial refunds), which the agent had recommended; on G059 the AI reviewer also said decline, but the hand label kept the full refund with return. G155, wrong in the previous run, was right this time (and escalated both times).")
+set_runs(para(doc, "G059, G129, G134 and G147 are the cases"), "G059, G129, G134 and G147 are the cases where reasonable people could disagree, and three of them are among the agent’s mistakes. On G129 and G147 the labeller chose a partial refund and the agent declined; the AI reviewer sided with the agent on all three, which is why we score only against the human labels. G155, wrong in the previous run, was right this time (and escalated both times).")
 
 t = table_after(doc, "8.4 Other results")
+set_row(t, 1, [None, "Agent 100%, baseline 80% on the 20 hand-written cases (28 Oct, scored against the outcomes they were written for). Not held out: these cases were used while writing the prompts"])
 set_row(t, 3, [None, "61 of the agent’s 68 citations (90%) support the decision. Most misses cite a procedural clause (how a return works), or a clause listing what is covered on a decline"])
 resize_rows(t, 6)
 set_row(t, 5, ["search_policy tool (default design)", F["tool_use_row"]])
@@ -224,7 +223,7 @@ cur = insert_paragraph_after(cur, NORMAL, "")
 cur = insert_paragraph_after(cur, NORMAL, [("What we found. ", True), (F["rubric_found"], False)])
 
 set_runs(old85, "8.7 The decision-guide fix, and how often the test set was used")
-set_runs(para(doc, "The first test run gave agent 82%"), "The first test run gave agent 82%, baseline 84%. Both systems declined every small undisclosed flaw on items listed as new or like new, because two lines of our decision guide contradicted each other. We clarified the rule (a small specific flaw on a new or like-new item is a partial refund) and checked it on dev cases only: agent 81% → 89%, baseline 78% → 81% on 36 borderline dev cases. Then we re-ran the test set (agent 88%, baseline 86%). These first runs were scored against the outcomes the cases were written for. On 4 November we added the search tool and ran the test set once per judge model; the team then labelled the test set by hand, and against those labels Gemini’s agent gets 94% and the baseline 84%. Nothing was tuned on the test set, but it has now been used three times and the default local model was picked from these results, so its numbers are slightly optimistic. All runs are in reports/.")
+set_runs(para(doc, "The first test run gave agent 82%"), "The first test run gave agent 82%, baseline 84%. Both systems declined every small undisclosed flaw on items listed as new or like new, because two lines of our decision guide contradicted each other. We clarified the rule (a small specific flaw on a new or like-new item is a partial refund) and checked it on dev cases only: agent 81% → 89%, baseline 78% → 81% on 36 borderline dev cases. Then we re-ran the test set (agent 88%, baseline 86%). These first runs were scored against the outcomes the cases were written for. On 4 November we added the search tool and ran the test set once per judge model; the team then labelled the test set by hand, and against those labels Gemini’s agent gets 90% and the baseline 88%. Nothing was tuned on the test set, but it has now been used three times and the default local model was picked from these results, so its numbers are slightly optimistic. All runs are in reports/.")
 set_runs(para(doc, "8.6 Limits of the evaluation", "Heading 2"), "8.8 Limits of the evaluation")
 set_runs(para(doc, "Labels are still provisional"), plain("Each test case was hand-labelled by one person, after the runs; there is no agreement score between labellers yet."))
 b = para(doc, "LLM answers vary between runs")
@@ -234,8 +233,8 @@ insert_paragraph_after(b, BULLET, plain("The local models were limited to 8B par
 # ------------------------------------------------------------ 10. risks
 t = table_after(doc, "10. Risks, ethics and limitations")
 set_row(t, 1, [None, None, None, F["risk_invented"]])
-set_row(t, 2, [None, None, None, "With Gemini the agent is close to even: 91% of buyer wins vs 96% of seller wins; the baseline leans to refunding (75% of seller wins). The local 8B models refund almost everything"])
-set_row(t, 3, [None, None, None, "6% escalated, including 2 of 3 wrong answers (Gemini)"])
+set_row(t, 2, [None, None, None, "With Gemini the agent leans to decline: 83% of buyer wins vs 96% of seller wins; the baseline the reverse (81% of seller wins). The local 8B models refund almost everything"])
+set_row(t, 3, [None, None, None, "6% escalated, including 2 of 5 wrong answers (Gemini)"])
 set_row(t, 4, [None, None, "Different models write and judge; people wrote 20 hard cases; the test set is labelled by hand; said openly", "Hand labels for all 50 test cases (one labeller per case)"])
 set_row(t, 5, [None, None, "Only public or made-up data. A deployment would remove personal details and use a paid tier or a local model (free-tier prompts may be used by Google)", "Local models keep case data on the machine"])
 set_row(t, 6, [None, None, None, "G155 changed between runs (escalated every time)"])
@@ -256,7 +255,7 @@ set_runs(p, "Demo backups: S02 (iPhone 64GB received as 16GB: full refund with r
 tc = table_after(doc, "Suggested cost side")
 set_cell(tc, 1, 2, "Measured on the 4 Nov test run: 1.8 LLM calls and about 2,250 input and 590 output tokens per case for claim matching and judgement; message drafts add one more call. At third-party-listed Gemini Flash-Lite prices (about US$0.30 in / US$2.50 out per million tokens) that is well under US$0.01. Check Google’s pricing page before quoting")
 b = para(doc, "Measured: about 9 seconds")
-set_runs(b, [("Measured:", True), (" about 9 seconds and 1.8 LLM calls per case; 6% of cases escalated; 98% accuracy on cases not escalated (Gemini, 4 Nov run, hand labels).", False)])
+set_runs(b, [("Measured:", True), (" about 9 seconds and 1.8 LLM calls per case; 6% of cases escalated; 94% accuracy on cases not escalated (Gemini, 4 Nov run, hand labels).", False)])
 
 # ------------------------------------------------------- 12. status
 b = para(doc, "Working agent, hybrid retrieval, what-if test")
@@ -294,7 +293,7 @@ remove(t)
 
 # ------------------------------------------------------- appendix
 t = table_after(doc, "Appendix A. Glossary")
-set_row(t, 3, [None, "Large language model, here Google Gemini, Meta’s Llama 3.1 or Alibaba’s Qwen 3"])
+set_row(t, 3, [None, "Large language model, here Google Gemini, OpenAI GPT-5.4 mini, Meta’s Llama 3.1 or Alibaba’s Qwen 3"])
 resize_rows(t, len(t.rows) + 3)
 n = len(t.rows)
 set_row(t, n - 3, ["Tool call", "The LLM asks the program to run a function (here search_policy) and continues with the result"])
