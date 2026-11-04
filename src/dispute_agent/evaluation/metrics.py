@@ -36,6 +36,11 @@ def latest_by_case(records: list[dict]) -> dict[str, dict]:
     return out
 
 
+def _reason(text: str) -> str:
+    """Group escalation reasons: 'Confidence 0.40 is below 0.70' -> 'Low confidence'."""
+    return "Low confidence" if text.startswith("Confidence ") else text.split(":")[0]
+
+
 def _share(n: int, d: int) -> float | None:
     return round(n / d, 3) if d else None
 
@@ -148,7 +153,7 @@ def compute_metrics(records: list[dict], labels: dict[str, dict], meta: dict[str
         # Final answer cites a clause ID the model was not shown (the agent's check removes these).
         "invented_citation_rate": _share(sum(bool(r["invented"]) for r in rows), n),
         # Why judged cases were escalated, by the first words of each reason.
-        "escalation_reasons": dict(Counter(e.split(":")[0].split(" is below")[0] for r in judged if r["escalate"]
+        "escalation_reasons": dict(Counter(_reason(e) for r in judged if r["escalate"]
                                            for e in r.get("escalation_reasons", []))),
         # Final answer cites a real clause in the wrong format (ID plus heading text).
         "citation_format_error_rate": _share(sum(bool(r["format_errors"]) for r in rows), n),

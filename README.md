@@ -266,7 +266,7 @@ from the retrieved clauses ([details](reports/model_comparison.md)):
 | Rubric only, per gap | 58% | 50% | 92% (23 of 25) | The retrieved clauses only |
 | Rubric only, no retrieval | 56% | 54% | 88% (22 of 25) | Nowhere: only the outcome rubric and the model's own knowledge |
 
-- **The local models cannot tell us:** every 8B variant lands at 48–60% and refunds almost everything, whatever the prompt holds.
+- **The local models cannot tell us:** every 8B variant lands at 48–60% (a spread of 6 cases), gets only 19–35% of seller wins right, and refunds almost everything, whatever the prompt holds.
 - **For Gemini, retrieval can replace the restated policy** (23 of 25 either way). Without retrieval it declined two missing-accessory claims (G008, G043) that the policy covers, and it could cite nothing, so every case went to a person.
 - **Conclusion:** on this test set retrieval is not what makes the decisions accurate (Gemini mostly knows the rules); its value is grounding every recommendation in a clause staff can check, putting coverage the model would miss in front of it, and letting a policy change be handled by re-indexing the text. The Gemini probe covers only the first 25 test cases, which are all clear cases (no borderline ones).
 

@@ -117,8 +117,8 @@ decline) and is told that what is covered must come from the clauses it is given
 | Rubric only, per gap | 58% | 50% | 92% (23 of 25) | The retrieved clauses only |
 | Rubric only, no retrieval | 56% | 54% | 88% (22 of 25) | Nowhere: only the outcome rubric and the model's own knowledge |
 
-- **The local models cannot tell us.** Every 8B variant lands at 48–60% (within
-  3 cases) and gets only 23–35% of seller wins right: they refund almost
+- **The local models cannot tell us.** Every 8B variant lands at 48–60% (a spread
+  of 6 cases) and gets only 19–35% of seller wins right: they refund almost
   everything whatever the prompt holds, so neither the guide nor retrieval
   measurably changes their decisions.
 - **For Gemini, retrieval can replace the restated policy** (rubric only with
@@ -193,7 +193,7 @@ Unseen clause: the model cited a clause ID that does not exist or that it was ne
 
 | Model | Failed answers (agent / baseline) | Eligibility right (agent / baseline) | Unseen clause cited (agent judge / baseline) | Citation format errors (baseline) | Agent escalated | Wrong agent decisions escalated | Agent accuracy when not escalated | Judge called search_policy | Main escalation reasons (agent) |
 |---|---|---|---|---|---|---|---|---|---|
-| `gemini-flash-lite-latest` | 0 / 0 | 100% / 68% | 0% / 0% | 0% | 6% | 40% | 94% | 0% | More evidence needed (3); Confidence 0.40 (1) |
+| `gemini-flash-lite-latest` | 0 / 0 | 100% / 68% | 0% / 0% | 0% | 6% | 40% | 94% | 0% | More evidence needed (3); Low confidence (2) |
 | `llama3.1:8b` | 0 / 0 | 100% / 86% | 2% / 0% | 100% | 2% | 4% | 53% | 0% | Cited clauses that were not retrieved (1) |
 | `qwen3:8b` | 0 / 0 | 100% / 90% | 22% / 0% | 0% | 22% | 27% | 51% | 0% | Cited clauses that were not retrieved (10); More evidence needed (1) |
 | `llama3.1:8b` (agent-driven retrieval) | 0 / n/a | 100% / n/a | 11% / n/a | n/a | 10% | 9% | 53% | 100% | Cited clauses that were not retrieved (5) |
@@ -203,10 +203,10 @@ Unseen clause: the model cited a clause ID that does not exist or that it was ne
 | `qwen3:8b` (no retrieval) | 0 / n/a | 100% / n/a | 100% / n/a | n/a | 90% | 100% | 100% | 0% | Cited clauses that were not retrieved (45); No valid policy citation supports the outcome (45) |
 | `llama3.1:8b` (rubric-only guide) | 0 / n/a | 100% / n/a | 0% / n/a | n/a | 4% | 0% | 56% | 0% | Declines although a gap was judged significant (1); Refunds although no gap was judged significant (1) |
 | `qwen3:8b` (rubric-only guide) | 0 / n/a | 100% / n/a | 20% / n/a | n/a | 20% | 20% | 50% | 0% | Cited clauses that were not retrieved (9); More evidence needed (1) |
-| `gemini-flash-lite-latest` (rubric-only guide, first 25 cases only) | 0 / n/a | 100% / n/a | 0% / n/a | n/a | 12% | 50% | 96% | 0% | Refunds although no gap was judged significant (1); Confidence 0.40 (1) |
+| `gemini-flash-lite-latest` (rubric-only guide, first 25 cases only) | 0 / n/a | 100% / n/a | 0% / n/a | n/a | 12% | 50% | 96% | 0% | Refunds although no gap was judged significant (1); Low confidence (1) |
 | `llama3.1:8b` (rubric-only guide, no retrieval) | 0 / n/a | 100% / n/a | 100% / n/a | n/a | 90% | 100% | 100% | 0% | Cited clauses that were not retrieved (45); No valid policy citation supports the outcome (45) |
 | `qwen3:8b` (rubric-only guide, no retrieval) | 0 / n/a | 100% / n/a | 100% / n/a | n/a | 90% | 100% | 100% | 0% | Cited clauses that were not retrieved (45); No valid policy citation supports the outcome (45) |
-| `gemini-flash-lite-latest` (rubric-only guide, no retrieval, first 25 cases only) | 0 / n/a | 100% / n/a | 0% / n/a | n/a | 100% | 100% | n/a | 0% | No valid policy citation supports the outcome (25); More evidence needed (3) |
+| `gemini-flash-lite-latest` (rubric-only guide, no retrieval, first 25 cases only) | 0 / n/a | 100% / n/a | 0% / n/a | n/a | 100% | 100% | n/a | 0% | No valid policy citation supports the outcome (25); Low confidence (3) |
 
 ## Speed and cost
 

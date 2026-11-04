@@ -29,7 +29,7 @@
     "invented_citation_rate": 0.0,
     "escalation_reasons": {
       "Refunds although no gap was judged significant": 1,
-      "Confidence 0.40": 1,
+      "Low confidence": 1,
       "More evidence needed": 1,
       "At least one gap is unclear": 1,
       "No valid policy citation supports the outcome": 1

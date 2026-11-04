@@ -115,8 +115,8 @@ decline) and is told that what is covered must come from the clauses it is given
 | Rubric only, per gap | 58% | 50% | 92% (23 of 25) | The retrieved clauses only |
 | Rubric only, no retrieval | 56% | 54% | 88% (22 of 25) | Nowhere: only the outcome rubric and the model's own knowledge |
 
-- **The local models cannot tell us.** Every 8B variant lands at 48–60% (within
-  3 cases) and gets only 23–35% of seller wins right: they refund almost
+- **The local models cannot tell us.** Every 8B variant lands at 48–60% (a spread
+  of 6 cases) and gets only 19–35% of seller wins right: they refund almost
   everything whatever the prompt holds, so neither the guide nor retrieval
   measurably changes their decisions.
 - **For Gemini, retrieval can replace the restated policy** (rubric only with
