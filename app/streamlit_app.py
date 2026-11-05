@@ -64,9 +64,9 @@ def store():
 def agent(provider: str, model: str | None = None):
     """One LLM client and graph per browser session.
 
-    The client falls back to the paid provider when the free one fails (config
-    llm.fallback), and remembers which model answered last; sharing it between
-    sessions could show one user another user's model.
+    The client falls back to OpenAI when a Gemini call fails (config llm.fallback),
+    and remembers which model answered last; sharing it between sessions could
+    show one user another user's model.
     """
     agents = st.session_state.setdefault("agents", {})
     if (provider, model) not in agents:
@@ -78,7 +78,8 @@ def agent(provider: str, model: str | None = None):
 @st.cache_data(ttl=60, show_spinner=False)
 def providers_here() -> list[str]:
     # Cached: checking for a local Ollama server takes up to 1.5 s when there is none.
-    return available_providers()
+    # OpenAI is not offered as a judge: it is only Gemini's fallback (see sidebar()).
+    return [p for p in available_providers() if p != "openai"]
 
 
 @st.cache_data(ttl=60, show_spinner=False)
@@ -89,7 +90,6 @@ def ollama_models() -> list[str]:
 PROVIDER_LABELS = {
     "gemini": "Gemini (Google cloud, free tier)",
     "ollama": "Local model (Ollama, this computer)",
-    "openai": "OpenAI (cloud, paid)",
     "mock": "Mock (offline keyword rules)",
 }
 
@@ -135,12 +135,8 @@ def sidebar() -> tuple[str, str | None]:
         st.sidebar.caption(f"Judge model: `{judge_model(provider)}`")
         fb = fallback_provider(provider)
         if fb:
-            budget = load_config()["llm"].get("openai", {}).get("app_budget_sgd_per_month", 100)
-            st.sidebar.caption(f"If {provider} fails or its free quota runs out: `{judge_model(fb)}` ({fb}, paid; "
-                               f"stops at S${budget:.0f} a month)")
-        if provider == "openai":
-            budget = load_config()["llm"].get("openai", {}).get("app_budget_sgd_per_month", 100)
-            st.sidebar.caption(f"Paid: the app stops at S${budget:.0f} of OpenAI usage a month.")
+            st.sidebar.caption(f"If {provider} fails or its free quota runs out: `{judge_model(fb)}` ({fb}, "
+                               "free usage tier, about 50 requests a day). Not tested on our test set.")
     if "gemini" not in options:
         st.sidebar.info("Add GEMINI_API_KEY to .env (or the app's Streamlit secrets) to use Gemini.")
     return provider, model
@@ -487,8 +483,9 @@ def page_about() -> None:
         "can call the `search_policy` tool and the graph loops back with the new clauses (a fallback: on the test "
         "set the per-gap searches always found the clauses). Code then checks the citations and confidence, and "
         "every recommendation pauses for a staff decision.\n\n"
-        "The judge can be Gemini (cloud, the default), OpenAI (the paid fallback) or a local model through Ollama; "
-        "`reports/model_comparison.md` compares them on the held-out test set."
+        "The judge is Gemini (cloud, the default) or a local model through Ollama; "
+        "`reports/model_comparison.md` compares them on the held-out test set. If a Gemini call fails, "
+        "the app makes it with OpenAI instead (a fallback for availability, not part of the comparison)."
     )
     st.graphviz_chart(
         """

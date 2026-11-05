@@ -45,34 +45,19 @@ def fallback_provider(provider: str) -> str | None:
     return None
 
 
-def _spend_tracker():
-    from ..config import path
-    from .openai_client import SpendTracker
-
-    full = load_config()
-    o = full["llm"].get("openai", {})
-    return SpendTracker(
-        file=path("outputs.openai_spend"),
-        budget_sgd=o.get("app_budget_sgd_per_month", 100),
-        usd_to_sgd=full["data"].get("usd_to_sgd", 1.35),
-        prices=o.get("prices_usd_per_million", {}),
-    )
-
-
 def get_llm(
     role: Role = "judge", provider: str | None = None, model: str | None = None, for_app: bool = False
 ) -> LLMClient:
     """A client for the judge (or the dispute generator). `model` overrides config.yaml.
 
     for_app=True is what the Streamlit app uses (evaluations never do): a failed call goes
-    to the fallback provider in config.yaml (Gemini -> OpenAI), and paid OpenAI calls stop
-    once the month's spend reaches llm.openai.app_budget_sgd_per_month.
+    to the fallback provider in config.yaml (Gemini -> OpenAI).
     """
     cfg = load_config()["llm"]
     provider = provider or cfg["provider"]
     if for_app and role == "judge" and fallback_provider(provider):
-        primary = get_llm(role, provider, model)  # the free provider: no fallback, no budget
-        backup = get_llm(role, fallback_provider(provider), for_app=True)
+        primary = get_llm(role, provider, model)
+        backup = get_llm(role, fallback_provider(provider))
         return CloudFallbackLLM(primary, backup)
     temperature = cfg["temperature"] if role == "judge" else cfg["generator_temperature"]
     if provider == "mock":
@@ -96,7 +81,7 @@ def get_llm(
         o = cfg.get("openai", {})
         return OpenAIClient(
             model=model or judge_model("openai"), api_key=key, temperature=temperature,
-            reasoning_effort=o.get("reasoning_effort"), spend=_spend_tracker() if for_app else None,
+            reasoning_effort=o.get("reasoning_effort"),
         )
     if provider == "gemini":
         key = gemini_api_key()
@@ -130,8 +115,9 @@ class CloudFallbackLLM:
 
     A daily-quota error switches to the backup for as long as this client lives
     (the app keeps one per browser session; the quota will not come back for
-    hours); any other failure falls back for that call only. The paid provider's monthly budget (SpendTracker, S$100 by default)
-    is the main limit; max_backup_calls is an optional extra cap.
+    hours); any other failure falls back for that call only. The backup's own quota
+    (OpenAI's free usage tier: about 50 requests a day) is the main limit;
+    max_backup_calls is an optional extra cap.
     """
 
     def __init__(self, primary, backup, max_backup_calls: int | None = None):

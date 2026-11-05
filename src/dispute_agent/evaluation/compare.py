@@ -12,7 +12,7 @@ from .report import _pct, build_report
 
 WHERE = {
     "gemini": "Google cloud API (free tier)",
-    "openai": "OpenAI cloud API (paid)",
+    "openai": "OpenAI cloud API",
     "ollama": "This computer (local, via Ollama)",
     "mock": "Offline keyword rules (not a model)",
 }

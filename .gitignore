@@ -13,7 +13,7 @@ data/raw/
 
 # Generated at runtime. The per-case predictions in outputs/runs/ are kept in
 # git so every number in reports/ can be checked; logs, the decision log,
-# the what-if cache and the OpenAI spend file are not.
+# and the what-if cache are not.
 .chroma/
 outputs/*
 !outputs/runs/
