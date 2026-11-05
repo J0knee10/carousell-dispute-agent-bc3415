@@ -861,8 +861,9 @@ def page_about() -> None:
         "5. **Judgement (AI).** Recommends one of Carousell's four outcomes (full refund with return, full refund "
         "without return, partial refund, decline) and must cite the clauses behind it. If they do not cover a gap, it "
         "can ask for another search.\n"
-        "6. **Check (code).** Flags the case for a closer look if the AI cites a clause it was not shown, is not "
-        "confident, asks for more evidence, or gives an outcome that does not fit the gaps it found.\n"
+        "6. **Check (code).** Removes any citation to a clause the AI was not shown, and flags the case for a closer "
+        "look if that happened, if the AI is not confident or asks for more evidence, or if its outcome does not fit "
+        "the gaps it found.\n"
         "7. **Staff decide.** The agent stops here. Staff approve the recommendation or override it with a note.\n"
         "8. **Message drafts (AI).** Drafts the messages to the buyer and the seller for staff to edit and send."
     )

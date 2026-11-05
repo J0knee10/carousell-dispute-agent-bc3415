@@ -9,6 +9,10 @@ A staff member always makes the final decision.
 
 BC3415 group project, Option A (working prototype + demo video).
 
+**Live app:** https://bc3415-carousell-dispute-agent.streamlit.app/ (Streamlit
+Community Cloud; it may take a minute to wake up if nobody has opened it for a
+while).
+
 ## What it does
 
 1. **Eligibility rules (plain code).** Paid with the 'Buy' button? Raised within the dispute window? Tracked delivery for non-receipt? Seller missed the 24-hour reply deadline? These are exact rules, so no LLM is involved, and each check cites the clause it comes from.
@@ -88,10 +92,31 @@ per model. `check-llm --provider openai` checks the key.
 uv run streamlit run app/streamlit_app.py
 ```
 
-Pages: review a dispute (run the agent, approve or override, see the tool calls
-and message drafts), what-if policy test, evaluation results (including the
-model comparison), policy library (search the clauses), and how it works. The
-sidebar lists only the providers that can run on this machine.
+Pages:
+
+- **Review a dispute** works like a guided chat. Pick a demo case from the
+  welcome message, open **📂 Select a case** in the bottom bar (demo,
+  development, test or all cases), or type a case ID (`S01`) or words from a
+  listing (`iphone`) into the chat box. Each review shows a short case card, the
+  agent's steps, the recommendation with its reasons and cited clauses, and
+  "How I got there" (eligibility checks, claim matching, tool calls, retrieved
+  clauses). **✅ Approve** or **✏️ Override** (with a required note), and the
+  agent drafts the messages to the buyer and the seller. Your name and a
+  testing switch that shows the outcome each case was written for are in the
+  sidebar.
+- **What-if policy test**: type a proposed rule into the chat box (or click an
+  example); **⚙** sets which past cases and how many. The answer gives the
+  outcomes that flip and the change in buyer wins, case by case.
+- **Evaluation results**: a summary for non-technical readers, with every number
+  read from `reports/` (headline accuracy, the agent against the single prompt,
+  why Gemini, policy search accuracy, limits); the full technical reports are
+  under one expander.
+- **Policy library**: search the clauses with the agent's own search, or read
+  each help-centre page.
+- **How it works**: the workflow figure and the eight steps in plain language.
+
+The sidebar's **AI model** lists only the models that can run where the app is
+opened.
 
 **Gemini first, OpenAI as fallback.** The free Gemini key is the default. If
 both keys are set and a Gemini call fails (free quota used up, or the service
@@ -348,19 +373,18 @@ data/                         policy text, listings, cases, labels, eval queries
 docs/labelling_guide.md       how to label cases
 docs/figures/                 workflow figure and the script that draws it
 reports/                      evaluation reports and the model comparison
-presentation/                 demo video slides (build_slides.js) and VIDEO_SCRIPT.md
+presentation/VIDEO_SCRIPT.md  demo video script (all six members, about 4:55)
 tests/                        pytest suite (runs offline: mock LLM, faked HTTP)
 ```
 
-Run the tests with `uv run pytest` (66 tests, no network or API key needed; they write their outputs to a temporary folder).
+Run the tests with `uv run pytest` (69 tests, no network or API key needed; they write their outputs to a temporary folder).
 
 ## Deploying to Streamlit Community Cloud
 
-Not deployed yet: deployment is a manual step (below). The app is prepared for
-it: it reads the key from Streamlit secrets, installs from `requirements.txt`
-(checked in a clean Python 3.12 environment on Windows; Community Cloud runs
-Linux, so watch the first build log), and hides the Ollama option when no local
-server is running. Steps:
+Deployed on 6 Nov 2026 at https://bc3415-carousell-dispute-agent.streamlit.app/.
+Every push to `main` redeploys it within a minute or two. The app reads the keys
+from Streamlit secrets, installs from `requirements.txt`, and hides the Ollama
+option when no local server is running. To deploy your own copy:
 
 1. Push the repo to GitHub (a private repo works; Streamlit asks for access to it).
 2. Sign in at https://share.streamlit.io with GitHub and click **Create app** → **Deploy a public app from GitHub**.
