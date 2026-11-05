@@ -14,7 +14,7 @@ final submission if you do not want it in the repo.
 - [ ] **Confirm the real submission deadline** (15 Nov was assumed).
 - [ ] **Check the Mercari competition rules** allow sharing the 300 sampled listings before making the repo public (fallback: keep it private or drop `data/listings/listings_sample.jsonl`).
 - [ ] **Record and edit the video** (`presentation/VIDEO_SCRIPT.md`). Re-check the demo cases on the day: `uv run dispute-agent run-case S01 --provider gemini` and `G155`.
-- [ ] **Re-read the README** once more before submission.
+- [ ] **Re-read the README** once more before submission, and delete `SESSION_HANDOFF.md` (and this file, if you do not want team notes in the repo).
 
 ## Business case (B1, B2)
 
