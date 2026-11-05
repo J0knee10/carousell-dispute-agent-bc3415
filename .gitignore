@@ -30,7 +30,3 @@ outputs/whatif/*
 Thumbs.db
 .vscode/
 .idea/
-
-# Slide build tools (presentation/)
-presentation/node_modules/
-presentation/package-lock.json

@@ -1,7 +1,0 @@
-{
-  "private": true,
-  "description": "Builds the demo video slides: npm install, then node build_slides.js",
-  "dependencies": {
-    "pptxgenjs": "3.12.0"
-  }
-}
