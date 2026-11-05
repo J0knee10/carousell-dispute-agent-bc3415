@@ -6,14 +6,14 @@ final submission if you do not want it in the repo.
 ## Before submission
 
 - [ ] **Push** the local commits to GitHub.
-- [x] ~~Put the names in the contribution table~~ (done 5 Nov: README, report section 12.2, slides 1 and 13).
+- [x] ~~Put the names in the contribution table~~ (done 5 Nov: README and report section 12.2).
 - [ ] **Check each member's row and add evidence.** The "Main contributions" and "Evidence" columns are still the role defaults; adjust them to what each person really did: `README.md` ("Team and contributions") and the `rows` list in `docs/report_build/update_report.py` (then rebuild the report, see `docs/report_build/README.md`). This is the 20% collaboration criterion: per-member evidence (commits from their own accounts, files they wrote, labelling sheets, meeting notes) matters more than the table itself.
 - [x] ~~B1 and B2 label the 50 test cases by hand~~ (done 4 Nov: 25 each, final labels for all 50). Optional: both label the same 10–15 cases so `uv run dispute-agent agreement` can report agreement between them.
 - [ ] **Spot-check the citation sheet** (`reports/citation_check_cmp_gemini-flash-lite.csv`): fill the `supports` column for about 15 rows.
-- [ ] **Deploy to Streamlit Community Cloud** (steps in the README). Put `GEMINI_API_KEY` and `OPENAI_API_KEY` in the app's Secrets (the OpenAI key stays unpaid: it is only the fallback when Gemini fails, about 50 requests a day) and watch the first (Linux) build log. Put the URL in the README.
+- [x] ~~Deploy to Streamlit Community Cloud~~ (done 6 Nov: https://bc3415-carousell-dispute-agent.streamlit.app/, linked at the top of the README; every push to `main` redeploys it).
 - [ ] **Confirm the real submission deadline** (15 Nov was assumed).
 - [ ] **Check the Mercari competition rules** allow sharing the 300 sampled listings before making the repo public (fallback: keep it private or drop `data/listings/listings_sample.jsonl`).
-- [ ] **Record and edit the video** (`presentation/VIDEO_SCRIPT.md`). Re-check the demo cases on the day: `uv run dispute-agent run-case S01 --provider gemini` and `G155`.
+- [ ] **Record and edit the video** (`presentation/VIDEO_SCRIPT.md`; no slides, it records the live app). Re-check the demo cases on the day in the app (S01, S16, G155, the what-if rule), early in the Gemini quota day.
 - [ ] **Re-read the README** once more before submission, and delete `SESSION_HANDOFF.md` (and this file, if you do not want team notes in the repo).
 
 ## Business case (B1, B2)
