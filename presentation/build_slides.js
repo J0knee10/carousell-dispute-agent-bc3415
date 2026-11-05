@@ -11,7 +11,7 @@ const OUT = process.argv[2] || "Carousell_Dispute_Agent_Slides.pptx";
 
 // Fill in the names, then rebuild. Empty names show the role only.
 const TEAM = {
-  C1: "", C2: "", C3: "", C4: "", B1: "", B2: "",
+  C1: "Ronak", C2: "Akshaya", C3: "Evelyn", C4: "Jonathan", B1: "Dan Yu", B2: "Drue",
 };
 const REPO = "github.com/J0knee10/carousell-dispute-agent-bc3415";
 
@@ -230,7 +230,7 @@ pres.addSection({ title: SEC2 });
     row("Judge model", "Gemini (cloud) or Llama / Qwen (local), JSON output"),
     row("Policy search", "ChromaDB embeddings + BM25 keywords, rank fusion"),
     row("Policy text", "4 Carousell help pages, 37 clauses, copied by hand"),
-    row("Interface", "Streamlit, on Community Cloud"),
+    row("Interface", "Streamlit, ready for Community Cloud"),
     row("Environment", "uv with Python 3.12 locked; Docker optional"),
   ], { x: 0.6, y: 1.95, w: 7.3, colW: [2.8, 4.5], rowH: 0.62, fontSize: 16, color: C.text1, valign: "middle", border: { type: "solid", pt: 0.75, color: DIVIDER }, margin: 0.1, objectName: "Stack table" });
 
@@ -245,7 +245,7 @@ pres.addSection({ title: SEC2 });
     text(s, `Bar value ${i + 1}`, `${pct}%`, { x: 8.65 + maxW * pct / 100 + 0.12, y: by + 0.36, w: 1.0, h: 0.38, fontSize: 18, bold: true, fontFace: HEAD, color: C.text1, valign: "middle" });
   });
   text(s, "Retrieval note", "Hybrid has the right clause in its top five 96% of the time.", { x: 8.65, y: 5.6, w: 3.8, h: 0.55, fontSize: 14, color: C.text2 });
-  s.addNotes(`[ends 1:40] C1: "The stack: LangGraph, Gemini's free tier or a local model with structured JSON output, ChromaDB plus keyword search, and Streamlit. The search is hybrid because it ranks the right clause first 76% of the time, against 52% for embeddings or keywords alone."`);
+  s.addNotes(`[1:25, ends 1:40] C2: "The policy search: Carousell's four help pages are split into 37 clauses, and every gap gets its own search. It's hybrid, ChromaDB embeddings plus keyword search, because that puts the right clause first 76% of the time, against 52% for either one alone."`);
 }
 
 // --- 3. Demo (C4; blank: the screen recording goes over this slide) -------
@@ -311,7 +311,7 @@ pres.addSection({ title: SEC4 });
       { text: body, options: { color: C.text2 } },
     ], { x: 0.95, y, w: 11.8, h: 0.42, fontSize: 17, valign: "middle" });
   });
-  s.addNotes(`[1:40 after the demo, about 3:00] C3: "Does it work? We sampled 300 real second-hand listings and wrote 200 disputes on top: 20 by hand and 180 with a generator model. The models that write the disputes never judge them. 50 cases are held out as the test set."`);
+  s.addNotes(`[3:00] C3: "Does it work? We sampled 300 real second-hand listings and wrote 200 disputes on top: 20 by hand and 180 with a generator model. The models that write the disputes never judge them. 50 cases are held out as the test set."`);
 }
 
 {
@@ -401,7 +401,7 @@ pres.addSection({ title: SEC5 });
     row("Staff rubber-stamping", "Confidence score, escalation, every override logged", "6% of cases escalated"),
     row("Personal data", "Made-up disputes only", "A deployment would remove personal details first"),
   ], { x: 0.6, y: 1.95, w: 12.13, colW: [2.7, 5.0, 4.43], rowH: 0.85, fontSize: 17, color: C.text1, valign: "middle", border: { type: "solid", pt: 0.75, color: DIVIDER }, margin: 0.12, objectName: "Risk table" });
-  s.addNotes(`[3:55] B1: "The risks. Invented policy: none of its citations were invented. Bias: it gets 96% of seller wins right but 83% of buyer wins, so it leans towards declining, and we track that. Rubber-stamping: unsure cases go to a person, and every override is logged. And our data is made up; a deployment would remove personal details first."`);
+  s.addNotes(`[3:55, ends 4:20] B2: "The risks. Invented policy: none of its citations were invented. Bias: it gets 96% of seller wins right but 83% of buyer wins, so it leans towards declining, and we track that. Rubber-stamping: unsure cases go to a person, and every override is logged. And our data is made up; a deployment would remove personal details first."`);
 }
 
 {
@@ -418,7 +418,7 @@ pres.addSection({ title: SEC5 });
     text(s, `Verdict caption ${i + 1}`, cap, { x, y: 4.25, w: 5.4, h: 1.0, fontSize: 22, color: C.background1 });
   });
   text(s, "Not automatic", "Not for automatic decisions: a person approves every one.", { x: 0.8, y: 6.0, w: 11.7, h: 0.6, fontSize: 24, italic: true, color: C.background1 });
-  s.addNotes(`B1: "So our recommendation: it's ready for a staff-assist pilot, not for automatic decisions. It gives a cited recommendation in about 9 seconds, and flags 6% of cases for a person."`);
+  s.addNotes(`[4:20] B1: "So our recommendation: it's ready for a staff-assist pilot, not for automatic decisions. It gives a cited recommendation in about 9 seconds, and flags 6% of cases for a person."`);
 }
 
 {

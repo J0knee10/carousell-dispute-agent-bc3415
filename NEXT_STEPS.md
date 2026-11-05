@@ -6,7 +6,8 @@ final submission if you do not want it in the repo.
 ## Before submission
 
 - [ ] **Push** the local commits to GitHub.
-- [ ] **Fill in the contribution table** with real names, roles and evidence: `README.md` ("Team and contributions") and section 12 of `Carousell_Dispute_Agent_Full_Report.docx`. Also `TEAM` at the top of `presentation/build_slides.js`, then rebuild the slides (`cd presentation && npm install && node build_slides.js`). This is the 20% collaboration criterion: per-member evidence (commits from their own accounts, files they wrote, labelling sheets, meeting notes) matters more than the table itself.
+- [x] ~~Put the names in the contribution table~~ (done 5 Nov: README, report section 12.2, slides 1 and 13).
+- [ ] **Check each member's row and add evidence.** The "Main contributions" and "Evidence" columns are still the role defaults; adjust them to what each person really did: `README.md` ("Team and contributions") and the `rows` list in `docs/report_build/update_report.py` (then rebuild the report, see `docs/report_build/README.md`). This is the 20% collaboration criterion: per-member evidence (commits from their own accounts, files they wrote, labelling sheets, meeting notes) matters more than the table itself.
 - [x] ~~B1 and B2 label the 50 test cases by hand~~ (done 4 Nov: 25 each, final labels for all 50). Optional: both label the same 10–15 cases so `uv run dispute-agent agreement` can report agreement between them.
 - [ ] **Spot-check the citation sheet** (`reports/citation_check_cmp_gemini-flash-lite.csv`): fill the `supports` column for about 15 rows.
 - [ ] **Deploy to Streamlit Community Cloud** (steps in the README). Put `GEMINI_API_KEY` and `OPENAI_API_KEY` in the app's Secrets (the OpenAI key stays unpaid: it is only the fallback when Gemini fails, about 50 requests a day) and watch the first (Linux) build log. Put the URL in the README.

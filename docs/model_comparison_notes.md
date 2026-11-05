@@ -102,13 +102,13 @@ three designs of the agent on both local models, and a 10-case probe on Gemini:
   tool's arguments as JSON and code runs the search, which works the same with
   every provider. We first offered it in the agent-driven design as
   an optional field inside the judgement, and no model used it (0 of 40 judged
-  Llama cases, 0 of 10 Gemini cases; [details](tool_field_experiment.md)): a
+  Llama cases, 0 of 10 Gemini cases; [details](../reports/tool_field_experiment.md)): a
   model that must give an outcome in the same answer does not stop to search.
   With a separate planning step the tool is used: Llama searched in every case,
   Qwen in 9%, and Gemini in 3 of 10, each time for a gap the general clauses
   missed (for example "item not in listing description", which found the
   exclusion in BPR-04). On those 10 cases Gemini scored the same with either
-  design (9 right; [probe report](evaluation_probe_gemini_agentic.md)).
+  design (9 right; [probe report](../reports/evaluation_probe_gemini_agentic.md)).
 - **Choice:** per-gap retrieval stays the default. It is as accurate as letting
   the model drive the search, needs one LLM call less per case, and its
   behaviour is predictable. The tool stays as a fallback for gaps the per-gap

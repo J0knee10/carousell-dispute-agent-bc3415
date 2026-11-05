@@ -383,18 +383,17 @@ After changing dependencies, regenerate `requirements.txt` with
 
 ## Team and contributions
 
-To be filled in by the team. Evidence can be commits, files, documents or
-meeting notes; the commit history alone shows one author because the code was
+Evidence can be commits, files, documents or meeting notes; the commit history alone shows one author because the code was
 pushed from one machine.
 
 | Member | Role | Main contributions | Evidence | In the video |
 |---|---|---|---|---|
-| _Name 1_ | C1: Agent lead | LangGraph workflow, tool loop, confidence check, staff pause | `src/dispute_agent/agent/` | How it works (0:50–1:40) |
-| _Name 2_ | C2: RAG and policy | Policy clauses, hybrid search, citations, retrieval evaluation | `src/dispute_agent/rag/`, `reports/retrieval.md` | |
-| _Name 3_ | C3: Data and evaluation | Listings, dispute generator, labels, harness, baseline, model comparison | `src/dispute_agent/data/`, `src/dispute_agent/evaluation/`, `reports/` | Does it work? (3:00–3:55) |
-| _Name 4_ | C4: App and deployment | Streamlit app, local models, cloud deployment, repo and README | `app/`, `src/dispute_agent/llm/`, `README.md` | Live demo (1:40–3:00) |
-| _Name 5_ | B1: Business lead | Problem, evidence, competitors, business case, recommendation | Project Brief, Business Case | Problem; risks and recommendation |
-| _Name 6_ | B2: Policy and story lead | Policy corpus, hard cases, labelling, risks and ethics, video editing | `data/policy/`, `data/labels/labels.csv`, `presentation/` | Edits the video |
+| Ronak | C1: Agent lead | LangGraph workflow, tool loop, confidence check, staff pause | `src/dispute_agent/agent/` | How it works (0:50–1:25) |
+| Akshaya | C2: RAG and policy | Policy clauses, hybrid search, citations, retrieval evaluation | `src/dispute_agent/rag/`, `reports/retrieval.md` | The policy search (1:25–1:40) |
+| Evelyn | C3: Data and evaluation | Listings, dispute generator, labels, harness, baseline, model comparison | `src/dispute_agent/data/`, `src/dispute_agent/evaluation/`, `reports/` | Does it work? (3:00–3:55) |
+| Jonathan | C4: App and deployment | Streamlit app, local models, cloud deployment, repo and README | `app/`, `src/dispute_agent/llm/`, `README.md` | Live demo (1:40–3:00) |
+| Dan Yu | B1: Business lead | Problem, evidence, competitors, business case, recommendation | Project Brief, Business Case | Problem; recommendation (0:00–0:50, 4:20–4:50) |
+| Drue | B2: Policy and story lead | Policy corpus, hard cases, labelling, risks and ethics, video editing | `data/policy/`, `data/labels/labels.csv`, `presentation/` | Risks (3:55–4:20); edits the video |
 
 ## Before submission
 

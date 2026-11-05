@@ -1,7 +1,13 @@
 # Labelling guide
 
-Each dispute needs a correct outcome so we can measure the agent. Two people
-label every case separately, then settle disagreements together.
+Each dispute needs a correct outcome so we can measure the agent.
+
+**What we did for the 50 test cases (4 Nov):** B1 labelled 25 cases and B2 the
+other 25, one person per case, in `b1_*` or `b2_*`, and copied each label into
+`final_outcome` / `final_eligible`, which is the answer key for every result.
+No case was labelled by both, so there is no agreement score yet. The full
+process below (both label the same cases, then settle disagreements) is what to
+follow for any cases you double-label later.
 
 ## The sheet
 
@@ -14,7 +20,7 @@ typed.
 | `provisional_outcome`, `provisional_eligible` | Already filled | The outcome the case was written for. **Do not look at it before labelling.** Hide the column in Excel or Sheets. |
 | `b1_outcome`, `b1_eligible` | B1 | Your own judgement |
 | `b2_outcome`, `b2_eligible` | B2 | Your own judgement, without looking at B1's |
-| `final_outcome`, `final_eligible` | B1 + B2 + C1 | Only where B1 and B2 disagree, after discussing |
+| `final_outcome`, `final_eligible` | B1 + B2 + C1 | The answer key. With one labeller, their label; with two, the agreed label after discussing any disagreement |
 | `notes` | Anyone | Why the case is hard, or what is wrong with it |
 | `claude_outcome`, `claude_eligible`, `claude_note` | Already filled for the 50 test cases | An AI reviewer's (Claude's) opinion, kept separate from the human labels and never used as the answer key. **Hide these too until you have labelled.** Useful afterwards when B1 and B2 settle disagreements. |
 

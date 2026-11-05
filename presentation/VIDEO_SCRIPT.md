@@ -2,7 +2,7 @@
 
 Audience: Carousell's support and Trust & Safety leads (and the BC3415 markers). The brief asks for 3 to 5 minutes; the target is about 4:55. That's about 4:35 of speech (about 690 words at 150 a minute), plus clicks and Gemini waits. Cut the waits in editing; a live LLM step takes 10 to 20 seconds on the free tier.
 
-Speakers follow the project brief: **B1** presents the problem, the risks and the recommendation, **C1** explains the architecture, **C4** records the live demo, **C3** presents the evaluation, and **B2** edits the video. Swap names freely; the lines don't depend on who says them.
+All six members speak, following the project brief: **B1** (Dan Yu) presents the problem and the recommendation, **C1** (Ronak) explains the workflow, **C2** (Akshaya) the policy search, **C4** (Jonathan) records the live demo, **C3** (Evelyn) presents the evaluation, and **B2** (Drue) presents the risks and edits the video. Swap names freely; the lines don't depend on who says them.
 
 Every number here comes from `reports/` or the SPF brief named on slide 2. The slides are `Carousell_Dispute_Agent_Slides.pptx` in this folder; their speaker notes hold every line below.
 
@@ -10,10 +10,10 @@ Every number here comes from `reports/` or the SPF brief named on slide 2. The s
 
 ## Before you hit record
 
-- [ ] Put the team's names in `TEAM` at the top of `build_slides.js` and rebuild (`npm install`, then `node build_slides.js`), or type them into slides 1 and 13 in PowerPoint.
 - [ ] Say your group number on slide 1 (the notes have "[number]").
 - [ ] Start the app from the repo root: `uv run streamlit run app/streamlit_app.py`. In the sidebar, choose **Gemini**. Check `uv run dispute-agent check-llm` says OK first: the free daily quota resets at midnight Pacific time (3 PM Singapore until 1 Nov, then 4 PM).
 - [ ] Do one full rehearsal of the demo on the day. The LLM can give a different answer between runs; the expected answers below were checked on 28 Oct 2026 and again (S01, G155) on 4 Nov 2026 with the current agent.
+- [ ] **Show every speaker.** The marking scheme asks that the video features the team: each person appears on camera for their part (a webcam corner over the slides, or a short clip before their section), with their name on screen the first time.
 - [ ] **Never open `.env` on screen.** It holds the API key.
 - [ ] Close other tabs and notifications. Zoom the browser to 110–125% so the text is readable in the recording.
 
@@ -31,15 +31,19 @@ Every number here comes from `reports/` or the SPF brief named on slide 2. The s
 >
 > **(next)** And these disputes are judgement calls. The policy covers a wrong model, missing parts or a hidden defect, but not 'light pink versus rose pink'. Lean too far towards buyers and honest sellers lose. Too far towards sellers, and buyers pay outside the app, where scams happen."
 
-## 2. How it works (C1, 0:50–1:40)
+## 2. How it works (C1, 0:50–1:25)
 
-**Screen:** slide 4 (the workflow), then slide 5 (the stack) from "The stack".
+**Screen:** slide 4 (the workflow).
 
-> "**(next)** How does it work? It's a LangGraph workflow. Exact rules are plain code: did the buyer use the Buy button, inside the window? If not, the case goes straight to staff. Judgement goes to an LLM: it matches what the listing promised against what the buyer reports, retrieves the policy clauses for each gap, and recommends an outcome with citations. If those clauses don't cover a gap, it can call a policy search tool and decide again. Code checks the citations, and the workflow pauses until a person decides.
->
-> **(next)** The stack: LangGraph, Gemini's free tier or a local model with structured JSON output, ChromaDB plus keyword search, and Streamlit. The search is hybrid because it ranks the right clause first 76% of the time, against 52% for embeddings or keywords alone."
+> "**(next)** How does it work? It's a LangGraph workflow. Exact rules are plain code: did the buyer use the Buy button, inside the window? If not, the case goes straight to staff. Judgement goes to an LLM: it matches what the listing promised against what the buyer reports, retrieves the policy clauses for each gap, and recommends an outcome with citations. If those clauses don't cover a gap, it can call a policy search tool and decide again. Code checks the citations, and the workflow pauses until a person decides."
 
-## 3. Live demo (C4, 1:40–3:00)
+## 3. The policy search (C2, 1:25–1:40)
+
+**Screen:** slide 5 (the stack, and why the search is hybrid).
+
+> "**(next)** The policy search: Carousell's four help pages are split into 37 clauses, and every gap gets its own search. It's hybrid, ChromaDB embeddings plus keyword search, because that puts the right clause first 76% of the time, against 52% for either one alone."
+
+## 4. Live demo (C4, 1:40–3:00)
 
 **(next)** **Screen:** slide 6 (blank), with the app recording placed over it. Sidebar: provider **Gemini**, page **Review a dispute**.
 
@@ -65,7 +69,7 @@ Every number here comes from `reports/` or the SPF brief named on slide 2. The s
 
 If a step gives a different answer from the one expected, keep going: say what the agent did and why, and use a backup case. Backups on the demo list: **S02** (iPhone 64GB received as 16GB: full refund with return) and **S10** (sweater with pilling the listing disclosed: decline).
 
-## 4. Does it work? (C3, 3:00–3:55)
+## 5. Does it work? (C3, 3:00–3:55)
 
 **Screen:** slide 7 (the data), slide 8 (the results) from "On those 50", slide 9 (the models) from "We also tried".
 
@@ -75,13 +79,17 @@ If a step gives a different answer from the one expected, keep going: say what t
 >
 > **(next)** We also tried two open models on our own 8 GB graphics card, Llama and Qwen. They got only about half right: they refund almost everything, even a change of mind. The agent helped them most, 20 points for Llama, because the rules are code. So Gemini stays the judge; local models keep data private but need bigger hardware."
 
-## 5. Risks and recommendation (B1, 3:55–4:50)
+## 6. Risks (B2, 3:55–4:20)
 
-**Screen:** slide 10 (risks), slide 11 (recommendation) from "So our recommendation", slide 12 (pilot) from "A pilot would measure", slide 13 (team), slide 14 on "Thank you".
+**Screen:** slide 10 (risks).
 
-> "**(next)** The risks. Invented policy: none of its citations were invented. Bias: it gets 96% of seller wins right but 83% of buyer wins, so it leans towards declining, and we track that. Rubber-stamping: unsure cases go to a person, and every override is logged. And our data is made up; a deployment would remove personal details first.
->
-> **(next)** So our recommendation: it's ready for a staff-assist pilot, not for automatic decisions. It gives a cited recommendation in about 9 seconds, and flags 6% of cases for a person.
+> "**(next)** The risks. Invented policy: none of its citations were invented. Bias: it gets 96% of seller wins right but 83% of buyer wins, so it leans towards declining, and we track that. Rubber-stamping: unsure cases go to a person, and every override is logged. And our data is made up; a deployment would remove personal details first."
+
+## 7. Recommendation (B1, 4:20–4:50)
+
+**Screen:** slide 11 (recommendation), slide 12 (pilot) from "A pilot would measure", slide 13 (team), slide 14 on "Thank you".
+
+> "**(next)** So our recommendation: it's ready for a staff-assist pilot, not for automatic decisions. It gives a cited recommendation in about 9 seconds, and flags 6% of cases for a person.
 >
 > **(next)** A pilot would measure time to resolve a dispute, decisions overturned on appeal, and the share of orders using the Buy button. First, a person checks the citations, and we re-measure on more cases.
 >
@@ -119,12 +127,12 @@ If a step gives a different answer from the one expected, keep going: say what t
 **The models**
 - **Which models:** `gemini-flash-lite-latest` (Google cloud, free tier), and two open 8B models on our own PC through Ollama: Llama 3.1 8B and Qwen 3 8B (thinking off). Same 50 test cases, prompts and code; only the judge changes.
 - **Results:** agent 90% / 54% / 52%, single prompt 88% / 34% / 44% (Gemini / Llama / Qwen); no gap is statistically significant on 50 cases (largest: Llama, p = 0.06). Of the 21 eligible cases that should be declined, Gemini refunded 1, Llama 19, Qwen 20.
-- **Why Gemini stays:** by far the most accurate model we could test (90%), at about 9 s a case. Llama is the local fallback when data must stay on the machine.
+- **Why Gemini stays:** by far the most accurate model we could test (90%), at about 9 s a case. Llama is the default local model, an option when data must stay on the machine.
 - **Hardware limits:** one PC with an 8 GB RTX 4060 Ti, which limits local models to about 8 billion parameters at 4-bit; a 10,240-token window keeps Llama fully on the GPU (Qwen ran 11% on the CPU). Bigger models would have run mostly on the CPU, and every run had to finish in one night.
 - **Does retrieval change the decisions?** Only a little on our test set. With the policy lists taken out of the prompt, Gemini got 23 of 25 clear cases right with retrieval and 22 without: without it, it declined two missing-accessory claims the policy covers, and it could cite nothing, so every case went to a person. The local models refund almost everything either way. Retrieval's main value is grounding: every recommendation cites a clause staff can check.
 - **OpenAI:** not part of the comparison. GPT-5.4 mini only keeps the cloud app running when a Gemini call fails; the key is unpaid (OpenAI's free usage tier, about 50 requests a day), far short of the roughly 500 requests a test run needs, so its judgements are untested and the app marks them "(fallback)".
 
 **Costs and deployment**
 - **Free tier:** about one full test run (agent and baseline on 50 cases) uses the daily quota of `gemini-flash-lite-latest`. A real deployment would use a paid tier, which also stops Google using the prompts to improve its products, or a local model, and would remove personal details before any LLM call.
-- **Cloud demo:** the app runs on Streamlit Community Cloud with Gemini as the judge and OpenAI (free usage tier) as the fallback if Gemini fails; local models only run on a machine with Ollama.
+- **Cloud demo:** the app is ready for Streamlit Community Cloud (not deployed yet), with Gemini as the judge and OpenAI (free usage tier) as the fallback if Gemini fails; local models only run on a machine with Ollama.
 - **Scaling:** other second-hand marketplaces (Carousell in other markets, Mercari, Vinted) need their own policy pages loaded into the search; the rules in `eligibility.py` would change with their policies.

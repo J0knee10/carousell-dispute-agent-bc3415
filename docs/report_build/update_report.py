@@ -127,7 +127,7 @@ insert_paragraph_after(b, BULLET, lead(F["design_tool_bullet"]))
 t = table_after(doc, "6.1 Tech stack")
 set_row(t, 1, [None, "LangGraph (StateGraph, conditional edges for the tool loop, interrupt, in-memory checkpointer)", None])
 set_row(t, 2, [None, "Gemini API (free tier, google-genai), Ollama (local Llama 3.1 8B and Qwen 3 8B), OpenAI (gpt-5.4-mini, free usage tier; only the app's fallback); Pydantic schemas; temperature 0 where the model allows it", None])
-set_row(t, 5, [None, "uv (Python 3.12, uv.lock), optional Docker, Streamlit Community Cloud (requirements.txt checked in a clean environment; deployed by hand), GitHub", None])
+set_row(t, 5, [None, "uv (Python 3.12, uv.lock), optional Docker, ready for Streamlit Community Cloud (requirements.txt checked in a clean environment; not deployed yet), GitHub", None])
 t = table_after(doc, "6.2 Models")
 resize_rows(t, 6)
 set_row(t, 5, ["Dispute generator", "gemma-4-26b-a4b-it, gemini-3-flash-preview and gemini-3.5-flash", "Different from every judge, so no model grades its own writing. 154 disputes were written by Gemma 4, 19 by gemini-3-flash-preview and 7 by gemini-3.5-flash (each used as the previous one’s free quota ran out)"])
@@ -140,7 +140,7 @@ set_runs(p, "Gemini calls are paced (at least 4.5 seconds apart). Short rate-lim
 insert_paragraph_after(p, NORMAL, [("Hardware. ", True), (F["hardware"], False)])
 
 b = para(doc, "Why hybrid:")
-set_runs(b, lead("Why hybrid: on 25 test queries it puts the right clause first 76% of the time, against 52% for either method alone, and has the best mean reciprocal rank (0.81, against 0.67 for embeddings and 0.71 for keywords). Within the top 3 that the agent uses, keyword search alone finds slightly more (92% against 88%); hybrid finds the most within the top 5 (96%). Section 8.6 tests whether retrieval changes the decisions, not just the citations.", ": "))
+set_runs(b, lead("Why hybrid: on 25 test queries it puts the right clause first 76% of the time, against 52% for either method alone, and has the best mean reciprocal rank (0.81, against 0.67 for embeddings and 0.71 for keywords). Within the top 3 that the agent uses, keyword search alone finds slightly more (92% against 88%). That is one query: for non-receipt by untracked mail, rank fusion pushes the answer to fourth place, and the agent decides that case with an eligibility rule in code anyway (reports/retrieval.md explains it). Hybrid finds the most within the top 5 (96%). Section 8.6 tests whether retrieval changes the decisions, not just the citations.", ": "))
 
 t = table_after(doc, "6.4 Code layout")
 set_row(t, 1, [None, "Staff app: review a dispute (with the judge’s tool calls), what-if policy test, evaluation results and model comparison, policy library, how it works. Provider and local-model picker in the sidebar", ])
@@ -243,17 +243,25 @@ set_row(t, len(t.rows) - 1, ["Model dependence", "A weaker or different model ma
 set_runs(para(doc, "Recommendation to Carousell (as in the video)"), lead(F["recommendation"], ": "))
 
 # ------------------------------------------------------- 11. slides
-set_runs(para(doc, "The slides (presentation/Carousell_Dispute_Agent_Slides.pptx"), "The slides (presentation/Carousell_Dispute_Agent_Slides.pptx, built by build_slides.js) and the script (presentation/VIDEO_SCRIPT.md) were updated on 4 November for the new results. The target is about 4:55, inside the 3 to 5 minutes allowed.")
+set_runs(para(doc, "The slides (presentation/Carousell_Dispute_Agent_Slides.pptx"), "The slides (presentation/Carousell_Dispute_Agent_Slides.pptx, built by build_slides.js) and the script (presentation/VIDEO_SCRIPT.md) were updated on 4 November for the new results; on 5 November the team names were added and the script was rearranged so all six members speak. The target is about 4:55, inside the 3 to 5 minutes allowed.")
 t = table_after(doc, "The slides (presentation")
-set_row(t, 2, [None, None, None, None, "Workflow with the search tool; rules in code, judgement in the LLM; stack (Gemini or a local model); why hybrid search"])
-set_row(t, 4, [None, None, None, None, F["slides_eval_row"]])
-t11 = table_after(doc, "The slides (presentation")
-set_cell(t11, 3, 4, "S01 partial refund 15%; S16 not covered by rules; G155 escalated (confidence 0.5 in the 4 Nov demo check; 0.7 in the 4 Nov test run, escalated for other reasons); what-if test")
+slide_rows = [
+    ["The problem", "0:00–0:50", "B1", "1–3", "Scams on Carousell, the ‘Buy’ button, the judgement call (light pink vs rose pink)"],
+    ["How it works", "0:50–1:25", "C1", "4", "Workflow with the search tool; rules in code, judgement in the LLM"],
+    ["The policy search", "1:25–1:40", "C2", "5", "37 clauses, a search per gap, why hybrid (right clause first 76% vs 52%)"],
+    ["Live demo", "1:40–3:00", "C4", "6", "S01 partial refund 15%; S16 not covered by rules; G155 escalated (confidence 0.5 in the 4 Nov demo check; 0.7 in the 4 Nov test run, escalated for other reasons); what-if test"],
+    ["Does it work?", "3:00–3:55", "C3", "7–9", F["slides_eval_row"]],
+    ["Risks", "3:55–4:20", "B2", "10", "Invented policy, bias, rubber-stamping, made-up data"],
+    ["Recommendation", "4:20–4:50", "B1", "11–14", "Staff-assist pilot; pilot KPIs; team; thank you"],
+]
+resize_rows(t, 1 + len(slide_rows), template_row=1)
+for i, row in enumerate(slide_rows, start=1):
+    set_row(t, i, row)
 p = para(doc, "Demo backups:")
 set_runs(p, "Demo backups: S02 (iPhone 64GB received as 16GB: full refund with return) and S10 (pilling the listing disclosed: decline). S01 and G155 were re-checked with Gemini on 4 November and still give the answers in the script. Before recording: put names in TEAM in build_slides.js, check uv run dispute-agent check-llm, rehearse once, close .env. The decision-guide story (first run lost 82 to 84) moved to the Q&A notes to make room for the model comparison.")
 
 tc = table_after(doc, "Suggested cost side")
-set_cell(tc, 1, 2, "Measured on the 4 Nov test run: 1.8 LLM calls and about 2,250 input and 590 output tokens per case for claim matching and judgement; message drafts add one more call. At third-party-listed Gemini Flash-Lite prices (about US$0.30 in / US$2.50 out per million tokens) that is well under US$0.01. Check Google’s pricing page before quoting")
+set_cell(tc, 1, 2, "Measured on the 4 Nov test run: 1.8 LLM calls and about 2,250 input and 590 output tokens per case for claim matching and judgement; message drafts add one more call. The judge alias gemini-flash-lite-latest pointed to gemini-3.5-flash-lite (checked through the API on 5 Nov 2026). At Google’s paid-tier price for it (US$0.30 in / US$2.50 out per million tokens, Gemini API pricing page, 5 Nov 2026) that is about US$0.002 a case, still well under US$0.01 with the message drafts; on the free tier it costs nothing")
 b = para(doc, "Measured: about 9 seconds")
 set_runs(b, [("Measured:", True), (" about 9 seconds and 1.8 LLM calls per case; 6% of cases escalated; 94% accuracy on cases not escalated (Gemini, 4 Nov run, hand labels).", False)])
 
@@ -277,12 +285,12 @@ t = table_after(doc, "12.3 Team roles") if False else table_after(doc, "12.3 Con
 anchor = insert_paragraph_after(h, NORMAL, "Fill in one row per member. Evidence can be commits, files, documents or meeting notes. The same table is in the README.")
 rows = [
     ["Member", "Role", "Main contributions", "Evidence", "In the video"],
-    ["Name 1", "C1: Agent lead", "LangGraph workflow, tool loop, confidence check, staff pause", "src/dispute_agent/agent/", "How it works"],
-    ["Name 2", "C2: RAG and policy", "Policy clauses, hybrid search, citations, retrieval evaluation", "src/dispute_agent/rag/, reports/retrieval.md", ""],
-    ["Name 3", "C3: Data and evaluation", "Listings, dispute generator, labels, harness, baseline, model comparison", "src/dispute_agent/data/, evaluation/, reports/", "Does it work?"],
-    ["Name 4", "C4: App and deployment", "Streamlit app, local models, cloud deployment, repo and README", "app/, src/dispute_agent/llm/, README.md", "Live demo"],
-    ["Name 5", "B1: Business lead", "Problem, evidence, competitors, business case, recommendation", "Project Brief, Business Case", "Problem; risks"],
-    ["Name 6", "B2: Policy and story lead", "Policy corpus, hard cases, labelling, risks and ethics, video editing", "data/policy/, data/labels/, presentation/", "Edits the video"],
+    ["Ronak", "C1: Agent lead", "LangGraph workflow, tool loop, confidence check, staff pause", "src/dispute_agent/agent/", "How it works"],
+    ["Akshaya", "C2: RAG and policy", "Policy clauses, hybrid search, citations, retrieval evaluation", "src/dispute_agent/rag/, reports/retrieval.md", "Policy search"],
+    ["Evelyn", "C3: Data and evaluation", "Listings, dispute generator, labels, harness, baseline, model comparison", "src/dispute_agent/data/, evaluation/, reports/", "Does it work?"],
+    ["Jonathan", "C4: App and deployment", "Streamlit app, local models, cloud deployment, repo and README", "app/, src/dispute_agent/llm/, README.md", "Live demo"],
+    ["Dan Yu", "B1: Business lead", "Problem, evidence, competitors, business case, recommendation", "Project Brief, Business Case", "Problem; recommendation"],
+    ["Drue", "B2: Policy and story lead", "Policy corpus, hard cases, labelling, risks and ethics, video editing", "data/policy/, data/labels/, presentation/", "Risks; edits the video"],
 ]
 five_col = table_after(doc, "The slides (presentation")  # 5 columns
 contrib = insert_table_after(anchor, five_col, rows)
