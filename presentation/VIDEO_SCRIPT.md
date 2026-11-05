@@ -4,96 +4,94 @@ Audience: Carousell's support and Trust & Safety leads (and the BC3415 markers).
 
 All six members speak, following the project brief: **B1** (Dan Yu) presents the problem and the recommendation, **C1** (Ronak) explains the workflow, **C2** (Akshaya) the policy search, **C4** (Jonathan) records the live demo, **C3** (Evelyn) presents the evaluation, and **B2** (Drue) presents the risks and edits the video. Swap names freely; the lines don't depend on who says them.
 
-Every number here comes from `reports/` or the SPF brief named on slide 2. The slides are `Carousell_Dispute_Agent_Slides.pptx` in this folder; their speaker notes hold every line below.
+There are no slides: the screen is the app itself (its How it works, Policy library and Evaluation results pages show the workflow, the search and the results), and the speaker is on camera where no page fits. Every number here comes from `reports/` (the app's Evaluation results page shows the same numbers) or the SPF brief named under "If someone asks".
 
 ---
 
 ## Before you hit record
 
-- [ ] Say your group number on slide 1 (the notes have "[number]").
-- [ ] Start the app from the repo root: `uv run streamlit run app/streamlit_app.py`. In the sidebar, choose **Gemini**. Check `uv run dispute-agent check-llm` says OK first: the free daily quota resets at midnight Pacific time (3 PM Singapore until 1 Nov, then 4 PM).
-- [ ] Do one full rehearsal of the demo on the day. The LLM can give a different answer between runs; the expected answers below were checked on 28 Oct 2026 and again (S01, G155) on 4 Nov 2026 with the current agent.
-- [ ] **Show every speaker.** The marking scheme asks that the video features the team: each person appears on camera for their part (a webcam corner over the slides, or a short clip before their section), with their name on screen the first time.
-- [ ] **Never open `.env` on screen.** It holds the API key.
+- [ ] Open the live app, https://bc3415-carousell-dispute-agent.streamlit.app/, or run it locally from the repo root with `uv run streamlit run app/streamlit_app.py`. If the live app shows "This app has gone to sleep", wake it a few minutes early. In the sidebar, set **AI model** to **Gemini**, and under **Your details and testing options** type your name (it is saved with each decision).
+- [ ] Check Gemini has quota: run `uv run dispute-agent check-llm`, or review one case in the app. The free daily quota resets at midnight Pacific time (4 PM Singapore) and is shared by everyone using the live app, so record early in the quota day.
+- [ ] Do one full rehearsal of the demo on the day. The LLM can give a different answer between runs; the expected answers below were checked on 28 Oct 2026 and again (S01, G155) on 4 Nov 2026 with the current agent, and S01 in the live app on 6 Nov.
+- [ ] Before recording the demo, clear the review conversation (🗑️ next to the chat box) so it starts from the welcome message.
+- [ ] **Show every speaker.** The marking scheme asks that the video features the team: each person appears on camera for their part (a webcam corner over the screen recording, or a short clip before their section), with their name on screen the first time.
+- [ ] **Never open `.env` or the app's Secrets on screen.** They hold the API keys.
 - [ ] Close other tabs and notifications. Zoom the browser to 110–125% so the text is readable in the recording.
 
 ---
 
 ## 1. The problem (B1, 0:00–0:50)
 
-**(next)** in the lines below means: click to the next slide at that point. Start recording on slide 1.
-
-**Screen:** slides 1–3 (cover, scams on Carousell, the judgement call).
+**Screen:** B1 on camera. In editing, add a title card ("Carousell Dispute Agent", group number) at the start, then the scam figures as on-screen text ("1,555 scam cases on Carousell, Jan–Jun 2026, up 17%"), and the colour example ("light pink vs rose pink") on the last paragraph.
 
 > "Hi, we're Group [number]. This is the Carousell Dispute Agent. It helps Carousell's support team settle 'not as described' disputes, and a person makes every final call.
 >
-> **(next)** Scams on Carousell are rising: 1,555 cases in the first half of this year, up 17%, the only major online service where scams went up. Carousell's answer is the Buy button, which holds the payment until the item arrives. That only works if buyers trust how disputes are settled.
+> Scams on Carousell are rising: 1,555 cases in the first half of this year, up 17%, the only major online service where scams went up. Carousell's answer is the Buy button, which holds the payment until the item arrives. That only works if buyers trust how disputes are settled.
 >
-> **(next)** And these disputes are judgement calls. The policy covers a wrong model, missing parts or a hidden defect, but not 'light pink versus rose pink'. Lean too far towards buyers and honest sellers lose. Too far towards sellers, and buyers pay outside the app, where scams happen."
+> And these disputes are judgement calls. The policy covers a wrong model, missing parts or a hidden defect, but not 'light pink versus rose pink'. Lean too far towards buyers and honest sellers lose. Too far towards sellers, and buyers pay outside the app, where scams happen."
 
 ## 2. How it works (C1, 0:50–1:25)
 
-**Screen:** slide 4 (the workflow).
+**Screen:** the app's **How it works** page: the workflow figure, then scroll to the numbered steps.
 
-> "**(next)** How does it work? It's a LangGraph workflow. Exact rules are plain code: did the buyer use the Buy button, inside the window? If not, the case goes straight to staff. Judgement goes to an LLM: it matches what the listing promised against what the buyer reports, retrieves the policy clauses for each gap, and recommends an outcome with citations. If those clauses don't cover a gap, it can call a policy search tool and decide again. Code checks the citations, and the workflow pauses until a person decides."
+> "How does it work? It's a LangGraph workflow. Exact rules are plain code: did the buyer use the Buy button, inside the window? If not, the case goes straight to staff. Judgement goes to an LLM: it matches what the listing promised against what the buyer reports, retrieves the policy clauses for each gap, and recommends an outcome with citations. If those clauses don't cover a gap, it can call a policy search tool and decide again. Code checks the citations, and the workflow pauses until a person decides."
 
 ## 3. The policy search (C2, 1:25–1:40)
 
-**Screen:** slide 5 (the stack, and why the search is hybrid).
+**Screen:** the **Policy library** page. Type `colour slightly different` into **Search the policy** and press Enter; the most relevant clauses appear as numbered cards.
 
-> "**(next)** The policy search: Carousell's four help pages are split into 37 clauses, and every gap gets its own search. It's hybrid, ChromaDB embeddings plus keyword search, because that puts the right clause first 76% of the time, against 52% for either one alone."
+> "The policy search: Carousell's four help pages are split into 37 clauses, and every gap gets its own search. It's hybrid, ChromaDB embeddings plus keyword search, because that puts the right clause first 76% of the time, against 52% for either one alone."
 
 ## 4. Live demo (C4, 1:40–3:00)
 
-**(next)** **Screen:** slide 6 (blank), with the app recording placed over it. Sidebar: provider **Gemini**, page **Review a dispute**.
+**Screen:** the app, page **Review a dispute**, starting from the welcome message. Sidebar: **AI model** = **Gemini**.
 
-1. **S01, partial refund.** Cases: **demo**. Pick **S01 · PS Vita Slim**. Click **Run the agent**.
-   Expect: eligible; one gap, `missing_part`; **Partial refund, 15%**, confidence 0.90, citing BPR-02, DPO-08 and DPO-02.
+1. **S01, partial refund.** In the welcome message, click **S01 · PS Vita Slim · missing parts**.
+   Expect: eligible; one gap, `missing_part`; **Partial refund, 15% (S$27.54)**, confidence 90%, citing BPR-02, DPO-08 and DPO-02.
    > "A PS Vita listed with an 8GB SD card, and the buyer says there's no card. Eligibility passes. The agent finds one gap, a missing part, and recommends a 15% partial refund, citing the clauses on incomplete items."
 
-   Then choose **Approve the recommendation**, type a name, click **Submit decision**, and scroll to the message drafts.
+   Then click **✅ Approve** in the "Your decision" box, and scroll to the drafts (tabs **To the buyer** and **To the seller**).
    > "I approve it, and it drafts the messages to the buyer and the seller."
-2. **S16, not covered.** Pick **S16 · Fushigi Yuugi anime DVD**. Run the agent.
-   Expect: **not covered**, decided by the rules, no LLM call.
+2. **S16, not covered.** Type `S16` into the chat box at the bottom and press Enter.
+   Expect: **Decline**, "decided by the eligibility rules (no LLM needed)", with the failed check (paid outside the 'Buy' button) shown under **Eligibility checks**.
    > "This buyer paid by bank transfer. That's outside Buyer Protection, so the rules say 'not covered' straight away, with no LLM call."
-3. **G155, the agent asks for help.** Cases: **all**. Pick **G155 · Old Nintendo Games**. Run the agent.
-   Expect: decline at **confidence 0.50**, **escalated**, with a follow-up question asking the buyer for photos of the outer packaging and shipping label.
-   > "Here the listing promised three games, the buyer got two, and the seller has a photo of all three in the box. The agent isn't sure: confidence 0.5. So it sends the case to a person, and suggests asking the buyer for photos of the packaging."
-4. **What-if.** Page **What-if policy test**. Replace the rule with:
+3. **G155, the agent asks for help.** Type `G155` into the chat box and press Enter.
+   Expect: decline at **confidence 50%**, with a yellow **Needs careful review** box, and a follow-up question asking the buyer for photos of the outer packaging and shipping label.
+   > "Here the listing promised three games, the buyer got two, and the seller has a photo of all three in the box. The agent isn't sure: confidence 50%. So it sends the case to a person, and suggests asking the buyer for photos of the packaging."
+4. **What-if.** Page **What-if policy test**. Click **⚙** in the bottom bar and set **Past cases from** to **Hand-written cases (20)** and **Maximum cases** to **10**. Then type this rule into the chat box and press Enter:
    ```
    If a promised accessory is missing, the buyer gets a full refund with return instead of a partial refund.
    ```
-   Past cases from: **seed**. Maximum cases: **10**. Click **Run what-if**.
-   Expect: about 3 of 10 cases flip to a full refund with return: S01 and S04 (missing accessories, as intended) and S09, which is a wrong flip (that buyer wanted accessories the listing never promised). Checked on 28 Oct over 15 seed cases: 4 flipped (S01, S04, S15 and S09).
+   Expect: about 3 of 10 cases flip to a full refund with return: S01 and S04 (missing accessories, as intended) and S09, which is a wrong flip (that buyer wanted accessories the listing never promised). Open **Case by case** to show them. Checked on 28 Oct over 15 hand-written cases: 4 flipped (S01, S04, S15 and S09).
    > "Last, the what-if test. Carousell writes a proposed rule, and the agent re-judges past disputes under it. Here 3 of 10 would flip. One flip, S09, is wrong: that listing never promised the accessory, so a person still checks the results."
 
-If a step gives a different answer from the one expected, keep going: say what the agent did and why, and use a backup case. Backups on the demo list: **S02** (iPhone 64GB received as 16GB: full refund with return) and **S10** (sweater with pilling the listing disclosed: decline).
+If a step gives a different answer from the one expected, keep going: say what the agent did and why, and use a backup case (type its ID into the chat box). Backups: **S02** (iPhone 64GB received as 16GB: full refund with return) and **S10** (sweater with pilling the listing disclosed: decline).
 
 ## 5. Does it work? (C3, 3:00–3:55)
 
-**Screen:** slide 7 (the data), slide 8 (the results) from "On those 50", slide 9 (the models) from "We also tried".
+**Screen:** the **Evaluation results** page: the top (headline numbers) for the first paragraph, **Compared with asking an AI directly** from "On those 50", **Why Gemini** from "We also tried".
 
-> "**(next)** Does it work? We sampled 300 real second-hand listings and wrote 200 disputes on top: 20 by hand and 180 with a generator model. The models that write the disputes never judge them. 50 cases are held out as the test set.
+> "Does it work? We sampled 300 real second-hand listings and wrote 200 disputes on top: 20 by hand and 180 with a generator model. The models that write the disputes never judge them. 50 cases are held out as the test set.
 >
-> **(next)** On those 50, labelled by hand, the agent gets 90% right; a single prompt with the whole policy pasted in gets 88%. That's one case, a tie on judgement. The gain is on the rules: eligibility is 100% against 68%. And 2 of its 5 mistakes go to a person.
+> On those 50, labelled by hand, the agent gets 90% right; a single prompt with the whole policy pasted in gets 88%. That's one case, a tie on judgement. The gain is on the rules: eligibility is 100% against 68%. And 2 of its 5 mistakes go to a person.
 >
-> **(next)** We also tried two open models on our own 8 GB graphics card, Llama and Qwen. They got only about half right: they refund almost everything, even a change of mind. The agent helped them most, 20 points for Llama, because the rules are code. So Gemini stays the judge; local models keep data private but need bigger hardware."
+> We also tried two open models on our own 8 GB graphics card, Llama and Qwen. They got only about half right: they refund almost everything, even a change of mind. The agent helped them most, 20 points for Llama, because the rules are code. So Gemini stays the judge; local models keep data private but need bigger hardware."
 
 ## 6. Risks (B2, 3:55–4:20)
 
-**Screen:** slide 10 (risks).
+**Screen:** B2 on camera, or the **Evaluation results** page scrolled to **What to keep in mind**. In editing, the four risks can appear as on-screen text.
 
-> "**(next)** The risks. Invented policy: none of its citations were invented. Bias: it gets 96% of seller wins right but 83% of buyer wins, so it leans towards declining, and we track that. Rubber-stamping: unsure cases go to a person, and every override is logged. And our data is made up; a deployment would remove personal details first."
+> "The risks. Invented policy: none of its citations were invented. Bias: it gets 96% of seller wins right but 83% of buyer wins, so it leans towards declining, and we track that. Rubber-stamping: unsure cases go to a person, and every override is logged. And our data is made up; a deployment would remove personal details first."
 
 ## 7. Recommendation (B1, 4:20–4:50)
 
-**Screen:** slide 11 (recommendation), slide 12 (pilot) from "A pilot would measure", slide 13 (team), slide 14 on "Thank you".
+**Screen:** B1 on camera. In editing, add the three pilot measures as on-screen text on the second paragraph, then an end card with each member's name and role (the README's "Team and contributions" table) and the live app link on "Here's who built what".
 
-> "**(next)** So our recommendation: it's ready for a staff-assist pilot, not for automatic decisions. It gives a cited recommendation in about 9 seconds, and flags 6% of cases for a person.
+> "So our recommendation: it's ready for a staff-assist pilot, not for automatic decisions. It gives a cited recommendation in about 9 seconds, and flags 6% of cases for a person.
 >
-> **(next)** A pilot would measure time to resolve a dispute, decisions overturned on appeal, and the share of orders using the Buy button. First, a person checks the citations, and we re-measure on more cases.
+> A pilot would measure time to resolve a dispute, decisions overturned on appeal, and the share of orders using the Buy button. First, a person checks the citations, and we re-measure on more cases.
 >
-> **(next)** Here's who built what. **(next)** Thank you."
+> Here's who built what. Thank you."
 
 ---
 
@@ -134,5 +132,5 @@ If a step gives a different answer from the one expected, keep going: say what t
 
 **Costs and deployment**
 - **Free tier:** about one full test run (agent and baseline on 50 cases) uses the daily quota of `gemini-flash-lite-latest`. A real deployment would use a paid tier, which also stops Google using the prompts to improve its products, or a local model, and would remove personal details before any LLM call.
-- **Cloud demo:** the app is ready for Streamlit Community Cloud (not deployed yet), with Gemini as the judge and OpenAI (free usage tier) as the fallback if Gemini fails; local models only run on a machine with Ollama.
+- **Cloud demo:** the app is live at https://bc3415-carousell-dispute-agent.streamlit.app/ (Streamlit Community Cloud), with Gemini as the judge and OpenAI (free usage tier) as the fallback if Gemini fails; local models only run on a machine with Ollama.
 - **Scaling:** other second-hand marketplaces (Carousell in other markets, Mercari, Vinted) need their own policy pages loaded into the search; the rules in `eligibility.py` would change with their policies.
