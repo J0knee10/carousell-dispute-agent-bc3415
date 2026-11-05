@@ -7,7 +7,12 @@ only the model that does claim matching and judgement:
 
 - `gemini-flash-lite-latest`: Google's small cloud model, free tier (our default).
 - `llama3.1:8b` (Meta) and `qwen3:8b` (Alibaba, thinking mode off): two widely used open models with 8 billion parameters, run on our own PC through Ollama, so no case data leaves the machine.
-- `gpt-5.4-mini` (OpenAI, paid, low reasoning effort): **pending.** The key's organisation is on OpenAI's free usage tier (50 requests a day per model), and the comparison needs about 500 requests. The first 6 cases ran; the rest resume when the limit is lifted (commands at the end).
+
+So the question is a free cloud model against open models that keep the data
+on our own machine. OpenAI is not part of the comparison: the app uses
+`gpt-5.4-mini` only as a fallback when a Gemini call fails, and our OpenAI key
+is on the free usage tier (unpaid, about 50 requests a day per model), far
+short of the roughly 500 requests one test run with its ablations needs.
 
 Each model ran the full agent and the single-prompt baseline. We then varied
 the retrieval design and the decision guide on the local models (free to run)
@@ -28,7 +33,6 @@ single run on 50 cases, so one case is 2 points.
 | Gemini Flash-Lite (cloud) | 90% | 88% | +2 pts | 5 vs 4, p = 1.00 | 9 (includes free-tier pacing) |
 | Llama 3.1 8B (local) | 54% | 34% | +20 pts | 17 vs 7, p = 0.06 | 15 |
 | Qwen 3 8B (local) | 52% | 44% | +8 pts | 6 vs 2, p = 0.29 | 19 |
-| GPT-5.4 mini (cloud, paid) | pending | pending | | | |
 
 **Gemini is far better at the judgement.** The two local models get about half
 the cases right. Their problem is one-sided: of the 21 eligible test cases that
@@ -96,7 +100,7 @@ three designs of the agent on both local models, and a 10-case probe on Gemini:
   `search_policy` on the test set: the per-gap searches already supplied the
   clauses. The tool is a structured-output tool call: the model returns the
   tool's arguments as JSON and code runs the search, which works the same with
-  Gemini, Ollama and OpenAI. We first offered it in the agent-driven design as
+  every provider. We first offered it in the agent-driven design as
   an optional field inside the judgement, and no model used it (0 of 40 judged
   Llama cases, 0 of 10 Gemini cases; [details](tool_field_experiment.md)): a
   model that must give an outcome in the same answer does not stop to search.
@@ -149,10 +153,10 @@ decline) and is told that what is covered must come from the clauses it is given
 
 ## Our choice, and why
 
-1. **Gemini Flash-Lite stays the default judge.** It is by far the most accurate of the models we could test (90%, and 94% on the cases it does not escalate). On the free tier it costs nothing; a deployment would use the paid tier (no training on prompts) after removing personal details.
-2. **OpenAI GPT-5.4 mini is the app's fallback** when a Gemini call fails, capped at S$100 a month. Its test numbers are pending (see above), so for now it is a backup, not a tested judge.
-3. **Llama 3.1 8B is the default local model.** It is level with Qwen 3 8B (54% vs 52%), fits fully on our 8 GB GPU (Qwen spilled 11% onto the CPU) and is faster. It is a fallback for when data must stay on the machine, not a replacement: with it, nearly every dispute would be refunded, which hurts honest sellers.
-4. **Per-gap retrieval stays the default retrieval design,** with the `search_policy` tool as a fallback: agent-driven retrieval was no more accurate on any model and costs one more LLM call per case.
+1. **Gemini Flash-Lite is the judge.** It is by far the most accurate of the models we tested (90% against 54% and 52%, and 94% on the cases it does not escalate), and on the free tier it costs nothing. A deployment would use the paid tier (no training on prompts) after removing personal details.
+2. **The local models are not good enough to judge.** Llama 3.1 8B is the default local model: level with Qwen 3 8B (54% vs 52%), faster, and it fits fully on our 8 GB GPU (Qwen spilled 11% onto the CPU). It is an option only when case data must stay on the machine, not a replacement: with it, nearly every dispute would be refunded, which hurts honest sellers.
+3. **Per-gap retrieval stays the default retrieval design,** with the `search_policy` tool as a fallback: agent-driven retrieval was no more accurate on any model and costs one more LLM call per case.
+4. **OpenAI keeps the cloud app available, nothing more.** When a Gemini call fails (free quota used up, or the service overloaded), the app makes that call with `gpt-5.4-mini` on the key's free usage tier (about 50 requests a day, so roughly 15 to 25 cases). Its judgements were not tested on our test set, so the app labels them "(fallback)" and staff should treat them with extra care.
 
 ## Hardware and other limits
 
@@ -160,13 +164,11 @@ decline) and is told that what is covered must come from the clauses it is given
 - 8 GB of GPU memory limits us to about 8 billion parameters. With a 10,240-token context window Llama takes 6.1 GB and runs fully on the GPU; Qwen takes 6.9 GB and ran 11% on the CPU. A 16k window pushed even Llama 13% onto the CPU, so we used 10,240 tokens, which fits the largest prompt (6,800 tokens).
 - "Cloud vs local" here is also "a strong small cloud model vs 8B models at 4-bit": the comparison cannot separate the two. 14B-and-larger open models, which might close the gap, would run largely on the CPU, several times slower, and all runs had to finish in one night.
 - Windows ran short of committed memory once while a model was loaded and a test suite ran next to it; that run resumed from where it stopped (the harness saves after every case).
-- The free Gemini quota allows about one full test run a day, so the Gemini rubric-only runs cover the first 25 test cases and the agent-driven run 10; the full-guide no-retrieval run and full-length versions are left for another day. The OpenAI key's free usage tier (50 requests a day) stopped the GPT-5.4 mini runs after 6 cases.
+- The free Gemini quota allows about one full test run a day, so the Gemini rubric-only runs cover the first 25 test cases and the agent-driven run 10; the full-guide no-retrieval run and full-length versions are left for another day.
 - Single runs on 50 cases, no repeat runs. The test set has now been used three times and the local default was chosen on it, so the local numbers are slightly optimistic. The hand labels were made after the runs, one person per case.
 
 ## What we would try next
 
-- Finish the GPT-5.4 mini runs once the OpenAI organisation is off the free usage tier (they resume where they stopped):
-  `uv run dispute-agent evaluate --split test --provider openai --run cmp_gpt-5.4-mini`, then the same with `--system agent` and `--retrieval agentic`, `--no-retrieval`, `--guide rubric`, `--guide rubric --no-retrieval` (run names `abl_gpt-5.4-mini_agentic`, `_norag`, `_rubric`, `_rubric_norag`), then `compare`.
 - The Gemini ablations on all 50 cases when the free quota allows: `uv run dispute-agent evaluate --provider gemini --system agent --guide rubric --run abl_gemini_rubric` (and with `--no-retrieval`).
 - Double-label some cases (both B1 and B2) to measure agreement, and repeat runs to measure run-to-run variation.
 - A larger local model on a bigger GPU, or a few worked examples of declines in the prompt for the small models.

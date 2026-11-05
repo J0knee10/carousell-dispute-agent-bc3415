@@ -349,7 +349,7 @@ pres.addSection({ title: SEC4 });
 
 {
   const s = content(SEC4, "4 · DOES IT WORK", "We tried three judge models: Gemini stays",
-    "Source: reports/model_comparison.md, same 50 test cases, hand labels. Local models ran on our own PC (RTX 4060 Ti, 8 GB GPU memory), so about 8B parameters at most. OpenAI GPT-5.4 mini: pending.");
+    "Source: reports/model_comparison.md, same 50 test cases, hand labels. Local models ran on our own PC (RTX 4060 Ti, 8 GB GPU memory), so about 8B parameters at most. OpenAI is only a fallback in the cloud app, not compared.");
   const labels = ["Gemini Flash-Lite (cloud)", "Llama 3.1 8B (local)", "Qwen 3 8B (local)"];
   s.addChart(pres.charts.BAR, [
     { name: "Agent", labels, values: [90, 54, 52] },

@@ -60,9 +60,9 @@ p.append(fld)
 update_fields_on_open(doc)
 
 # ----------------------------------------------------------------- summary
-set_runs(NORMAL, "We built a working AI agent that helps Carousell Singapore’s support team decide buyer–seller disputes where the buyer says a second-hand item is “significantly not as described”. The agent reads the listing, the order, the buyer’s complaint, the seller’s reply and the chat. It checks the fixed rules in plain code, finds the relevant clauses of Carousell’s Buyer Protection policy with retrieval-augmented generation (RAG), can search the policy again through a tool if those clauses are not enough (a fallback the test set never needed), and recommends one of Carousell’s four outcomes with reasons and clause citations. A staff member always approves or overrides it. We compared judge models (Gemini in the cloud, Llama and Qwen running locally; OpenAI GPT-5.4 mini is pending) and other retrieval designs, and the team labelled the test set by hand; section 8.5 has the results and our choice.")
+set_runs(NORMAL, "We built a working AI agent that helps Carousell Singapore’s support team decide buyer–seller disputes where the buyer says a second-hand item is “significantly not as described”. The agent reads the listing, the order, the buyer’s complaint, the seller’s reply and the chat. It checks the fixed rules in plain code, finds the relevant clauses of Carousell’s Buyer Protection policy with retrieval-augmented generation (RAG), can search the policy again through a tool if those clauses are not enough (a fallback the test set never needed), and recommends one of Carousell’s four outcomes with reasons and clause citations. A staff member always approves or overrides it. We compared judge models (Gemini in the cloud, Llama and Qwen running locally) and other retrieval designs, and the team labelled the test set by hand; section 8.5 has the results and our choice.")
 t = table_after(doc, "We built a working AI agent")
-set_cell(t, 3, 1, "A LangGraph agent (Python) with plain-code eligibility rules, an LLM for claim matching and judgement, hybrid policy search (ChromaDB + BM25), a search_policy tool the judge can call, a code check on confidence and citations, a pause for a staff decision, message drafts, a what-if policy test and a Streamlit app. The judge can be Gemini (cloud), a local model through Ollama, or OpenAI.")
+set_cell(t, 3, 1, "A LangGraph agent (Python) with plain-code eligibility rules, an LLM for claim matching and judgement, hybrid policy search (ChromaDB + BM25), a search_policy tool the judge can call, a code check on confidence and citations, a pause for a staff decision, message drafts, a what-if policy test and a Streamlit app. The judge can be Gemini (cloud) or a local model through Ollama; in the cloud app OpenAI takes over when a Gemini call fails.")
 set_cell(t, 4, 1, F["summary_does_it_work"])
 set_cell(t, 6, 1, "Two people label the test set by hand; spot-check the citation sheet; deploy to Streamlit Cloud (manual, steps in the README); fill in the contribution table; confirm the deadline; record the video; check two business figures by hand.")
 resize_rows(t, 8)
@@ -81,7 +81,7 @@ t = table_after(doc, "BC3415 group assignment:")
 set_row(t, 0, ["Criterion (weight)", "How the project meets it", "Where to look"])
 set_row(t, 1, ["Problem relevance and originality (15%)", None, None])
 set_row(t, 2, ["Technical design and implementation (20%)",
-               "Real retrieval over a vector database (ChromaDB) plus BM25; a LangGraph graph with conditional routing, a tool loop (search_policy) and a human-approval pause; rules in code where rules are exact; structured JSON output from three providers; Streamlit app prepared for Community Cloud (not deployed yet); 67 offline tests; resumable jobs.", "Sections 5 and 6"])
+               "Real retrieval over a vector database (ChromaDB) plus BM25; a LangGraph graph with conditional routing, a tool loop (search_policy) and a human-approval pause; rules in code where rules are exact; structured JSON output from three providers; Streamlit app prepared for Community Cloud (not deployed yet); 66 offline tests; resumable jobs.", "Sections 5 and 6"])
 set_row(t, 3, ["Effectiveness of the AI / agent (25%)",
                "Held-out test set of 50 cases against a single-prompt baseline, for three judge models; grounded answers (citations checked by code), tool use, and a fallback (escalation to a person with follow-up questions). Honest about the tie on judgement with the strongest model.", "Section 8"])
 set_row(t, 4, ["Creativity and RAG / GenAI integration (20%)",
@@ -98,7 +98,7 @@ for i, row in enumerate(t.rows):
 resize_rows(t, len(t.rows) + 1)
 set_row(t, len(t.rows) - 1, ["4 Nov", "Professor asked us to compare models. Added the search_policy tool, Ollama and OpenAI providers, the model comparison and retrieval ablations; app made ready for Streamlit Cloud", F["timeline_outcome"]])
 resize_rows(t, len(t.rows) + 1)
-set_row(t, len(t.rows) - 1, ["4 Nov (later)", "OpenAI gpt-5.4-mini added as a fourth judge and as the app's paid fallback (capped at S$100 a month)", F["timeline_openai"]])
+set_row(t, len(t.rows) - 1, ["4–5 Nov", "OpenAI gpt-5.4-mini added as the cloud app's fallback when a Gemini call fails. Planned as a fourth judge, then dropped from the comparison: the key stays unpaid (about 50 requests a day)", F["timeline_openai"]])
 
 # ----------------------------------------------------------- 5. solution
 fig_par = [p for p in doc.paragraphs if p._p.xpath(".//w:drawing")][0]
@@ -117,7 +117,7 @@ set_cell(t, 6, 2, "Judges each gap as significant, not significant or unclear; r
 set_cell(t, 7, 2, "Drops citations to clauses that were not retrieved and escalates if: confidence < 0.7, no valid citation, more evidence needed, a gap is unclear, the outcome contradicts the gap assessment, or the judge still wants policy the tool could not find")
 
 b = para(doc, "Mock mode. Without an API key")
-insert_paragraph_after(b, BULLET, lead("Choice of judge model. The same agent runs on Gemini (cloud, free tier), a local model through Ollama (nothing leaves the machine), or OpenAI (paid). In the app, OpenAI is also the fallback when a Gemini call fails, capped at S$100 a month. The app lists only the providers that can run where it is opened."))
+insert_paragraph_after(b, BULLET, lead("Choice of judge model. The same agent runs on Gemini (cloud, free tier) or a local model through Ollama (nothing leaves the machine). In the app, OpenAI takes over when a Gemini call fails (an unpaid key on OpenAI’s free usage tier, about 50 requests a day), and the recommendation is marked as a fallback answer. The app lists only the providers that can run where it is opened."))
 b = para(doc, "Rules in code, judgement in the LLM.")
 set_runs(b, lead("Rules in code, judgement in the LLM. Payment method, dates and tracking are exact, so code gets them right every time and costs nothing. This is where the agent beats the baseline most clearly (100% vs 68% eligibility with Gemini)."))
 b = para(doc, "Every recommendation cites a clause")
@@ -126,7 +126,7 @@ insert_paragraph_after(b, BULLET, lead(F["design_tool_bullet"]))
 # ------------------------------------------------------- 6. technical
 t = table_after(doc, "6.1 Tech stack")
 set_row(t, 1, [None, "LangGraph (StateGraph, conditional edges for the tool loop, interrupt, in-memory checkpointer)", None])
-set_row(t, 2, [None, "Gemini API (free tier, google-genai), OpenAI (gpt-5.4-mini, paid; the app's fallback), Ollama (local Llama 3.1 8B and Qwen 3 8B); Pydantic schemas; temperature 0 where the model allows it", None])
+set_row(t, 2, [None, "Gemini API (free tier, google-genai), Ollama (local Llama 3.1 8B and Qwen 3 8B), OpenAI (gpt-5.4-mini, free usage tier; only the app's fallback); Pydantic schemas; temperature 0 where the model allows it", None])
 set_row(t, 5, [None, "uv (Python 3.12, uv.lock), optional Docker, Streamlit Community Cloud (requirements.txt checked in a clean environment; deployed by hand), GitHub", None])
 t = table_after(doc, "6.2 Models")
 resize_rows(t, 6)
@@ -134,7 +134,7 @@ set_row(t, 5, ["Dispute generator", "gemma-4-26b-a4b-it, gemini-3-flash-preview 
 set_row(t, 1, ["Judge (default, cloud)", "gemini-flash-lite-latest", F["model_row_gemini"]])
 set_row(t, 2, ["Judge (local, compared)", "llama3.1:8b via Ollama", F["model_row_llama"]])
 set_row(t, 3, ["Judge (local, compared)", "qwen3:8b via Ollama (thinking off)", F["model_row_qwen"]])
-set_row(t, 4, ["Judge (cloud, paid; the app's fallback)", "gpt-5.4-mini (OpenAI), low reasoning effort", F["model_row_openai"]])
+set_row(t, 4, ["Fallback (cloud app only)", "gpt-5.4-mini (OpenAI), low reasoning effort", F["model_row_openai"]])
 p = para(doc, "Calls are paced (at least 4.5 seconds apart).")
 set_runs(p, "Gemini calls are paced (at least 4.5 seconds apart). Short rate-limit waits are retried; if the daily quota runs out, long jobs stop with exit code 75 and resume where they stopped. wait-for-quota waits until the quota is back. Local models need no pacing; a prompt that would not fit the model’s context window is refused rather than silently cut.")
 insert_paragraph_after(p, NORMAL, [("Hardware. ", True), (F["hardware"], False)])
@@ -149,12 +149,12 @@ set_row(t, 4, [None, "Gemini, Ollama and OpenAI clients, mock provider, model fa
 set_row(t, 6, [None, "Harness, metrics, report writer, model comparison, retrieval evaluation, what-if"])
 set_row(t, 7, [None, "Command line: run-case, evaluate (with --provider, --model, --retrieval), compare, eval-retrieval, whatif, generate, split, export-labels, agreement, check-llm, wait-for-quota"])
 set_row(t, 9, [None, "Evaluation reports (Markdown and JSON), the model comparison and citation-check sheets"])
-set_row(t, 11, [None, "67 pytest tests that run offline (mock LLM; Ollama and OpenAI calls answered by fakes)"])
+set_row(t, 11, [None, "66 pytest tests that run offline (mock LLM; Ollama and OpenAI calls answered by fakes)"])
 
 p = para(doc, "3.  Put a free Gemini key")
-insert_paragraph_after(p, p, "4.  Optional: install Ollama and run ollama pull llama3.1:8b (the default local model) to use it; choose it in the app’s sidebar or pass --provider ollama. Add OPENAI_API_KEY to .env to enable the paid OpenAI fallback.")
+insert_paragraph_after(p, p, "4.  Optional: install Ollama and run ollama pull llama3.1:8b (the default local model) to use it; choose it in the app’s sidebar or pass --provider ollama. Add OPENAI_API_KEY to .env to enable the OpenAI fallback (an unpaid key on the free usage tier is enough).")
 set_runs(para(doc, "4.  Start the app with"), "5.  Start the app with uv run streamlit run app/streamlit_app.py, or run one case with uv run dispute-agent run-case S01.")
-set_runs(para(doc, "5.  Run the tests with"), "6.  Run the tests with uv run pytest (67 tests, no network needed).")
+set_runs(para(doc, "5.  Run the tests with"), "6.  Run the tests with uv run pytest (66 tests, no network needed).")
 
 # ------------------------------------------------------- 7. data
 set_runs(para(doc, "Provisional labels are the outcomes"), "Labels: the outcome each case was written for is its provisional label. For the 50 test cases the team labelled each case by hand on 4 November (B1 25 cases, B2 the other 25; final_outcome in data/labels/labels.csv), and every result below uses those hand labels. They differ from the provisional labels on two cases: G134 (decline instead of a partial refund) and G147 (a partial refund instead of a decline).")
@@ -213,12 +213,12 @@ cur = insert_paragraph_after(cur, NORMAL, [("Hardware limits. ", True), (F["comp
 h86 = insert_paragraph_after(cur, H2, "8.6 Retrieval design: per gap, agent-driven, or none")
 cur = insert_paragraph_after(h86, NORMAL, F["retrieval_intro"])
 cur = insert_table_after(cur, _tpl(F["retrieval_table"]), F["retrieval_table"])
-set_widths(cur, [1.55, 0.85, 0.85, 0.95, 2.3])
+set_widths(cur, [1.75, 0.95, 0.95, 2.85])
 cur = insert_paragraph_after(cur, NORMAL, "")
 cur = insert_paragraph_after(cur, NORMAL, [("What we found. ", True), (F["retrieval_found"], False)])
 cur = insert_paragraph_after(cur, NORMAL, [("Without the policy in the prompt. ", True), (F["rubric_intro"], False)])
 cur = insert_table_after(cur, _tpl(F["rubric_table"]), F["rubric_table"])
-set_widths(cur, [2.0, 1.0, 1.0, 1.25, 1.25])
+set_widths(cur, [2.2, 1.2, 1.2, 1.9])
 cur = insert_paragraph_after(cur, NORMAL, "")
 cur = insert_paragraph_after(cur, NORMAL, [("What we found. ", True), (F["rubric_found"], False)])
 
@@ -259,19 +259,17 @@ set_runs(b, [("Measured:", True), (" about 9 seconds and 1.8 LLM calls per case;
 
 # ------------------------------------------------------- 12. status
 b = para(doc, "Working agent, hybrid retrieval, what-if test")
-set_runs(b, "Working agent with the search_policy tool, hybrid retrieval, what-if test, evaluation harness, Streamlit app, CLI, 67 offline tests, Docker files.")
+set_runs(b, "Working agent with the search_policy tool, hybrid retrieval, what-if test, evaluation harness, Streamlit app, CLI, 66 offline tests, Docker files.")
 b = para(doc, "Two test runs, seed run, dev runs")
-set_runs(b, "Three test runs with Gemini; the model comparison with two local models (Llama 3.1 8B, Qwen 3 8B; OpenAI GPT-5.4 mini pending); retrieval and decision-guide ablations; seed run, dev runs and retrieval evaluation, all in reports/; AI citation and label checks in separate columns.")
+set_runs(b, "Three test runs with Gemini; the model comparison with two local models (Llama 3.1 8B, Qwen 3 8B); retrieval and decision-guide ablations; seed run, dev runs and retrieval evaluation, all in reports/; AI citation and label checks in separate columns.")
 b = para(doc, "GitHub repo linked on this machine (3 Nov).")
-insert_paragraph_after(b, BULLET, plain("App prepared for Streamlit Community Cloud: keys from Streamlit secrets, Gemini first with OpenAI as a fallback capped at S$100 a month, requirements.txt checked in a clean Python 3.12 environment."))
+insert_paragraph_after(b, BULLET, plain("App prepared for Streamlit Community Cloud: keys from Streamlit secrets, Gemini first with OpenAI (free usage tier) as a fallback, requirements.txt checked in a clean Python 3.12 environment."))
 t = table_after(doc, "12.2 What is left")
 set_row(t, 1, [None, "Fill in the contribution table (README and section 12.3)", "All", "Needed for the collaboration criterion (20%) and slide 13"])
 set_row(t, 4, [None, "Settle disagreements, then re-run evaluate --split test (and the model comparison if time allows)", None, "One Gemini run uses about the whole free daily quota; local runs are free"])
 set_row(t, 5, [None, None, None, "reports/citation_check_cmp_gemini-flash-lite.csv"])
 set_row(t, 8, [None, "Deploy to Streamlit Community Cloud", "C4", "Manual; exact steps in the README. Key goes in Streamlit Secrets"])
 set_row(t, 11, [None, "Re-check the README before submission", None, "Working notes were removed on 4 Nov"])
-resize_rows(t, len(t.rows) + 1)
-set_row(t, len(t.rows) - 1, ["12", "Optional: run the model comparison with the OpenAI key when it arrives", "C3", "uv run dispute-agent evaluate --provider openai --run cmp_openai, then compare"])
 
 h = para(doc, "12.3 Team roles", "Heading 2")
 set_runs(h, "12.3 Contribution table (template)")
@@ -293,7 +291,7 @@ remove(t)
 
 # ------------------------------------------------------- appendix
 t = table_after(doc, "Appendix A. Glossary")
-set_row(t, 3, [None, "Large language model, here Google Gemini, OpenAI GPT-5.4 mini, Meta’s Llama 3.1 or Alibaba’s Qwen 3"])
+set_row(t, 3, [None, "Large language model, here Google Gemini, Meta’s Llama 3.1 or Alibaba’s Qwen 3 (and OpenAI GPT-5.4 mini as the app’s fallback)"])
 resize_rows(t, len(t.rows) + 3)
 n = len(t.rows)
 set_row(t, n - 3, ["Tool call", "The LLM asks the program to run a function (here search_policy) and continues with the result"])
@@ -330,7 +328,7 @@ def _heading(prefix, level):
 t = table_after(doc, "We built a working AI agent")
 for i, row in enumerate(t.rows):
     if row.cells[0].text.startswith("What is left"):
-        set_row(t, i, ["Status", "Working prototype with 67 offline tests, evaluated against the team’s hand labels; the GPT-5.4 mini comparison is pending (OpenAI free usage tier); prepared for Streamlit Community Cloud with Gemini first and OpenAI as a paid fallback."])
+        set_row(t, i, ["Status", "Working prototype with 66 offline tests, evaluated against the team’s hand labels with Gemini and two local models; prepared for Streamlit Community Cloud with Gemini first and OpenAI (free usage tier) as a fallback."])
 
 # Summary: the business-case self-assessment
 _remove_from(para(doc, "Our verdict on the business case", "Heading 2"), _heading("2. The assignment", 1))

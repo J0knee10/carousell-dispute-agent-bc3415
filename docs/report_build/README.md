@@ -7,16 +7,16 @@ by hand, so its numbers always match `reports/`.
 |---|---|
 | `report_orig.docx` | The first version of the report (3 Nov). Every build starts from it, so no edit is applied twice and the styles stay the same. |
 | `findings_text.json` | The written findings, conclusions and table notes. Edit this to change wording. |
-| `findings_build.py` | Reads `reports/evaluation_*.json` and builds the result tables (runs that are not finished show "pending"). |
+| `findings_build.py` | Reads `reports/evaluation_*.json` and builds the result tables. |
 | `update_report.py` | Applies every change to the original: updated sections, new sections 8.5–8.6, the redrawn figure, and the removal of internal notes. |
 | `docx_helpers.py` | Small python-docx helpers that keep the report's own styles. |
 | `build_report.py` | Runs the two steps above and writes the report to the repo root. |
 | `render_docx.ps1` | Windows only: opens the report in Word, updates the contents page, saves, and exports a PDF to check. |
 
-Rebuild after new results (for example the GPT-5.4 mini runs):
+Rebuild after new results (for example full-length Gemini ablations):
 
 ```bash
-uv run dispute-agent compare cmp_gemini-flash-lite cmp_gpt-5.4-mini cmp_llama3.1-8b cmp_qwen3-8b ...   # refresh reports/
+uv run dispute-agent compare cmp_gemini-flash-lite cmp_llama3.1-8b cmp_qwen3-8b ... --notes docs/model_comparison_notes.md   # refresh reports/
 uv run --no-project --with python-docx --with pillow python docs/report_build/build_report.py
 ```
 

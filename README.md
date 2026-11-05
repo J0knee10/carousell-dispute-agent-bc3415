@@ -14,13 +14,13 @@ BC3415 group project, Option A (working prototype + demo video).
 1. **Eligibility rules (plain code).** Paid with the 'Buy' button? Raised within the dispute window? Tracked delivery for non-receipt? Seller missed the 24-hour reply deadline? These are exact rules, so no LLM is involved, and each check cites the clause it comes from.
 2. **Claim matching (LLM).** Lists what the listing promised and what the buyer reports, and pairs them up as gaps ("listing says it comes with an 8GB SD card; buyer says no card"). It writes a policy search query for each gap.
 3. **Policy retrieval (RAG).** Each gap's query is run over the policy clauses. Search is hybrid: ChromaDB embeddings plus BM25 keyword scores, combined by rank fusion.
-4. **Policy judgement (LLM, with a tool).** Decides whether each gap is significant and recommends one of Carousell's four outcomes: full refund with return, full refund without return, partial refund, or decline. It must cite clause IDs. If the clauses it was given do not cover a gap, it can call the **`search_policy` tool**: the model returns the tool's arguments as structured JSON, code runs the search and adds the new clauses, and the graph loops back to the judge. (A structured-output tool call rather than a provider's native function calling, so it works the same with Gemini, Ollama and OpenAI.) It is a fallback: on the test set the per-gap searches always supplied the clauses, so no model needed it; it is used when retrieval is left to the agent (see [Retrieval design](#retrieval-design-per-gap-agent-driven-or-none)).
+4. **Policy judgement (LLM, with a tool).** Decides whether each gap is significant and recommends one of Carousell's four outcomes: full refund with return, full refund without return, partial refund, or decline. It must cite clause IDs. If the clauses it was given do not cover a gap, it can call the **`search_policy` tool**: the model returns the tool's arguments as structured JSON, code runs the search and adds the new clauses, and the graph loops back to the judge. (A structured-output tool call rather than a provider's native function calling, so it works the same with every provider.) It is a fallback: on the test set the per-gap searches always supplied the clauses, so no model needed it; it is used when retrieval is left to the agent (see [Retrieval design](#retrieval-design-per-gap-agent-driven-or-none)).
 5. **Confidence and citation check (code).** Drops citations to clauses that were not retrieved, and escalates low-confidence, unclear, uncited or self-contradicting judgements, with follow-up questions to ask for evidence.
 6. **Staff decision.** The LangGraph workflow pauses until a person approves or overrides. Every decision is logged.
 7. **Message drafts (LLM).** Drafts the decision messages to the buyer and the seller.
 
 Also included:
-- **A choice of judge model:** Gemini (Google cloud, free tier), a local model through [Ollama](https://ollama.com) (nothing leaves the machine), or OpenAI (paid). [reports/model_comparison.md](reports/model_comparison.md) compares them.
+- **A choice of judge model:** Gemini (Google cloud, free tier) or a local model through [Ollama](https://ollama.com) (nothing leaves the machine). [reports/model_comparison.md](reports/model_comparison.md) compares them. In the app, OpenAI is a fallback for when a Gemini call fails.
 - **What-if policy test:** re-judges past disputes under a proposed rule change and reports how many outcomes flip.
 - **Evaluation harness:** the agent against a single-prompt baseline on a held-out test set, for any judge model, plus retrieval ablations.
 - **Photo checking:** an interface only (`src/dispute_agent/agent/photo.py`). Cases carry text descriptions of photos for now.
@@ -40,7 +40,7 @@ intake -> eligibility --covered--> claim matching -> retrieval -> judgement <-> 
 | Part | Tool |
 |---|---|
 | Agent workflow, tool loop, pause for human approval | LangGraph (`StateGraph`, conditional edges, `interrupt`) |
-| LLM calls with structured JSON output | Gemini API (`google-genai`), Ollama (local), OpenAI (`openai`); Pydantic schemas; an offline mock for tests |
+| LLM calls with structured JSON output | Gemini API (`google-genai`), Ollama (local); OpenAI (`openai`) as the app's fallback; Pydantic schemas; an offline mock for tests |
 | Policy retrieval | ChromaDB (local all-MiniLM-L6-v2 embeddings) + BM25, reciprocal rank fusion |
 | Interface | Streamlit (runs locally or on Streamlit Community Cloud) |
 | Environment | uv (Python 3.12 pinned, `uv.lock`), optional Docker |
@@ -76,10 +76,11 @@ pull a model, e.g. `ollama pull qwen3:8b` (5.2 GB) or `ollama pull llama3.1:8b`
 `--provider ollama --model qwen3:8b`. An 8B model needs about 6 GB of GPU memory
 to run at full speed (see [Model comparison](#model-comparison)).
 
-**Optional: OpenAI (paid).** Add `OPENAI_API_KEY=sk-...` to `.env` (see
-`.env.example`). The judge model is `gpt-5.4-mini` with low reasoning effort
-(`config.yaml`; `OPENAI_MODEL` overrides it). The CLI takes `--provider openai`.
-In the app, OpenAI is also the **fallback** for Gemini (below).
+**Optional: OpenAI fallback.** Add `OPENAI_API_KEY=sk-...` to `.env` (see
+`.env.example`). The app then uses `gpt-5.4-mini` (low reasoning effort;
+`OPENAI_MODEL` overrides it) when a Gemini call fails (below). A key on
+OpenAI's free usage tier is enough: no payment method, about 50 requests a day
+per model. `check-llm --provider openai` checks the key.
 
 ## Run the app
 
@@ -97,13 +98,13 @@ both keys are set and a Gemini call fails (free quota used up, or the service
 overloaded), the app makes that call with OpenAI instead: after a daily-quota
 error it stays on OpenAI for the rest of that browser session (a new session
 tries Gemini first again); after any other error it goes back to Gemini on the
-next call. Each recommendation shows which model judged
-it. **Paid usage is capped at S$100 a month**: the app prices every OpenAI call
-from its tokens (`llm.openai.prices_usd_per_million` in `config.yaml`, converted
-at 1.35 SGD per USD) and stops making paid calls when the month's total reaches
-`llm.openai.app_budget_sgd_per_month`. The running total is kept in
-`outputs/openai_spend.json`. Evaluations from the command line never fall back
-and are not capped, so every number in `reports/` comes from the model it names.
+next call. Each recommendation shows which model judged it, marked
+"(fallback)" when it was OpenAI. Our OpenAI key is unpaid (OpenAI's free usage
+tier, about 50 requests a day, so roughly 15 to 25 cases), so it keeps the app
+available when Gemini's quota runs out; it costs nothing and was not tested on
+our test set. OpenAI is not offered as a judge in the sidebar. Evaluations from
+the command line never fall back, so every number in `reports/` comes from the
+model it names.
 
 Docker alternative (no Python needed): `docker compose up --build`, then open
 http://localhost:8501. The Docker files are included but were not tested on
@@ -221,21 +222,19 @@ never replace the human ones:
 
 The professor asked us to try different models. We compared the free cloud
 model with two open models running locally, under the same prompts, cases and
-code ([full tables and notes](reports/model_comparison.md)):
+code ([full tables and notes](reports/model_comparison.md)). OpenAI is not part
+of the comparison: it is only the app's fallback, and our key's free usage tier
+(about 50 requests a day) is far short of the roughly 500 requests a test run
+with its ablations needs.
 
 | Judge model | Runs on | Agent | Single prompt | Agent gain | Paired test | Seconds per case (agent) |
 |---|---|---|---|---|---|---|
 | `gemini-flash-lite-latest` | Google cloud, free tier | **90%** | 88% | +2 pts | 5 vs 4 cases, p = 1.00 | 9 (includes free-tier pacing) |
 | `llama3.1:8b` | our PC, Ollama | 54% | 34% | +20 pts | 17 vs 7 cases, p = 0.06 | 15 |
 | `qwen3:8b` (thinking off) | our PC, Ollama | 52% | 44% | +8 pts | 6 vs 2 cases, p = 0.29 | 19 |
-| `gpt-5.4-mini` (low reasoning) | OpenAI cloud, paid | pending | pending | | | |
 
 Paired test: cases only the agent got right vs cases only the single prompt got
-right, exact McNemar test. Single runs on 50 cases. **GPT-5.4 mini is
-pending:** the OpenAI key's organisation is on OpenAI's free usage tier (50
-requests a day per model) and the comparison needs about 500 requests; the
-first 6 cases ran, and the runs resume where they stopped once the limit is
-lifted (commands in [reports/model_comparison.md](reports/model_comparison.md)).
+right, exact McNemar test. Single runs on 50 cases.
 
 **Hardware constraints.** The local models ran on one desktop: Intel Core
 i5-13400F, 32 GB RAM, NVIDIA RTX 4060 Ti with 8 GB of GPU memory, Windows 11.
@@ -254,13 +253,14 @@ Each local run of 50 cases took about 15 to 30 minutes.
 - **Citations:** the agent's final answers never cite a clause the judge was not shown, with any model. Before that check, Qwen cited BPR-05, a real clause it had not been given, in 10 of 45 judged cases; the check removed it and escalated those cases.
 - **Escalation:** Gemini's agent escalates 6% of cases (asking for more evidence, or low confidence) and 2 of its 5 mistakes are among them. Qwen's 22% is almost entirely those BPR-05 citations, not low confidence; the local models never reported low confidence on their mistakes, so with them escalation protects only against bad citations.
 
-**Our choice and why.** Gemini Flash-Lite stays the default judge: it is by far
-the most accurate of the models we could test (90%, and 94% on the cases it does
-not escalate). OpenAI GPT-5.4 mini is the app's fallback when a Gemini call
-fails (capped at S$100 a month); its test numbers are pending. Llama 3.1 8B is
-the default local model (level with Qwen, faster, and it fits fully on our
-GPU), as a fallback when case data must stay on the machine, not as a
-replacement: it would refund nearly every dispute, which hurts honest sellers.
+**Our conclusion.** Gemini Flash-Lite is the judge: it is by far the most
+accurate of the models we tested (90% against 54% and 52%, and 94% on the cases
+it does not escalate), and it is free. The local 8B models are not good enough
+to judge disputes on their own: they refund nearly every dispute, which hurts
+honest sellers. Llama 3.1 8B is the default local model (level with Qwen,
+faster, and it fits fully on our GPU) for when case data must stay on the
+machine, as an option, not a replacement. OpenAI GPT-5.4 mini only keeps the
+cloud app running when Gemini fails; it is not a tested judge.
 
 ### Retrieval design: per gap, agent-driven, or none
 
@@ -328,6 +328,7 @@ results, so its test numbers are slightly optimistic.
 - Free-tier Gemini may use prompts to improve Google's products; all data here is made up or public. A real deployment would remove personal details and use a paid tier or a local model.
 - LLM answers can vary between runs even at temperature 0.
 - The local models were limited by an 8 GB GPU (see [Hardware constraints](#model-comparison)), so "cloud vs local" is also "strong small cloud model vs 8B models": the comparison cannot separate the two.
+- The app's OpenAI fallback (`gpt-5.4-mini`) was not evaluated on the test set, and on the free usage tier it covers only about 50 requests a day.
 - Single runs, no repeat runs to measure variation. Each test case was hand-labelled by one person (no agreement score), after the runs; no person has checked the citations yet.
 - Paused reviews live in memory (LangGraph `InMemorySaver`), so a restart of the app loses cases waiting for a staff decision; the decision log is a local file.
 
@@ -338,7 +339,7 @@ app/streamlit_app.py          staff interface
 src/dispute_agent/
   agent/                      LangGraph graph (with the search_policy tool loop), eligibility rules, prompts, runner
   rag/                        clause chunker, ChromaDB + BM25 store
-  llm/                        Gemini, Ollama and OpenAI clients, mock, fallback
+  llm/                        Gemini, Ollama and OpenAI (fallback) clients, mock, fallback logic
   data/                       Mercari sampler, case loading, generator, labels
   evaluation/                 harness, metrics, report, model comparison, retrieval eval, what-if
   cli.py                      command line
@@ -350,7 +351,7 @@ presentation/                 demo video slides (build_slides.js) and VIDEO_SCRI
 tests/                        pytest suite (runs offline: mock LLM, faked HTTP)
 ```
 
-Run the tests with `uv run pytest` (67 tests, no network or API key needed; they write their outputs to a temporary folder).
+Run the tests with `uv run pytest` (66 tests, no network or API key needed; they write their outputs to a temporary folder).
 
 ## Deploying to Streamlit Community Cloud
 
@@ -368,15 +369,15 @@ server is running. Steps:
    GEMINI_API_KEY = "your-gemini-key"
    OPENAI_API_KEY = "sk-your-openai-key"
    ```
-   Gemini is used first; OpenAI only when Gemini fails, up to S$100 a month. Leave out the OpenAI line to run on Gemini alone.
+   Gemini is used first; OpenAI only when a Gemini call fails (an unpaid key on OpenAI's free usage tier is enough). Leave out the OpenAI line to run on Gemini alone.
 5. Click **Deploy**. The first start takes a few minutes (it installs the packages and downloads the 80 MB embedding model).
 
-On the cloud the app offers Gemini, OpenAI and mock (no Ollama). Everyone who
-opens the link shares the free Gemini quota (about one full test run a day for
-`gemini-flash-lite-latest`; it resets at midnight Pacific time, 4 PM in
-Singapore), then the OpenAI fallback. Files on Community Cloud do not survive a
-restart: the decision log and the OpenAI spend total start again from zero, so
-the budget on the OpenAI project itself is the hard limit.
+On the cloud the app offers Gemini and mock (no Ollama), with OpenAI as
+Gemini's fallback. Everyone who opens the link shares the free Gemini quota
+(about one full test run a day for `gemini-flash-lite-latest`; it resets at
+midnight Pacific time, 4 PM in Singapore), then the OpenAI fallback's free
+usage tier (about 50 requests a day). Files on Community Cloud do not survive a
+restart, so the decision log starts again from zero.
 After changing dependencies, regenerate `requirements.txt` with
 `uv export --no-hashes --no-dev --no-emit-project -o requirements.txt`.
 
