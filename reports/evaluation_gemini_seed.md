@@ -3,13 +3,14 @@
 - Cases: seed split, 20 cases
 - Models: gemini/gemini-flash-lite-latest
 - Confidence threshold for escalation: 0.7
-- Labels used: provisional: 20. 'provisional' means the outcome the case was written for, not yet checked by the labellers.
+- Labels used: provisional: 16, final: 4. 'provisional' means the outcome the case was written for, not yet checked by the labellers.
 
 ## Headline numbers
 
 | Measure | Agent | Single-prompt baseline |
 |---|---|---|
 | Cases scored | 20 | 20 |
+| Failed (no valid answer; counted as wrong) | 0 | 0 |
 | Decision accuracy (4 outcomes) | 100% | 80% |
 |   clear cases | 100% (n=10) | 90% (n=10) |
 |   borderline cases | 100% (n=6) | 83% (n=6) |
@@ -20,13 +21,17 @@
 | Eligibility accuracy | 100% | 85% |
 | Ineligible cases flagged | 100% | 50% |
 | Judged cases citing a clause | 100% | 100% |
-| Cases with invented clause IDs | 0% | 0% |
+| Cases with invented clause IDs (final answer) | 0% | 0% |
+| Cases citing a real clause in the wrong format (final answer) | 0% | 0% |
+| Judged cases where the model cited a clause it was not shown | 0% | 0% |
+| Judged cases where the judge called search_policy | 0% | 0% |
 | Escalated | 0% | 5% |
 | Wrong decisions that were escalated | n/a | 25% |
 | Right decisions that were escalated | 0% | 0% |
 | Accuracy on cases not escalated | 100% | 84% |
 | Seconds per case (median) | 8.88 | 4.5 |
 | LLM calls per case | 1.5 | 1 |
+| Tokens per case (in / out) | n/a / n/a | n/a / n/a |
 
 **Gain over baseline:** +20.0 percentage points in decision accuracy.
 

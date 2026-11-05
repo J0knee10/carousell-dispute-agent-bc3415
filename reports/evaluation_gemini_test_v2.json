@@ -2,7 +2,7 @@
   "agent": {
     "n": 50,
     "label_sources": {
-      "provisional": 50
+      "final": 50
     },
     "decision_accuracy": 0.88,
     "accuracy_by_difficulty": {
@@ -35,6 +35,27 @@
     },
     "cited_at_least_one_clause": 0.978,
     "invented_citation_rate": 0.0,
+    "escalation_reasons": {
+      "No valid policy citation supports the outcome": 1,
+      "Low confidence": 2,
+      "More evidence needed": 2,
+      "At least one gap is unclear": 1
+    },
+    "citation_format_error_rate": 0.0,
+    "raw_invented_citation_rate": 0.0,
+    "failed": {
+      "n": 0,
+      "share": 0.0
+    },
+    "tool_use": {
+      "judged": 45,
+      "cases_using_search": 0.0,
+      "searches": 0
+    },
+    "tokens_per_case": {
+      "input": null,
+      "output": null
+    },
     "escalation": {
       "escalated_share": 0.06,
       "wrong_decisions_escalated": 0.333,
@@ -102,7 +123,7 @@
         "escalated": false
       },
       {
-        "case_id": "G134",
+        "case_id": "G147",
         "label": "partial_refund",
         "pred": "decline",
         "difficulty": "borderline",
@@ -120,13 +141,13 @@
   "baseline": {
     "n": 50,
     "label_sources": {
-      "provisional": 50
+      "final": 50
     },
-    "decision_accuracy": 0.86,
+    "decision_accuracy": 0.9,
     "accuracy_by_difficulty": {
       "borderline": {
         "n": 15,
-        "accuracy": 0.733
+        "accuracy": 0.867
       },
       "clear": {
         "n": 30,
@@ -137,14 +158,14 @@
         "accuracy": 0.6
       }
     },
-    "direction_accuracy": 0.86,
+    "direction_accuracy": 0.9,
     "buyer_win_accuracy": {
       "n": 24,
-      "accuracy": 0.917
+      "accuracy": 0.958
     },
     "seller_win_accuracy": {
       "n": 26,
-      "accuracy": 0.808
+      "accuracy": 0.846
     },
     "eligibility_accuracy": 0.74,
     "ineligible_flagged": {
@@ -153,11 +174,27 @@
     },
     "cited_at_least_one_clause": 1.0,
     "invented_citation_rate": 0.04,
+    "escalation_reasons": {},
+    "citation_format_error_rate": 0.0,
+    "raw_invented_citation_rate": 0.04,
+    "failed": {
+      "n": 0,
+      "share": 0.0
+    },
+    "tool_use": {
+      "judged": 50,
+      "cases_using_search": 0.0,
+      "searches": 0
+    },
+    "tokens_per_case": {
+      "input": null,
+      "output": null
+    },
     "escalation": {
       "escalated_share": 0.04,
-      "wrong_decisions_escalated": 0.143,
-      "right_decisions_escalated": 0.023,
-      "accuracy_when_not_escalated": 0.875
+      "wrong_decisions_escalated": 0.2,
+      "right_decisions_escalated": 0.022,
+      "accuracy_when_not_escalated": 0.917
     },
     "seconds_per_case": {
       "mean": 4.44,
@@ -180,14 +217,14 @@
       "partial_refund": {
         "full_refund_with_return": 0,
         "full_refund_without_return": 0,
-        "partial_refund": 7,
-        "decline": 1
+        "partial_refund": 8,
+        "decline": 0
       },
       "decline": {
         "full_refund_with_return": 0,
         "full_refund_without_return": 0,
-        "partial_refund": 5,
-        "decline": 21
+        "partial_refund": 4,
+        "decline": 22
       }
     },
     "wrong_cases": [
@@ -204,20 +241,6 @@
         "pred": "partial_refund",
         "difficulty": "borderline",
         "escalated": true
-      },
-      {
-        "case_id": "G134",
-        "label": "partial_refund",
-        "pred": "decline",
-        "difficulty": "borderline",
-        "escalated": false
-      },
-      {
-        "case_id": "G147",
-        "label": "decline",
-        "pred": "partial_refund",
-        "difficulty": "borderline",
-        "escalated": false
       },
       {
         "case_id": "G155",

@@ -2,7 +2,7 @@
   "agent": {
     "n": 50,
     "label_sources": {
-      "provisional": 50
+      "final": 50
     },
     "decision_accuracy": 0.82,
     "accuracy_by_difficulty": {
@@ -35,6 +35,26 @@
     },
     "cited_at_least_one_clause": 1.0,
     "invented_citation_rate": 0.0,
+    "escalation_reasons": {
+      "Low confidence": 3,
+      "More evidence needed": 3,
+      "At least one gap is unclear": 1
+    },
+    "citation_format_error_rate": 0.0,
+    "raw_invented_citation_rate": 0.0,
+    "failed": {
+      "n": 0,
+      "share": 0.0
+    },
+    "tool_use": {
+      "judged": 45,
+      "cases_using_search": 0.0,
+      "searches": 0
+    },
+    "tokens_per_case": {
+      "input": null,
+      "output": null
+    },
     "escalation": {
       "escalated_share": 0.06,
       "wrong_decisions_escalated": 0.333,
@@ -109,13 +129,6 @@
         "escalated": false
       },
       {
-        "case_id": "G134",
-        "label": "partial_refund",
-        "pred": "decline",
-        "difficulty": "borderline",
-        "escalated": false
-      },
-      {
         "case_id": "G139",
         "label": "partial_refund",
         "pred": "decline",
@@ -124,6 +137,13 @@
       },
       {
         "case_id": "G144",
+        "label": "partial_refund",
+        "pred": "decline",
+        "difficulty": "borderline",
+        "escalated": false
+      },
+      {
+        "case_id": "G147",
         "label": "partial_refund",
         "pred": "decline",
         "difficulty": "borderline",
@@ -141,7 +161,7 @@
   "baseline": {
     "n": 50,
     "label_sources": {
-      "provisional": 50
+      "final": 50
     },
     "decision_accuracy": 0.84,
     "accuracy_by_difficulty": {
@@ -174,6 +194,22 @@
     },
     "cited_at_least_one_clause": 1.0,
     "invented_citation_rate": 0.0,
+    "escalation_reasons": {},
+    "citation_format_error_rate": 0.0,
+    "raw_invented_citation_rate": 0.0,
+    "failed": {
+      "n": 0,
+      "share": 0.0
+    },
+    "tool_use": {
+      "judged": 50,
+      "cases_using_search": 0.0,
+      "searches": 0
+    },
+    "tokens_per_case": {
+      "input": null,
+      "output": null
+    },
     "escalation": {
       "escalated_share": 0.06,
       "wrong_decisions_escalated": 0.125,
@@ -241,7 +277,7 @@
         "escalated": false
       },
       {
-        "case_id": "G134",
+        "case_id": "G147",
         "label": "partial_refund",
         "pred": "decline",
         "difficulty": "borderline",

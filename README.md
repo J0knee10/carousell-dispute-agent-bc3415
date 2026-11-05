@@ -306,9 +306,10 @@ because two lines of the decision guide contradicted each other. We clarified
 the rule and checked the change on dev cases only (agent 81% to 89%, baseline
 78% to 81%; [before](reports/evaluation_dev_borderline_v1.md),
 [after](reports/evaluation_dev_borderline_v2.md)), then re-ran the test set
-([report](reports/evaluation_gemini_test_v2.md): agent 88%, baseline 86%).
-These early reports were scored against the outcomes the cases were written
-for, before the hand labels existed.
+([report](reports/evaluation_gemini_test_v2.md): agent 88%, baseline 90%;
+the fix helped both). Every test-set report, these early runs included, is
+scored against the hand labels; the dev cases were not labelled by hand, so
+the dev numbers use the outcomes the cases were written for.
 
 **The tool, the model comparison and the hand labels.** We then added the
 `search_policy` tool and ran the test set a third time, now once per judge

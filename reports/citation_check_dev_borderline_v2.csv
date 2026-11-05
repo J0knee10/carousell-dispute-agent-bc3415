@@ -1,9 +1,15 @@
-case_id,predicted_outcome,reasons,clause_id,clause_section,clause_text,supports
+case_id,predicted_outcome,reasons,clause_id,clause_section,clause_text,supports,claude_supports,claude_note
 G112,decline,The item was correctly stated as being in 'well used' condition in the listing. | Signs of wear that match a correctly stated used condition are not covered under significant differences. | Disputes regarding subjective wear expectations for used items are ineligible for refund.,BPR-03,Transactions are not eligible for refund,"An item that is materially similar with subjective and non-significant variations from the seller’s listing and description will not be accepted. This includes:
     ✘   Item with signs of wear but was correctly listed as being in used condition
     ✘  Non-significant variations, including quality, for example:
         Item listed as light pink but received as rose pink
-        Item listed as palm-",
+        Item listed as palm-sized but received at 15cm
+        Item listed as 8/10 but receiver claims it is more of a 6/10
+    Buyers change their mind about the item
+    Buyers place the wrong order by mistake
+    Buyers have received a partial or full refund from a separate resolution process not facilitated by Carousell
+    Buyers provide an incorrect or invalid delivery address
+    Buyers receive the item after the suggested delivery date",,,
 G113,full_refund_with_return,The item has an undisclosed defect affecting its core function (unplayable due to deep scratches). | Listing the DVD as 'lightly used' does not cover severe functional damage that makes the item unusable. | The buyer provided photographic evidence of the deep scratches.,BPR-02,Eligibility > Dispute Reason,"Under the Buyer Protection and Certified refund policy, buyers may raise a dispute for:
     Item(s) not received
     Incomplete item(s)
@@ -11,7 +17,8 @@ G113,full_refund_with_return,The item has an undisclosed defect affecting its co
     Examples of cases where the item is significantly not as described
         The item is of a different variation, such as size, colour, model or version
         The item is incomplete or has missing parts
-        T",
+        The item is damaged or has one or more undisclosed defect(s)
+        The item received deviates extensively from the listing photo",,,
 G114,partial_refund,"The item was listed as brand new, but contains a minor undisclosed flaw (loose thread), which constitutes a significant gap under policy for brand new items. | The item remains fully functional and usable as a waist trainer. | A partial refund is appropriate for a minor cosmetic defect on a brand new item where the item is still usable.",BPR-02,Eligibility > Dispute Reason,"Under the Buyer Protection and Certified refund policy, buyers may raise a dispute for:
     Item(s) not received
     Incomplete item(s)
@@ -19,22 +26,39 @@ G114,partial_refund,"The item was listed as brand new, but contains a minor undi
     Examples of cases where the item is significantly not as described
         The item is of a different variation, such as size, colour, model or version
         The item is incomplete or has missing parts
-        T",
+        The item is damaged or has one or more undisclosed defect(s)
+        The item received deviates extensively from the listing photo",,,
 G114,partial_refund,"The item was listed as brand new, but contains a minor undisclosed flaw (loose thread), which constitutes a significant gap under policy for brand new items. | The item remains fully functional and usable as a waist trainer. | A partial refund is appropriate for a minor cosmetic defect on a brand new item where the item is still usable.",BPR-04,Transactions are not eligible for refund (cont.),"Buyers make a claim for something that is not in the original listing/what was agreed upon
     Buyers raise an issue after the dispute window
     The item gets stolen/damaged post successful delivery
         It is the buyer’s responsibility to ensure that the receiving address can receive the item securely
-        Parcel and packaging that has creases, lines, wrinkles or dents as a result of shipp",
+        Parcel and packaging that has creases, lines, wrinkles or dents as a result of shipping or tempered of packaging upon delivery will not be covered unless the item itself is damaged
+    The items are reported for surface wear and tear that does not affect functionality
+        For “Brand New” items, transactions will be reviewed on a case-by-case basis
+    The items fall under our exclusion list
+    The items are sold in gift bundles such as hampers, goodie bags and mystery boxes unless the constituents in the bundles are clearly described in the listing.",,,
 G117,decline,The item was correctly listed as being in heavily used condition. | Signs of wear and scratches match the stated used condition and are not considered significant defects. | Transactions with signs of wear matching a correctly stated used condition are not eligible for a refund.,BPR-03,Transactions are not eligible for refund,"An item that is materially similar with subjective and non-significant variations from the seller’s listing and description will not be accepted. This includes:
     ✘   Item with signs of wear but was correctly listed as being in used condition
     ✘  Non-significant variations, including quality, for example:
         Item listed as light pink but received as rose pink
-        Item listed as palm-",
+        Item listed as palm-sized but received at 15cm
+        Item listed as 8/10 but receiver claims it is more of a 6/10
+    Buyers change their mind about the item
+    Buyers place the wrong order by mistake
+    Buyers have received a partial or full refund from a separate resolution process not facilitated by Carousell
+    Buyers provide an incorrect or invalid delivery address
+    Buyers receive the item after the suggested delivery date",,,
 G118,decline,The listing accurately described the items as assorted colors. | Buyer dissatisfaction with specific random colors constitutes a subjective variation rather than a significant defect. | Disagreements over aesthetic appeal of assorted items are not covered under significant not as described policies.,BPR-03,Transactions are not eligible for refund,"An item that is materially similar with subjective and non-significant variations from the seller’s listing and description will not be accepted. This includes:
     ✘   Item with signs of wear but was correctly listed as being in used condition
     ✘  Non-significant variations, including quality, for example:
         Item listed as light pink but received as rose pink
-        Item listed as palm-",
+        Item listed as palm-sized but received at 15cm
+        Item listed as 8/10 but receiver claims it is more of a 6/10
+    Buyers change their mind about the item
+    Buyers place the wrong order by mistake
+    Buyers have received a partial or full refund from a separate resolution process not facilitated by Carousell
+    Buyers provide an incorrect or invalid delivery address
+    Buyers receive the item after the suggested delivery date",,,
 G119,partial_refund,"The wallet was listed as brand new but contained a small undisclosed scratch. | Brand new items with specific undisclosed flaws are reviewed on a case-by-case basis under policy. | The item remains fully functional, making a partial refund appropriate rather than a full return.",BPR-02,Eligibility > Dispute Reason,"Under the Buyer Protection and Certified refund policy, buyers may raise a dispute for:
     Item(s) not received
     Incomplete item(s)
@@ -42,77 +66,160 @@ G119,partial_refund,"The wallet was listed as brand new but contained a small un
     Examples of cases where the item is significantly not as described
         The item is of a different variation, such as size, colour, model or version
         The item is incomplete or has missing parts
-        T",
+        The item is damaged or has one or more undisclosed defect(s)
+        The item received deviates extensively from the listing photo",,,
 G119,partial_refund,"The wallet was listed as brand new but contained a small undisclosed scratch. | Brand new items with specific undisclosed flaws are reviewed on a case-by-case basis under policy. | The item remains fully functional, making a partial refund appropriate rather than a full return.",BPR-04,Transactions are not eligible for refund (cont.),"Buyers make a claim for something that is not in the original listing/what was agreed upon
     Buyers raise an issue after the dispute window
     The item gets stolen/damaged post successful delivery
         It is the buyer’s responsibility to ensure that the receiving address can receive the item securely
-        Parcel and packaging that has creases, lines, wrinkles or dents as a result of shipp",
+        Parcel and packaging that has creases, lines, wrinkles or dents as a result of shipping or tempered of packaging upon delivery will not be covered unless the item itself is damaged
+    The items are reported for surface wear and tear that does not affect functionality
+        For “Brand New” items, transactions will be reviewed on a case-by-case basis
+    The items fall under our exclusion list
+    The items are sold in gift bundles such as hampers, goodie bags and mystery boxes unless the constituents in the bundles are clearly described in the listing.",,,
 G121,decline,The seller correctly described the shade as medium brown in the listing. | A subjective difference in perceived undertone or warmth is considered a non-significant variation under policy. | The buyer simply received the correct item in the correct shade as described.,BPR-03,Transactions are not eligible for refund,"An item that is materially similar with subjective and non-significant variations from the seller’s listing and description will not be accepted. This includes:
     ✘   Item with signs of wear but was correctly listed as being in used condition
     ✘  Non-significant variations, including quality, for example:
         Item listed as light pink but received as rose pink
-        Item listed as palm-",
+        Item listed as palm-sized but received at 15cm
+        Item listed as 8/10 but receiver claims it is more of a 6/10
+    Buyers change their mind about the item
+    Buyers place the wrong order by mistake
+    Buyers have received a partial or full refund from a separate resolution process not facilitated by Carousell
+    Buyers provide an incorrect or invalid delivery address
+    Buyers receive the item after the suggested delivery date",,,
 G122,decline,"The item was correctly stated as being in used condition. | The dispute is based on a subjective opinion describing ordinary wear (8/10 vs 6/10 style condition opinions). | No specific undisclosed defects, stains, or damages affecting function were reported.",BPR-03,Transactions are not eligible for refund,"An item that is materially similar with subjective and non-significant variations from the seller’s listing and description will not be accepted. This includes:
     ✘   Item with signs of wear but was correctly listed as being in used condition
     ✘  Non-significant variations, including quality, for example:
         Item listed as light pink but received as rose pink
-        Item listed as palm-",
+        Item listed as palm-sized but received at 15cm
+        Item listed as 8/10 but receiver claims it is more of a 6/10
+    Buyers change their mind about the item
+    Buyers place the wrong order by mistake
+    Buyers have received a partial or full refund from a separate resolution process not facilitated by Carousell
+    Buyers provide an incorrect or invalid delivery address
+    Buyers receive the item after the suggested delivery date",,,
 G123,decline,The seller clearly disclosed the wax spill in the listing description. | The condition received matches the disclosed description of the item. | Flaws or wear that are disclosed by the seller in the listing are not covered as significantly not as described.,BPR-03,Transactions are not eligible for refund,"An item that is materially similar with subjective and non-significant variations from the seller’s listing and description will not be accepted. This includes:
     ✘   Item with signs of wear but was correctly listed as being in used condition
     ✘  Non-significant variations, including quality, for example:
         Item listed as light pink but received as rose pink
-        Item listed as palm-",
+        Item listed as palm-sized but received at 15cm
+        Item listed as 8/10 but receiver claims it is more of a 6/10
+    Buyers change their mind about the item
+    Buyers place the wrong order by mistake
+    Buyers have received a partial or full refund from a separate resolution process not facilitated by Carousell
+    Buyers provide an incorrect or invalid delivery address
+    Buyers receive the item after the suggested delivery date",,,
 G127,decline,The item was correctly listed as used and shows signs of normal wear consistent with its description. | Subjective condition opinions such as '8/10 vs 6/10' style discrepancies are considered non-significant variations. | Transactions for items with signs of wear matching a correctly stated used condition are not eligible for a refund.,BPR-03,Transactions are not eligible for refund,"An item that is materially similar with subjective and non-significant variations from the seller’s listing and description will not be accepted. This includes:
     ✘   Item with signs of wear but was correctly listed as being in used condition
     ✘  Non-significant variations, including quality, for example:
         Item listed as light pink but received as rose pink
-        Item listed as palm-",
+        Item listed as palm-sized but received at 15cm
+        Item listed as 8/10 but receiver claims it is more of a 6/10
+    Buyers change their mind about the item
+    Buyers place the wrong order by mistake
+    Buyers have received a partial or full refund from a separate resolution process not facilitated by Carousell
+    Buyers provide an incorrect or invalid delivery address
+    Buyers receive the item after the suggested delivery date",,,
 G128,decline,The seller clearly stated in the description that the items had signs of wear from washing. | The reported fading and pilling are ordinary signs of wear that match the correctly stated used condition. | Items with signs of wear that were correctly listed as being in used condition are not eligible for a refund.,BPR-03,Transactions are not eligible for refund,"An item that is materially similar with subjective and non-significant variations from the seller’s listing and description will not be accepted. This includes:
     ✘   Item with signs of wear but was correctly listed as being in used condition
     ✘  Non-significant variations, including quality, for example:
         Item listed as light pink but received as rose pink
-        Item listed as palm-",
+        Item listed as palm-sized but received at 15cm
+        Item listed as 8/10 but receiver claims it is more of a 6/10
+    Buyers change their mind about the item
+    Buyers place the wrong order by mistake
+    Buyers have received a partial or full refund from a separate resolution process not facilitated by Carousell
+    Buyers provide an incorrect or invalid delivery address
+    Buyers receive the item after the suggested delivery date",,,
 G131,decline,"The complaint is about a subjective and minor colour shade variation, which is not covered under the policy. | The seller provided evidence showing the correct item under natural light, and the buyer inspected and collected the item in person during a meetup.",BPR-03,Transactions are not eligible for refund,"An item that is materially similar with subjective and non-significant variations from the seller’s listing and description will not be accepted. This includes:
     ✘   Item with signs of wear but was correctly listed as being in used condition
     ✘  Non-significant variations, including quality, for example:
         Item listed as light pink but received as rose pink
-        Item listed as palm-",
+        Item listed as palm-sized but received at 15cm
+        Item listed as 8/10 but receiver claims it is more of a 6/10
+    Buyers change their mind about the item
+    Buyers place the wrong order by mistake
+    Buyers have received a partial or full refund from a separate resolution process not facilitated by Carousell
+    Buyers provide an incorrect or invalid delivery address
+    Buyers receive the item after the suggested delivery date",,,
 G132,decline,"The buyer's complaint is about subjective condition opinions regarding wear. | Policy explicitly excludes claims where an item is listed as 8/10 but claimed to be 6/10 or has minor subjective variations. | The seller disclosed the item was stored and showed photos, and the buyer received the item as described.",BPR-03,Transactions are not eligible for refund,"An item that is materially similar with subjective and non-significant variations from the seller’s listing and description will not be accepted. This includes:
     ✘   Item with signs of wear but was correctly listed as being in used condition
     ✘  Non-significant variations, including quality, for example:
         Item listed as light pink but received as rose pink
-        Item listed as palm-",
+        Item listed as palm-sized but received at 15cm
+        Item listed as 8/10 but receiver claims it is more of a 6/10
+    Buyers change their mind about the item
+    Buyers place the wrong order by mistake
+    Buyers have received a partial or full refund from a separate resolution process not facilitated by Carousell
+    Buyers provide an incorrect or invalid delivery address
+    Buyers receive the item after the suggested delivery date",,,
 G133,decline,"The seller clearly disclosed the heat damage and dents on the cream pans in the item description. | The buyer's complaint relates to flaws that were fully disclosed prior to purchase. | Under policy, items with flaws or wear correctly disclosed in the listing do not qualify for a significant not as described (SNAD) refund.",BPR-03,Transactions are not eligible for refund,"An item that is materially similar with subjective and non-significant variations from the seller’s listing and description will not be accepted. This includes:
     ✘   Item with signs of wear but was correctly listed as being in used condition
     ✘  Non-significant variations, including quality, for example:
         Item listed as light pink but received as rose pink
-        Item listed as palm-",
+        Item listed as palm-sized but received at 15cm
+        Item listed as 8/10 but receiver claims it is more of a 6/10
+    Buyers change their mind about the item
+    Buyers place the wrong order by mistake
+    Buyers have received a partial or full refund from a separate resolution process not facilitated by Carousell
+    Buyers provide an incorrect or invalid delivery address
+    Buyers receive the item after the suggested delivery date",,,
 G136,decline,"Subjective or minor variations in colour caused by different lighting conditions are not covered under the policy. | The seller provided evidence that the item was photographed in bright daylight, explaining the perceived shade difference. | The listing correctly described the item condition and colour.",BPR-03,Transactions are not eligible for refund,"An item that is materially similar with subjective and non-significant variations from the seller’s listing and description will not be accepted. This includes:
     ✘   Item with signs of wear but was correctly listed as being in used condition
     ✘  Non-significant variations, including quality, for example:
         Item listed as light pink but received as rose pink
-        Item listed as palm-",
+        Item listed as palm-sized but received at 15cm
+        Item listed as 8/10 but receiver claims it is more of a 6/10
+    Buyers change their mind about the item
+    Buyers place the wrong order by mistake
+    Buyers have received a partial or full refund from a separate resolution process not facilitated by Carousell
+    Buyers provide an incorrect or invalid delivery address
+    Buyers receive the item after the suggested delivery date",,,
 G137,decline,"The buyer's complaint concerns subjective condition opinions (8/10 vs 6/10) involving ordinary wear. | Slight pilling on a used jersey style T-shirt does not constitute a significant undisclosed defect under the policy. | The seller correctly stated the nature of the used item, and the wear matches the expected condition without functional damage or major flaws.",BPR-03,Transactions are not eligible for refund,"An item that is materially similar with subjective and non-significant variations from the seller’s listing and description will not be accepted. This includes:
     ✘   Item with signs of wear but was correctly listed as being in used condition
     ✘  Non-significant variations, including quality, for example:
         Item listed as light pink but received as rose pink
-        Item listed as palm-",
+        Item listed as palm-sized but received at 15cm
+        Item listed as 8/10 but receiver claims it is more of a 6/10
+    Buyers change their mind about the item
+    Buyers place the wrong order by mistake
+    Buyers have received a partial or full refund from a separate resolution process not facilitated by Carousell
+    Buyers provide an incorrect or invalid delivery address
+    Buyers receive the item after the suggested delivery date",,,
 G138,decline,The listing description explicitly disclosed the red mark on the plushie's tag. | Subjective differences in how big or dirty a disclosed flaw appears do not meet the threshold for a significantly not as described claim. | Items with disclosed flaws or subjective/non-significant variations are not eligible for a refund.,BPR-03,Transactions are not eligible for refund,"An item that is materially similar with subjective and non-significant variations from the seller’s listing and description will not be accepted. This includes:
     ✘   Item with signs of wear but was correctly listed as being in used condition
     ✘  Non-significant variations, including quality, for example:
         Item listed as light pink but received as rose pink
-        Item listed as palm-",
+        Item listed as palm-sized but received at 15cm
+        Item listed as 8/10 but receiver claims it is more of a 6/10
+    Buyers change their mind about the item
+    Buyers place the wrong order by mistake
+    Buyers have received a partial or full refund from a separate resolution process not facilitated by Carousell
+    Buyers provide an incorrect or invalid delivery address
+    Buyers receive the item after the suggested delivery date",,,
 G141,decline,The colour difference reported by the buyer is a subjective or non-significant variation. | Non-significant colour variations are explicitly excluded from being eligible for a refund under policy. | The item matches the description and used condition stated by the seller.,BPR-03,Transactions are not eligible for refund,"An item that is materially similar with subjective and non-significant variations from the seller’s listing and description will not be accepted. This includes:
     ✘   Item with signs of wear but was correctly listed as being in used condition
     ✘  Non-significant variations, including quality, for example:
         Item listed as light pink but received as rose pink
-        Item listed as palm-",
+        Item listed as palm-sized but received at 15cm
+        Item listed as 8/10 but receiver claims it is more of a 6/10
+    Buyers change their mind about the item
+    Buyers place the wrong order by mistake
+    Buyers have received a partial or full refund from a separate resolution process not facilitated by Carousell
+    Buyers provide an incorrect or invalid delivery address
+    Buyers receive the item after the suggested delivery date",,,
 G142,decline,"The seller correctly listed the item condition as well used and disclosed the letter peeling. | Disputes regarding subjective condition opinions, such as an 8/10 versus 6/10 difference, are not considered significant variations under policy. | The buyer's complaints match the ordinary wear and tear expected from a correctly described used medical supply item.",BPR-03,Transactions are not eligible for refund,"An item that is materially similar with subjective and non-significant variations from the seller’s listing and description will not be accepted. This includes:
     ✘   Item with signs of wear but was correctly listed as being in used condition
     ✘  Non-significant variations, including quality, for example:
         Item listed as light pink but received as rose pink
-        Item listed as palm-",
+        Item listed as palm-sized but received at 15cm
+        Item listed as 8/10 but receiver claims it is more of a 6/10
+    Buyers change their mind about the item
+    Buyers place the wrong order by mistake
+    Buyers have received a partial or full refund from a separate resolution process not facilitated by Carousell
+    Buyers provide an incorrect or invalid delivery address
+    Buyers receive the item after the suggested delivery date",,,
 G143,partial_refund,"The item was listed as 'like new' and 'never worn', but arrived with undisclosed fabric pilling. | Although the seller admitted to washing it once, the condition is worse than the 'never worn' claim. | The item is still fully functional and wearable as a baby onesie, making a partial refund appropriate rather than a full return.",BPR-02,Eligibility > Dispute Reason,"Under the Buyer Protection and Certified refund policy, buyers may raise a dispute for:
     Item(s) not received
     Incomplete item(s)
@@ -120,12 +227,17 @@ G143,partial_refund,"The item was listed as 'like new' and 'never worn', but arr
     Examples of cases where the item is significantly not as described
         The item is of a different variation, such as size, colour, model or version
         The item is incomplete or has missing parts
-        T",
+        The item is damaged or has one or more undisclosed defect(s)
+        The item received deviates extensively from the listing photo",,,
 G143,partial_refund,"The item was listed as 'like new' and 'never worn', but arrived with undisclosed fabric pilling. | Although the seller admitted to washing it once, the condition is worse than the 'never worn' claim. | The item is still fully functional and wearable as a baby onesie, making a partial refund appropriate rather than a full return.",BPR-04,Transactions are not eligible for refund (cont.),"Buyers make a claim for something that is not in the original listing/what was agreed upon
     Buyers raise an issue after the dispute window
     The item gets stolen/damaged post successful delivery
         It is the buyer’s responsibility to ensure that the receiving address can receive the item securely
-        Parcel and packaging that has creases, lines, wrinkles or dents as a result of shipp",
+        Parcel and packaging that has creases, lines, wrinkles or dents as a result of shipping or tempered of packaging upon delivery will not be covered unless the item itself is damaged
+    The items are reported for surface wear and tear that does not affect functionality
+        For “Brand New” items, transactions will be reviewed on a case-by-case basis
+    The items fall under our exclusion list
+    The items are sold in gift bundles such as hampers, goodie bags and mystery boxes unless the constituents in the bundles are clearly described in the listing.",,,
 G149,partial_refund,"The item was listed as brand new but featured an undisclosed small mark. | Brand new items with specific undisclosed flaws are reviewed on a case-by-case basis. | The item remains fully functional and usable, making a partial refund appropriate.",BPR-02,Eligibility > Dispute Reason,"Under the Buyer Protection and Certified refund policy, buyers may raise a dispute for:
     Item(s) not received
     Incomplete item(s)
@@ -133,57 +245,112 @@ G149,partial_refund,"The item was listed as brand new but featured an undisclose
     Examples of cases where the item is significantly not as described
         The item is of a different variation, such as size, colour, model or version
         The item is incomplete or has missing parts
-        T",
+        The item is damaged or has one or more undisclosed defect(s)
+        The item received deviates extensively from the listing photo",,,
 G149,partial_refund,"The item was listed as brand new but featured an undisclosed small mark. | Brand new items with specific undisclosed flaws are reviewed on a case-by-case basis. | The item remains fully functional and usable, making a partial refund appropriate.",BPR-04,Transactions are not eligible for refund (cont.),"Buyers make a claim for something that is not in the original listing/what was agreed upon
     Buyers raise an issue after the dispute window
     The item gets stolen/damaged post successful delivery
         It is the buyer’s responsibility to ensure that the receiving address can receive the item securely
-        Parcel and packaging that has creases, lines, wrinkles or dents as a result of shipp",
+        Parcel and packaging that has creases, lines, wrinkles or dents as a result of shipping or tempered of packaging upon delivery will not be covered unless the item itself is damaged
+    The items are reported for surface wear and tear that does not affect functionality
+        For “Brand New” items, transactions will be reviewed on a case-by-case basis
+    The items fall under our exclusion list
+    The items are sold in gift bundles such as hampers, goodie bags and mystery boxes unless the constituents in the bundles are clearly described in the listing.",,,
 G151,decline,The color variance reported by the buyer is considered a subjective and non-significant variation. | Lighting differences between photos taken in bright natural sunlight versus indoor warm lighting commonly account for shade discrepancies. | The item matches the description and variation promised by the seller.,BPR-03,Transactions are not eligible for refund,"An item that is materially similar with subjective and non-significant variations from the seller’s listing and description will not be accepted. This includes:
     ✘   Item with signs of wear but was correctly listed as being in used condition
     ✘  Non-significant variations, including quality, for example:
         Item listed as light pink but received as rose pink
-        Item listed as palm-",
+        Item listed as palm-sized but received at 15cm
+        Item listed as 8/10 but receiver claims it is more of a 6/10
+    Buyers change their mind about the item
+    Buyers place the wrong order by mistake
+    Buyers have received a partial or full refund from a separate resolution process not facilitated by Carousell
+    Buyers provide an incorrect or invalid delivery address
+    Buyers receive the item after the suggested delivery date",,,
 G152,decline,The buyer's complaint is about minor scuffs and marks on a used ukulele listed as 'like new'. | Policy explicitly states that a subjective condition difference (such as an 8/10 opinion versus a 6/10 opinion) is a non-significant variation. | No undisclosed functional defects or extensive deviations from the listing were established.,BPR-03,Transactions are not eligible for refund,"An item that is materially similar with subjective and non-significant variations from the seller’s listing and description will not be accepted. This includes:
     ✘   Item with signs of wear but was correctly listed as being in used condition
     ✘  Non-significant variations, including quality, for example:
         Item listed as light pink but received as rose pink
-        Item listed as palm-",
+        Item listed as palm-sized but received at 15cm
+        Item listed as 8/10 but receiver claims it is more of a 6/10
+    Buyers change their mind about the item
+    Buyers place the wrong order by mistake
+    Buyers have received a partial or full refund from a separate resolution process not facilitated by Carousell
+    Buyers provide an incorrect or invalid delivery address
+    Buyers receive the item after the suggested delivery date",,,
 G153,decline,The item was correctly stated to be in used condition ('Lightly used'). | Pilling and fabric texture signs on a used waist trainer fall under expected signs of wear rather than an undisclosed major defect. | The policy excludes items with normal signs of wear when correctly listed as used.,BPR-03,Transactions are not eligible for refund,"An item that is materially similar with subjective and non-significant variations from the seller’s listing and description will not be accepted. This includes:
     ✘   Item with signs of wear but was correctly listed as being in used condition
     ✘  Non-significant variations, including quality, for example:
         Item listed as light pink but received as rose pink
-        Item listed as palm-",
+        Item listed as palm-sized but received at 15cm
+        Item listed as 8/10 but receiver claims it is more of a 6/10
+    Buyers change their mind about the item
+    Buyers place the wrong order by mistake
+    Buyers have received a partial or full refund from a separate resolution process not facilitated by Carousell
+    Buyers provide an incorrect or invalid delivery address
+    Buyers receive the item after the suggested delivery date",,,
 G154,decline,The dent on the exterior packaging is a result of shipping and does not constitute damage to the actual item inside. | The factory seal remains fully intact and the product's function and usability are unaffected. | Packaging dents caused by shipping are explicitly excluded from coverage unless the item itself is damaged.,BPR-04,Transactions are not eligible for refund (cont.),"Buyers make a claim for something that is not in the original listing/what was agreed upon
     Buyers raise an issue after the dispute window
     The item gets stolen/damaged post successful delivery
         It is the buyer’s responsibility to ensure that the receiving address can receive the item securely
-        Parcel and packaging that has creases, lines, wrinkles or dents as a result of shipp",
+        Parcel and packaging that has creases, lines, wrinkles or dents as a result of shipping or tempered of packaging upon delivery will not be covered unless the item itself is damaged
+    The items are reported for surface wear and tear that does not affect functionality
+        For “Brand New” items, transactions will be reviewed on a case-by-case basis
+    The items fall under our exclusion list
+    The items are sold in gift bundles such as hampers, goodie bags and mystery boxes unless the constituents in the bundles are clearly described in the listing.",,,
 G156,decline,The colour difference is a subjective and minor variation attributed to lighting. | The item matches the description and photos provided by the seller. | Minor lighting variations do not qualify as a significant deviation under policy.,BPR-03,Transactions are not eligible for refund,"An item that is materially similar with subjective and non-significant variations from the seller’s listing and description will not be accepted. This includes:
     ✘   Item with signs of wear but was correctly listed as being in used condition
     ✘  Non-significant variations, including quality, for example:
         Item listed as light pink but received as rose pink
-        Item listed as palm-",
+        Item listed as palm-sized but received at 15cm
+        Item listed as 8/10 but receiver claims it is more of a 6/10
+    Buyers change their mind about the item
+    Buyers place the wrong order by mistake
+    Buyers have received a partial or full refund from a separate resolution process not facilitated by Carousell
+    Buyers provide an incorrect or invalid delivery address
+    Buyers receive the item after the suggested delivery date",,,
 G157,decline,The seller correctly disclosed in the listing description that all items were opened and swatched. | The buyer's complaint about condition being '6/10' instead of 'lightly used' is a subjective variation that does not constitute a significant discrepancy. | Signs of wear that match a correctly stated used condition are not eligible for a refund under policy.,BPR-03,Transactions are not eligible for refund,"An item that is materially similar with subjective and non-significant variations from the seller’s listing and description will not be accepted. This includes:
     ✘   Item with signs of wear but was correctly listed as being in used condition
     ✘  Non-significant variations, including quality, for example:
         Item listed as light pink but received as rose pink
-        Item listed as palm-",
+        Item listed as palm-sized but received at 15cm
+        Item listed as 8/10 but receiver claims it is more of a 6/10
+    Buyers change their mind about the item
+    Buyers place the wrong order by mistake
+    Buyers have received a partial or full refund from a separate resolution process not facilitated by Carousell
+    Buyers provide an incorrect or invalid delivery address
+    Buyers receive the item after the suggested delivery date",,,
 G159,decline,The minor smudge affects only a single label in a pack of multiple stickers. | The defect does not impact the functionality or intended use of the shipping labels. | Brand new items with minor surface flaws that do not impair function generally do not warrant a full return or refund when mostly as described.,BPR-04,Transactions are not eligible for refund (cont.),"Buyers make a claim for something that is not in the original listing/what was agreed upon
     Buyers raise an issue after the dispute window
     The item gets stolen/damaged post successful delivery
         It is the buyer’s responsibility to ensure that the receiving address can receive the item securely
-        Parcel and packaging that has creases, lines, wrinkles or dents as a result of shipp",
+        Parcel and packaging that has creases, lines, wrinkles or dents as a result of shipping or tempered of packaging upon delivery will not be covered unless the item itself is damaged
+    The items are reported for surface wear and tear that does not affect functionality
+        For “Brand New” items, transactions will be reviewed on a case-by-case basis
+    The items fall under our exclusion list
+    The items are sold in gift bundles such as hampers, goodie bags and mystery boxes unless the constituents in the bundles are clearly described in the listing.",,,
 G161,decline,"The color difference is a subjective and non-significant variation attributed to lighting conditions. | The seller provided evidence that their photos were taken in natural sunlight, whereas the buyer viewed them under indoor lighting. | The policy explicitly states that items with subjective or non-significant variations are not eligible for a refund.",BPR-03,Transactions are not eligible for refund,"An item that is materially similar with subjective and non-significant variations from the seller’s listing and description will not be accepted. This includes:
     ✘   Item with signs of wear but was correctly listed as being in used condition
     ✘  Non-significant variations, including quality, for example:
         Item listed as light pink but received as rose pink
-        Item listed as palm-",
+        Item listed as palm-sized but received at 15cm
+        Item listed as 8/10 but receiver claims it is more of a 6/10
+    Buyers change their mind about the item
+    Buyers place the wrong order by mistake
+    Buyers have received a partial or full refund from a separate resolution process not facilitated by Carousell
+    Buyers provide an incorrect or invalid delivery address
+    Buyers receive the item after the suggested delivery date",,,
 G162,decline,The item was correctly listed as used and shows normal wear and tear. | Disputes regarding condition opinions like 8/10 versus 6/10 are not eligible for a refund. | The item remains fully functional as confirmed by both parties.,BPR-03,Transactions are not eligible for refund,"An item that is materially similar with subjective and non-significant variations from the seller’s listing and description will not be accepted. This includes:
     ✘   Item with signs of wear but was correctly listed as being in used condition
     ✘  Non-significant variations, including quality, for example:
         Item listed as light pink but received as rose pink
-        Item listed as palm-",
+        Item listed as palm-sized but received at 15cm
+        Item listed as 8/10 but receiver claims it is more of a 6/10
+    Buyers change their mind about the item
+    Buyers place the wrong order by mistake
+    Buyers have received a partial or full refund from a separate resolution process not facilitated by Carousell
+    Buyers provide an incorrect or invalid delivery address
+    Buyers receive the item after the suggested delivery date",,,
 G164,partial_refund,"The item was listed as like new, but contained an undisclosed scratch on the back. | A specific undisclosed flaw on a like-new item is considered a significant gap under policy. | The item remains fully functional and usable, making a partial refund appropriate. | The buyer's requested partial refund of S$3.78 represents approximately 20% of the total item price.",BPR-02,Eligibility > Dispute Reason,"Under the Buyer Protection and Certified refund policy, buyers may raise a dispute for:
     Item(s) not received
     Incomplete item(s)
@@ -191,27 +358,52 @@ G164,partial_refund,"The item was listed as like new, but contained an undisclos
     Examples of cases where the item is significantly not as described
         The item is of a different variation, such as size, colour, model or version
         The item is incomplete or has missing parts
-        T",
+        The item is damaged or has one or more undisclosed defect(s)
+        The item received deviates extensively from the listing photo",,,
 S10,decline,The item was correctly listed as used with disclosed signs of wear. | The seller specifically noted the pilling and provided a photo in the listing. | Wear that matches a correctly stated used condition is not covered under the policy.,BPR-03,Transactions are not eligible for refund,"An item that is materially similar with subjective and non-significant variations from the seller’s listing and description will not be accepted. This includes:
     ✘   Item with signs of wear but was correctly listed as being in used condition
     ✘  Non-significant variations, including quality, for example:
         Item listed as light pink but received as rose pink
-        Item listed as palm-",
+        Item listed as palm-sized but received at 15cm
+        Item listed as 8/10 but receiver claims it is more of a 6/10
+    Buyers change their mind about the item
+    Buyers place the wrong order by mistake
+    Buyers have received a partial or full refund from a separate resolution process not facilitated by Carousell
+    Buyers provide an incorrect or invalid delivery address
+    Buyers receive the item after the suggested delivery date",,,
 S11,decline,The seller provided the official Lululemon colour name (Blue Lotus Oil Slick) as listed. | A slight subjective difference in how a colour appears in person or under different lighting is considered a non-significant variation. | Minor or subjective variations in shade are not covered under the Buyer Protection policy.,BPR-03,Transactions are not eligible for refund,"An item that is materially similar with subjective and non-significant variations from the seller’s listing and description will not be accepted. This includes:
     ✘   Item with signs of wear but was correctly listed as being in used condition
     ✘  Non-significant variations, including quality, for example:
         Item listed as light pink but received as rose pink
-        Item listed as palm-",
+        Item listed as palm-sized but received at 15cm
+        Item listed as 8/10 but receiver claims it is more of a 6/10
+    Buyers change their mind about the item
+    Buyers place the wrong order by mistake
+    Buyers have received a partial or full refund from a separate resolution process not facilitated by Carousell
+    Buyers provide an incorrect or invalid delivery address
+    Buyers receive the item after the suggested delivery date",,,
 S12,decline,The yellowing on the soles was explicitly disclosed by the seller in the listing description. | Toe box creasing and minor condition rating differences are subjective and represent ordinary wear consistent with a used item. | The dispute falls under non-significant variations and signs of wear on items correctly listed as used.,BPR-03,Transactions are not eligible for refund,"An item that is materially similar with subjective and non-significant variations from the seller’s listing and description will not be accepted. This includes:
     ✘   Item with signs of wear but was correctly listed as being in used condition
     ✘  Non-significant variations, including quality, for example:
         Item listed as light pink but received as rose pink
-        Item listed as palm-",
+        Item listed as palm-sized but received at 15cm
+        Item listed as 8/10 but receiver claims it is more of a 6/10
+    Buyers change their mind about the item
+    Buyers place the wrong order by mistake
+    Buyers have received a partial or full refund from a separate resolution process not facilitated by Carousell
+    Buyers provide an incorrect or invalid delivery address
+    Buyers receive the item after the suggested delivery date",,,
 S13,decline,The buyer reported flaws that were already explicitly disclosed in the listing description. | The item matches the correctly stated used condition. | Transactions with signs of wear matching a correctly stated used condition are not eligible for a refund.,BPR-03,Transactions are not eligible for refund,"An item that is materially similar with subjective and non-significant variations from the seller’s listing and description will not be accepted. This includes:
     ✘   Item with signs of wear but was correctly listed as being in used condition
     ✘  Non-significant variations, including quality, for example:
         Item listed as light pink but received as rose pink
-        Item listed as palm-",
+        Item listed as palm-sized but received at 15cm
+        Item listed as 8/10 but receiver claims it is more of a 6/10
+    Buyers change their mind about the item
+    Buyers place the wrong order by mistake
+    Buyers have received a partial or full refund from a separate resolution process not facilitated by Carousell
+    Buyers provide an incorrect or invalid delivery address
+    Buyers receive the item after the suggested delivery date",,,
 S14,partial_refund,"The item has an undisclosed 2cm stain on the right cuff, which contradicts the listing description stating no stains. | The seller acknowledged the defect and did not dispute its presence. | The item remains fully usable and mostly as described, making a partial refund appropriate rather than a full return.",BPR-02,Eligibility > Dispute Reason,"Under the Buyer Protection and Certified refund policy, buyers may raise a dispute for:
     Item(s) not received
     Incomplete item(s)
@@ -219,4 +411,5 @@ S14,partial_refund,"The item has an undisclosed 2cm stain on the right cuff, whi
     Examples of cases where the item is significantly not as described
         The item is of a different variation, such as size, colour, model or version
         The item is incomplete or has missing parts
-        T",
+        The item is damaged or has one or more undisclosed defect(s)
+        The item received deviates extensively from the listing photo",,,

@@ -10,6 +10,7 @@
 | Measure | Agent | Single-prompt baseline |
 |---|---|---|
 | Cases scored | 36 | 36 |
+| Failed (no valid answer; counted as wrong) | 0 | 0 |
 | Decision accuracy (4 outcomes) | 89% | 81% |
 |   clear cases | n/a (n=0) | n/a (n=0) |
 |   borderline cases | 89% (n=36) | 81% (n=36) |
@@ -20,13 +21,17 @@
 | Eligibility accuracy | 100% | 67% |
 | Ineligible cases flagged | n/a | n/a |
 | Judged cases citing a clause | 100% | 100% |
-| Cases with invented clause IDs | 0% | 0% |
+| Cases with invented clause IDs (final answer) | 0% | 0% |
+| Cases citing a real clause in the wrong format (final answer) | 0% | 0% |
+| Judged cases where the model cited a clause it was not shown | 0% | 0% |
+| Judged cases where the judge called search_policy | 0% | 0% |
 | Escalated | 0% | 0% |
 | Wrong decisions that were escalated | 0% | 0% |
 | Right decisions that were escalated | 0% | 0% |
 | Accuracy on cases not escalated | 89% | 81% |
 | Seconds per case (median) | 8.98 | 4.48 |
 | LLM calls per case | 2 | 1 |
+| Tokens per case (in / out) | n/a / n/a | n/a / n/a |
 
 **Gain over baseline:** +8.3 percentage points in decision accuracy.
 

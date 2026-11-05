@@ -27,6 +27,22 @@
     },
     "cited_at_least_one_clause": 1.0,
     "invented_citation_rate": 0.0,
+    "escalation_reasons": {},
+    "citation_format_error_rate": 0.0,
+    "raw_invented_citation_rate": 0.0,
+    "failed": {
+      "n": 0,
+      "share": 0.0
+    },
+    "tool_use": {
+      "judged": 36,
+      "cases_using_search": 0.0,
+      "searches": 0
+    },
+    "tokens_per_case": {
+      "input": null,
+      "output": null
+    },
     "escalation": {
       "escalated_share": 0.0,
       "wrong_decisions_escalated": 0.0,
@@ -123,6 +139,22 @@
     },
     "cited_at_least_one_clause": 1.0,
     "invented_citation_rate": 0.0,
+    "escalation_reasons": {},
+    "citation_format_error_rate": 0.0,
+    "raw_invented_citation_rate": 0.0,
+    "failed": {
+      "n": 0,
+      "share": 0.0
+    },
+    "tool_use": {
+      "judged": 36,
+      "cases_using_search": 0.0,
+      "searches": 0
+    },
+    "tokens_per_case": {
+      "input": null,
+      "output": null
+    },
     "escalation": {
       "escalated_share": 0.0,
       "wrong_decisions_escalated": 0.0,

@@ -95,6 +95,8 @@ t = table_after(doc, "We went through three ideas")
 for i, row in enumerate(t.rows):
     if "written before it knew about the build" in row.cells[1].text:
         set_cell(t, i, 1, "Project Report for slides and video (written before the prototype was built)")
+    if "test run 2: agent 88%, baseline 86%" in row.cells[2].text:
+        set_cell(t, i, 2, "Test run 1: agent 82%, baseline 84%. Decision guide fixed on dev cases; test run 2: agent 88%, baseline 90% (both against the later hand labels)")
 resize_rows(t, len(t.rows) + 1)
 set_row(t, len(t.rows) - 1, ["4 Nov", "Professor asked us to compare models. Added the search_policy tool, Ollama and OpenAI providers, the model comparison and retrieval ablations; app made ready for Streamlit Cloud", F["timeline_outcome"]])
 resize_rows(t, len(t.rows) + 1)
@@ -181,7 +183,7 @@ for i, row in enumerate(G["wrong"], start=1):
 set_runs(para(doc, "G059, G129, G134 and G147 are the cases"), "G059, G129, G134 and G147 are the cases where reasonable people could disagree, and three of them are among the agent’s mistakes. On G129 and G147 the labeller chose a partial refund and the agent declined; the AI reviewer sided with the agent on all three, which is why we score only against the human labels. G155, wrong in the previous run, was right this time (and escalated both times).")
 
 t = table_after(doc, "8.4 Other results")
-set_row(t, 1, [None, "Agent 100%, baseline 80% on the 20 hand-written cases (28 Oct, scored against the outcomes they were written for). Not held out: these cases were used while writing the prompts"])
+set_row(t, 1, [None, "Agent 100%, baseline 80% on the 20 hand-written cases (28 Oct; the 4 that are also test cases are scored against the hand labels, the other 16 against the outcomes they were written for). Not held out: these cases were used while writing the prompts"])
 set_row(t, 3, [None, "61 of the agent’s 68 citations (90%) support the decision. Most misses cite a procedural clause (how a return works), or a clause listing what is covered on a decline"])
 resize_rows(t, 6)
 set_row(t, 5, ["search_policy tool (default design)", F["tool_use_row"]])
@@ -223,7 +225,7 @@ cur = insert_paragraph_after(cur, NORMAL, "")
 cur = insert_paragraph_after(cur, NORMAL, [("What we found. ", True), (F["rubric_found"], False)])
 
 set_runs(old85, "8.7 The decision-guide fix, and how often the test set was used")
-set_runs(para(doc, "The first test run gave agent 82%"), "The first test run gave agent 82%, baseline 84%. Both systems declined every small undisclosed flaw on items listed as new or like new, because two lines of our decision guide contradicted each other. We clarified the rule (a small specific flaw on a new or like-new item is a partial refund) and checked it on dev cases only: agent 81% → 89%, baseline 78% → 81% on 36 borderline dev cases. Then we re-ran the test set (agent 88%, baseline 86%). These first runs were scored against the outcomes the cases were written for. On 4 November we added the search tool and ran the test set once per judge model; the team then labelled the test set by hand, and against those labels Gemini’s agent gets 90% and the baseline 88%. Nothing was tuned on the test set, but it has now been used three times and the default local model was picked from these results, so its numbers are slightly optimistic. All runs are in reports/.")
+set_runs(para(doc, "The first test run gave agent 82%"), "The first test run gave agent 82%, baseline 84%. Both systems declined every small undisclosed flaw on items listed as new or like new, because two lines of our decision guide contradicted each other. We clarified the rule (a small specific flaw on a new or like-new item is a partial refund) and checked it on dev cases only: agent 81% → 89%, baseline 78% → 81% on 36 borderline dev cases. Then we re-ran the test set (agent 88%, baseline 90%: the fix helped both). On 4 November we added the search tool and ran the test set once per judge model; the team then labelled the test set by hand, and against those labels Gemini’s agent gets 90% and the baseline 88%. Every test-set number in this report, the early runs included, uses the hand labels; the dev cases were not labelled by hand, so the dev numbers use the outcomes the cases were written for. Nothing was tuned on the test set, but it has now been used three times and the default local model was picked from these results, so its numbers are slightly optimistic. All runs are in reports/.")
 set_runs(para(doc, "8.6 Limits of the evaluation", "Heading 2"), "8.8 Limits of the evaluation")
 set_runs(para(doc, "Labels are still provisional"), plain("Each test case was hand-labelled by one person, after the runs; there is no agreement score between labellers yet."))
 b = para(doc, "LLM answers vary between runs")
