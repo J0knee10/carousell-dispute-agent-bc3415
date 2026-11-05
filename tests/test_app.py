@@ -51,6 +51,17 @@ def test_whatif_chat_runs_a_rule():
     assert any("past cases would get a different outcome" in m.value for m in at.markdown)
 
 
+def test_evaluation_page_reads_the_headline_numbers_from_the_report():
+    import json
+
+    report = json.loads((Path(APP).parents[1] / "reports" / "evaluation_cmp_gemini-flash-lite.json").read_text(encoding="utf-8"))
+    at = _app()
+    at.sidebar.radio[1].set_value("Evaluation results").run()
+    assert not at.exception
+    right = next(m for m in at.metric if m.label == "Right outcome")
+    assert right.value == f"{report['agent']['decision_accuracy']:.0%}"
+
+
 def test_other_pages_render():
     at = _app()
     for name in ["What-if policy test", "Evaluation results", "Policy library", "How it works"]:

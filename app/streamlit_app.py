@@ -669,15 +669,133 @@ def page_whatif(provider: str, model: str | None) -> None:
 
 # ------------------------------------------------------------- other pages
 
+JUDGE_RUN = "cmp_gemini-flash-lite"  # the run behind the headline numbers (the app's default judge)
+MODEL_NAMES = {
+    "gemini-flash-lite-latest": "Gemini Flash-Lite (Google cloud)",
+    "llama3.1:8b": "Llama 3.1 8B (runs locally)",
+    "qwen3:8b": "Qwen 3 8B (runs locally)",
+}
+TECHNICAL_REPORTS = {
+    "model_comparison": "Model comparison and ablations",
+    f"evaluation_{JUDGE_RUN}": "Full test-set results (Gemini)",
+    "retrieval": "Policy search accuracy",
+}
+
+
+@st.cache_data(show_spinner=False)
+def load_report(name: str):
+    import json
+
+    f = path("outputs.reports_dir") / f"{name}.json"
+    return json.loads(f.read_text(encoding="utf-8")) if f.exists() else None
+
+
+@st.cache_data(show_spinner=False)
+def hybrid_search_hits() -> dict[str, str] | None:
+    """Hit@1 and Hit@3 of the hybrid search, from the retrieval report's table."""
+    f = path("outputs.reports_dir") / "retrieval.md"
+    if not f.exists():
+        return None
+    import re
+
+    text = f.read_text(encoding="utf-8")
+    queries = re.search(r"on (\d+) test queries", text)
+    for line in text.splitlines():
+        cells = [c.strip() for c in line.strip("|").split("|")]
+        if cells and cells[0] == "hybrid" and len(cells) >= 3:
+            return {"hit1": cells[1], "hit3": cells[2], "queries": queries.group(1) if queries else "the"}
+    return None
+
+
+def pct(x: float | None) -> str:
+    return "n/a" if x is None else f"{x:.0%}"
+
+
 def page_evaluation() -> None:
     st.title("Evaluation results")
-    # The model comparison first, then the newest runs.
-    reports = sorted(path("outputs.reports_dir").glob("*.md"), key=lambda p: (p.stem != "model_comparison", -p.stat().st_mtime))
-    if not reports:
-        st.info("No reports yet. Run `uv run dispute-agent evaluate` first.")
+    report = load_report(f"evaluation_{JUDGE_RUN}")
+    if not report:
+        st.info("No evaluation results yet. Run `uv run dispute-agent evaluate` first.")
         return
-    choice = st.selectbox("Report", reports, format_func=lambda p: p.stem)
-    st.markdown(choice.read_text(encoding="utf-8"))
+    a, b = report["agent"], report["baseline"]
+    n = a["n"]
+    right = round(a["decision_accuracy"] * n)
+    wrong = n - right
+    caught = round(a["escalation"]["wrong_decisions_escalated"] * wrong)
+    st.markdown(
+        f"We tested the agent on **{n} disputes kept aside while we built it**, each with the outcome a member of our "
+        "team decided by hand. The judge is Gemini Flash-Lite, the model the app uses."
+    )
+
+    m = st.columns(4)
+    m[0].metric("Right outcome", pct(a["decision_accuracy"]), help=f"{right} of {n} cases: the same outcome as our labeller.")
+    m[1].metric("Right when not flagged", pct(a["escalation"]["accuracy_when_not_escalated"]),
+                help=f"It flags {pct(a['escalation']['escalated_share'])} of cases for a person to look at closely; "
+                     f"{caught} of its {wrong} mistakes are among them.")
+    m[2].metric("Eligibility rules right", pct(a["eligibility_accuracy"]),
+                help="Payment method, dispute window and order status are checked by code, not by the AI.")
+    m[3].metric("Seconds per case", f"{a['seconds_per_case']['median']:.0f}",
+                help=f"About {a['llm_calls_per_case']} AI calls per case on the free Gemini tier.")
+    st.markdown(
+        f"- **Every recommendation cites the policy:** {pct(a['cited_at_least_one_clause'])} of judged cases name a "
+        f"clause staff can open, and {pct(a['invented_citation_rate'])} cite a clause that does not exist.\n"
+        f"- **It knows when to ask:** it flagged {pct(a['escalation']['escalated_share'])} of cases for a closer look, and "
+        f"{caught} of its {wrong} wrong answers were among them, so a person would have looked again.\n"
+        "- **Staff always decide:** nothing is sent to the buyer or seller until someone approves or overrides."
+    )
+
+    st.subheader("Compared with asking an AI directly")
+    st.markdown("The same model, given the whole case and the full policy in one prompt, with no rules, search or checks.")
+    rows = [("All cases", a["decision_accuracy"], b["decision_accuracy"])]
+    for key, label in (("clear", "Clear-cut cases"), ("borderline", "Borderline cases"), ("ineligible", "Not covered by Buyer Protection")):
+        if key in a["accuracy_by_difficulty"]:
+            rows.append((f"{label} ({a['accuracy_by_difficulty'][key]['n']})",
+                         a["accuracy_by_difficulty"][key]["accuracy"], b["accuracy_by_difficulty"][key]["accuracy"]))
+    rows += [("Eligibility right", a["eligibility_accuracy"], b["eligibility_accuracy"]),
+             ("Seller-win cases right", a["seller_win_accuracy"]["accuracy"], b["seller_win_accuracy"]["accuracy"]),
+             ("Buyer-win cases right", a["buyer_win_accuracy"]["accuracy"], b["buyer_win_accuracy"]["accuracy"])]
+    st.dataframe([{"": r[0], "Agent": pct(r[1]), "AI on its own": pct(r[2])} for r in rows], hide_index=True)
+    runs = load_report("model_comparison") or []
+    paired = next((r.get("paired") for r in runs if r["run"] == JUDGE_RUN), None)
+    st.caption(
+        "On the judgement itself the two are close"
+        + (f" ({paired['agent_only']} cases only the agent got right, {paired['baseline_only']} only the AI on its own; "
+           "not a significant difference on 50 cases)" if paired else "")
+        + ". The agent's advantage: it got eligibility right on every test case, cites policy staff can check, and "
+          "flags the cases it is unsure about."
+    )
+
+    models = [r for r in runs if r["run"].startswith("cmp_")]
+    if models:
+        st.subheader("Why Gemini")
+        st.dataframe(
+            [{"Model": MODEL_NAMES.get(r["model"], r["model"]), "Right outcome": pct(r["agent"]["decision_accuracy"]),
+              "Seconds per case": f"{r['agent']['seconds_per_case']['median']:.0f}"} for r in models],
+            hide_index=True,
+        )
+        st.caption("Models small enough to run on a staff computer refunded almost every dispute, so Gemini is the judge.")
+
+    hits = hybrid_search_hits()
+    if hits:
+        st.subheader("Finding the right policy")
+        st.markdown(f"On {hits['queries']} test questions, the policy search put the clause that answers the question **first {hits['hit1']}** "
+                    f"of the time and in the **top 3 {hits['hit3']}** of the time. The agent reads the top 3.")
+
+    st.subheader("What to keep in mind")
+    st.markdown(
+        f"- {n} test cases is a small sample: a few cases more or less right moves the rate by several points.\n"
+        "- The disputes are built on real second-hand listings, but the disputes themselves were written by us (most "
+        "with the help of an AI model), not taken from Carousell's records. Each test case was labelled by one person.\n"
+        "- If Gemini is unavailable, the app falls back to an OpenAI model that was not part of these tests; its answers "
+        "are marked \"(fallback)\".\n"
+        "- A pilot on real disputes, with staff comparing their own decisions, is the next step before relying on it."
+    )
+
+    with st.expander("Full technical reports"):
+        available = [k for k in TECHNICAL_REPORTS if (path("outputs.reports_dir") / f"{k}.md").exists()]
+        choice = st.selectbox("Report", available, format_func=TECHNICAL_REPORTS.get)
+        if choice:
+            st.markdown((path("outputs.reports_dir") / f"{choice}.md").read_text(encoding="utf-8"))
 
 
 def page_policy() -> None:
