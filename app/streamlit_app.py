@@ -55,15 +55,35 @@ REASON_LABELS = {
     "counterfeit": "counterfeit",
     "not_received": "not received",
 }
-WHATIF_EXAMPLES = [
-    "Items listed as 'Brand new' or 'Like new' that arrive with any cosmetic flaw not shown or mentioned "
-    "in the listing now qualify for a partial refund, even if the flaw does not affect use.",
-    "A missing accessory worth less than a tenth of the price is settled with a partial refund, "
-    "never a full refund with return.",
-    "If the seller does not respond to the dispute, the buyer's description of the problem is taken as accurate.",
-]
+WHATIF_EXAMPLES = {  # short label -> the rule as staff would write it
+    "Unmentioned cosmetic flaws on new items → partial refund":
+        "Items listed as 'Brand new' or 'Like new' that arrive with any cosmetic flaw not shown or mentioned "
+        "in the listing now qualify for a partial refund, even if the flaw does not affect use.",
+    "Cheap missing accessory → partial refund only":
+        "A missing accessory worth less than a tenth of the price is settled with a partial refund, "
+        "never a full refund with return.",
+    "Seller does not respond → the buyer's account stands":
+        "If the seller does not respond to the dispute, the buyer's description of the problem is taken as accurate.",
+}
 AVATARS = {"staff": "🧑‍💼", "agent": "⚖️", "case": "📦"}
-SPLIT_HELP = "demo: the four walkthrough cases. dev: cases used while building. test: the held-out set used for evaluation."
+CASE_SETS = {
+    "demo": "Demo cases",
+    "dev": "Development cases",
+    "test": "Test cases",
+    "seed": "Hand-written cases",
+    "all": "All cases",
+}
+SPLIT_HELP = ("Demo: the walkthrough cases. Development: cases we used while building the agent. "
+              "Test: the cases kept aside to measure it (see Evaluation results).")
+
+
+def case_set_label(split: str) -> str:
+    return f"{CASE_SETS.get(split, split)} ({len(case_ids_for(split))})"
+
+
+def doc_title(title: str) -> str:
+    """Help-centre titles all start with '[Singapore] '; it adds nothing on screen."""
+    return title.removeprefix("[Singapore] ")
 
 
 # ------------------------------------------------------------------ resources
@@ -142,7 +162,7 @@ def sidebar() -> tuple[str, str | None]:
     options = providers_here()
     default = load_config()["llm"]["provider"]
     provider = st.sidebar.radio(
-        "LLM provider",
+        "AI model",
         options,
         index=options.index(default) if default in options else 0,
         format_func=lambda p: PROVIDER_LABELS.get(p, p),
@@ -158,11 +178,11 @@ def sidebar() -> tuple[str, str | None]:
     elif provider == "mock":
         st.sidebar.warning("Mock mode: answers come from keyword rules, not an LLM.")
     else:
-        st.sidebar.caption(f"Judge model: `{judge_model(provider)}`")
+        st.sidebar.caption(f"Model: `{judge_model(provider)}`")
         fb = fallback_provider(provider)
         if fb:
-            st.sidebar.caption(f"If {provider} fails or its free quota runs out: `{judge_model(fb)}` ({fb}, "
-                               "free usage tier, about 50 requests a day). Not tested on our test set.")
+            st.sidebar.caption(f"Backup when Gemini is unavailable or out of free quota: `{judge_model(fb)}` "
+                               "(OpenAI). Its answers are marked \"(fallback)\"; it was not part of our tests.")
     if "gemini" not in options:
         st.sidebar.info("Add GEMINI_API_KEY to .env (or the app's Streamlit secrets) to use Gemini.")
     return provider, model
@@ -239,7 +259,7 @@ def show_clause(cid: str) -> None:
     if not clause:
         st.markdown(f"- `{cid}` (proposed rule)" if cid == "PROPOSED-1" else f"- `{cid}`")
         return
-    with st.expander(f"📜 `{cid}` · {clause.doc_title} > {clause.section}"):
+    with st.expander(f"📜 `{cid}` · {doc_title(clause.doc_title)} > {clause.section}"):
         st.text(clause.text)
         st.markdown(f"[Open the help-centre page]({clause.url})")
 
@@ -523,7 +543,7 @@ def review_bar(provider: str, model: str | None) -> None:
         with st.container(horizontal=True, vertical_alignment="center"):
             with st.popover("📂 Select a case"):
                 split = st.segmented_control("Case set", ["demo", "dev", "test", "all"], default="demo", help=SPLIT_HELP,
-                                             key="pick_split")
+                                             format_func=case_set_label, key="pick_split")
                 ids = case_ids_for(split or "demo")
                 cid = st.selectbox("Case", ids, format_func=case_label, key="pick_case")
                 st.button("Review this case", type="primary", disabled=not cid, on_click=queue_case,
@@ -622,11 +642,11 @@ def welcome_whatif(provider: str, model: str | None) -> None:
             "Describe a **policy change** in plain English. I re-judge past disputes as if the rule were in force and "
             "show which outcomes would flip, so you can see its effect before it goes live."
         )
-        st.caption("Each case costs one LLM call (plus two the first time a case is used). "
-                   "Change the case set and number of cases with **⚙** below.")
+        st.caption("Each case costs one AI call (plus two the first time a case is used). "
+                   "Choose which past cases and how many with **⚙** below.")
         st.markdown("Try one of these:")
-        for i, rule in enumerate(WHATIF_EXAMPLES):
-            st.button(rule, key=f"wi-example-{i}", on_click=queue_whatif, args=(rule, provider, model))
+        for i, (label, rule) in enumerate(WHATIF_EXAMPLES.items()):
+            st.button(label, key=f"wi-example-{i}", help=rule, on_click=queue_whatif, args=(rule, provider, model))
 
 
 def whatif_bar(provider: str, model: str | None) -> None:
@@ -634,8 +654,8 @@ def whatif_bar(provider: str, model: str | None) -> None:
     st.session_state.setdefault("wi_limit", 10)
     with st.bottom:
         with st.container(horizontal=True, vertical_alignment="center"):
-            with st.popover(f"⚙ {st.session_state.wi_split} · {st.session_state.wi_limit} cases"):
-                st.selectbox("Past cases from", ["dev", "seed", "all"], key="wi_split")
+            with st.popover(f"⚙ {CASE_SETS[st.session_state.wi_split]} · up to {st.session_state.wi_limit}"):
+                st.selectbox("Past cases from", ["dev", "seed", "all"], key="wi_split", format_func=case_set_label)
                 st.slider("Maximum cases", 3, 60, key="wi_limit")
             st.chat_input("Describe a proposed rule change...", key="whatif_chat", on_submit=on_whatif_chat,
                           args=(provider, model))
@@ -654,7 +674,7 @@ def page_whatif(provider: str, model: str | None) -> None:
     for event in events:
         with st.chat_message("staff", avatar=AVATARS["staff"]):
             st.markdown(event["rule"])
-            st.caption(f"{event['split']} cases · up to {event['limit']}")
+            st.caption(f"{CASE_SETS.get(event['split'], event['split'])} · up to {event['limit']}")
         with st.chat_message("agent", avatar=AVATARS["agent"]):
             if event["status"] == "pending":
                 run_whatif_event(event)
@@ -800,19 +820,26 @@ def page_evaluation() -> None:
 
 def page_policy() -> None:
     st.title("Policy library")
-    st.caption("Carousell SG help-centre pages, split into the clauses the agent cites.")
-    query = st.text_input("Search the policy (the same hybrid search the agent uses)", placeholder="e.g. colour slightly different")
+    st.markdown("Carousell Singapore's help-centre pages on Buyer Protection and disputes, split into the numbered "
+                "clauses the agent cites (for example `BPR-02`).")
+    query = st.text_input("Search the policy", placeholder="e.g. colour slightly different, missing charger",
+                          help="The same search the agent uses: it matches both the words and the meaning.")
     if query:
-        for c in store().retrieve(query, k=5):
-            st.markdown(f"**`{c.clause_id}`** {c.doc_title} > {c.section}")
-            st.text(c.text)
+        results = store().retrieve(query, k=5)
+        st.markdown(f"**Most relevant clauses for “{query}”**")
+        for i, c in enumerate(results, 1):
+            with st.container(border=True):
+                st.markdown(f"**{i}. `{c.clause_id}`** · {doc_title(c.doc_title)} > {c.section}")
+                st.text(c.text)
+                st.markdown(f"[Open the help-centre page]({c.url})")
         st.divider()
+    st.markdown("**All policy pages**")
     docs: dict[str, list] = {}
     for c in load_clauses():
         docs.setdefault(c.doc_title, []).append(c)
     for title, clauses in docs.items():
-        with st.expander(f"{title} ({len(clauses)} clauses)"):
-            st.markdown(f"[Source]({clauses[0].url})")
+        with st.expander(f"{doc_title(title)} ({len(clauses)} clauses)"):
+            st.markdown(f"[Open the help-centre page]({clauses[0].url})")
             for c in clauses:
                 st.markdown(f"**`{c.clause_id}`** {c.section}")
                 st.text(c.text)
@@ -820,6 +847,32 @@ def page_policy() -> None:
 
 def page_about() -> None:
     st.title("How it works")
+    st.markdown("The agent follows the same steps for every dispute. Fixed rules are checked by plain code, the AI "
+                "handles the judgement, and a person always makes the final decision.")
+    st.image(str(ROOT / "docs" / "figures" / "agent_workflow.png"))
+    st.markdown(
+        "1. **Intake.** The listing, the order, the dispute and the chat between buyer and seller.\n"
+        "2. **Eligibility (code).** Was it paid through the 'Buy' button, raised in time, and the first dispute on "
+        "the order? If not, or if the seller missed the 24-hour deadline to respond, the rules decide on their own "
+        "and no AI is used.\n"
+        "3. **Claim matching (AI).** Lists what the listing promised and what the buyer says is wrong, and finds the gaps "
+        "between them.\n"
+        "4. **Retrieval (policy search).** Looks up the policy clauses that cover each gap.\n"
+        "5. **Judgement (AI).** Recommends one of Carousell's four outcomes (full refund with return, full refund "
+        "without return, partial refund, decline) and must cite the clauses behind it. If they do not cover a gap, it "
+        "can ask for another search.\n"
+        "6. **Check (code).** Flags the case for a closer look if the AI cites a clause it was not shown, is not "
+        "confident, asks for more evidence, or gives an outcome that does not fit the gaps it found.\n"
+        "7. **Staff decide.** The agent stops here. Staff approve the recommendation or override it with a note.\n"
+        "8. **Message drafts (AI).** Drafts the messages to the buyer and the seller for staff to edit and send."
+    )
+    st.markdown("**Why this design:** the rules that must never be wrong are code, every recommendation can be checked "
+                "against the policy it cites, and nothing reaches a customer without a person's decision.")
+    with st.expander("Technical details"):
+        technical_details()
+
+
+def technical_details() -> None:
     st.markdown(
         "The agent is a LangGraph workflow. Fixed rules (payment method, dispute window) are plain code; "
         "the LLM matches the buyer's claims against the listing and judges them against policy clauses "
@@ -831,21 +884,6 @@ def page_about() -> None:
         "`reports/model_comparison.md` compares them on the held-out test set. If a Gemini call fails, "
         "the app makes it with OpenAI instead (a fallback for availability, not part of the comparison)."
     )
-    st.graphviz_chart(
-        """
-        digraph {
-          rankdir=LR; node [shape=box, style="rounded,filled", fillcolor="#f4f4f5", fontname="Helvetica"];
-          intake [label="Case intake"]; elig [label="Eligibility rules\\n(code)"]; rules [label="Rule-based\\nrecommendation"];
-          claims [label="Claim matching\\n(LLM)"]; rag [label="Policy retrieval\\n(RAG)"]; judge [label="Policy judgement\\n(LLM)"];
-          gate [label="Confidence and\\ncitation check"]; staff [label="Staff decides\\n(pause)", fillcolor="#fde68a"]; msgs [label="Message drafts\\n(LLM)"];
-          intake -> elig; elig -> claims [label="covered"]; elig -> rules [label="not covered /\\nprocedural"];
-          tool [label="search_policy\\ntool (RAG)", fillcolor="#dbeafe"];
-          claims -> rag -> judge; judge -> tool [label="needs more\\npolicy"]; tool -> judge [label="new\\nclauses"];
-          judge -> gate -> staff; rules -> staff; staff -> msgs;
-        }
-        """
-    )
-    st.markdown("**Nodes:** " + ", ".join(NODE_LABELS.values()))
 
 
 def main() -> None:
