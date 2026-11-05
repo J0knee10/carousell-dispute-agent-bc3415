@@ -539,8 +539,12 @@ def page_review(provider: str, model: str | None) -> None:
     staff_settings()
     review_bar(provider, model)
     events = st.session_state.setdefault("review_events", [])
+    # Its own slot, emptied once a review starts, so the welcome does not linger
+    # (greyed out) while the agent runs.
+    welcome = st.empty()
     if not events:
-        welcome_review(provider, model)
+        with welcome.container():
+            welcome_review(provider, model)
     for event in events:
         if event["kind"] == "case":
             show_case_event(event)
@@ -643,8 +647,10 @@ def page_whatif(provider: str, model: str | None) -> None:
     st.title("What-if policy test")
     whatif_bar(provider, model)
     events = st.session_state.setdefault("whatif_events", [])
+    welcome = st.empty()  # see page_review
     if not events:
-        welcome_whatif(provider, model)
+        with welcome.container():
+            welcome_whatif(provider, model)
     for event in events:
         with st.chat_message("staff", avatar=AVATARS["staff"]):
             st.markdown(event["rule"])
