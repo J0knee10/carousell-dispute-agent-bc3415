@@ -127,16 +127,3 @@ def format_retrieval_table(by_k: dict[int, dict]) -> str:
         cells = [f"{by_k[k]['modes'][mode][f'hit@{k}']:.0%}" for k in ks]
         lines.append(f"| {mode} | " + " | ".join(cells) + f" | {by_k[mrr_k]['modes'][mode]['mrr']:.2f} |")
     return "\n".join(lines)
-
-
-def format_retrieval(results: dict) -> str:
-    k = results["k"]
-    lines = [
-        f"Retrieval accuracy on {results['n_queries']} test queries (data/eval/retrieval_queries.jsonl)",
-        "",
-        f"| Mode | Hit@1 | Hit@{k} | MRR |",
-        "|---|---|---|---|",
-    ]
-    for mode, m in results["modes"].items():
-        lines.append(f"| {mode} | {m['hit@1']:.0%} | {m[f'hit@{k}']:.0%} | {m['mrr']:.2f} |")
-    return "\n".join(lines)

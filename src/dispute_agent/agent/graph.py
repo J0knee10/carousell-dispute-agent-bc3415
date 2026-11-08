@@ -18,7 +18,6 @@ import json
 import operator
 import time
 from datetime import datetime
-from pathlib import Path
 from typing import Annotated, Any, Callable, TypedDict
 
 from langgraph.checkpoint.memory import InMemorySaver
@@ -439,12 +438,3 @@ NODE_LABELS = {
     "staff_review": "Staff decision",
     "messages": "Message drafts",
 }
-
-
-def mermaid_diagram(graph) -> str:
-    return graph.get_graph().draw_mermaid()
-
-
-def save_diagram(graph, out: Path) -> Path:
-    out.write_text(mermaid_diagram(graph), encoding="utf-8")
-    return out

@@ -19,6 +19,7 @@ COPY data/cases ./data/cases
 COPY data/eval ./data/eval
 COPY data/labels ./data/labels
 COPY reports ./reports
+COPY docs/figures ./docs/figures
 RUN uv sync --frozen --no-dev
 
 # Download the embedding model and build the policy index at build time.

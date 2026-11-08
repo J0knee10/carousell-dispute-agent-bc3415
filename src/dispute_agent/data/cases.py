@@ -68,7 +68,7 @@ def make_splits(cases: list[DisputeCase], test_size: int | None = None, seed: in
 
     test: list[str] = []
     total = len(pool)
-    for diff, ids in sorted(by_diff.items()):
+    for _diff, ids in sorted(by_diff.items()):
         ids = sorted(ids)
         rng.shuffle(ids)
         share = round(test_size * len(ids) / total) if total else 0

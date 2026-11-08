@@ -1,7 +1,8 @@
-"""Update Carousell_Dispute_Agent_Full_Report.docx in place for the 4 Nov 2026 changes.
+"""Build Carousell_Dispute_Agent_Full_Report.docx from report_orig.docx for the 4 Nov 2026 changes.
 
-Run from the repo root:
-  uv run --no-project --with python-docx python -I <this file> <scratch dir> <findings.json>
+build_report.py runs this with the right arguments. To run it by hand, from the repo root:
+  uv run --no-project --with python-docx --with pillow python -I <this file> docs/report_build <findings.json> <output .docx>
+The output must not be report_orig.docx: every build starts from it.
 """
 from __future__ import annotations
 
@@ -9,6 +10,8 @@ import json
 import sys
 from pathlib import Path
 
+if len(sys.argv) != 4:
+    sys.exit("usage: update_report.py <report_build dir> <findings.json> <output .docx> (or run build_report.py)")
 sys.path.insert(0, sys.argv[1])
 from docx import Document  # noqa: E402
 from docx.oxml.ns import qn  # noqa: E402
@@ -19,6 +22,9 @@ from docx_helpers import (  # noqa: E402
 
 REPO = Path(".")
 SRC = Path(sys.argv[1]) / "report_orig.docx"  # always start from the original (commit 48bcbba)
+OUT = Path(sys.argv[3])
+if OUT.resolve() == SRC.resolve():
+    sys.exit(f"refusing to save over {SRC}: every build starts from it, so give another output path")
 F = json.loads(Path(sys.argv[2]).read_text(encoding="utf-8"))  # findings and numbers written after the runs
 FIGURE = REPO / "docs/figures/agent_workflow.png"
 
@@ -412,12 +418,15 @@ set_runs(para(doc, "12.3 Contribution table (template)", "Heading 2"), "12.2 Tea
 set_runs(para(doc, "Fill in one row per member."),
          "Each member’s role, main contributions, where the evidence is, and their part in the video.")
 
+# Appendix B: the price was checked on Google's own page (section 9.6)
+set_runs(para(doc, "Gemini API pricing:"),
+         "Gemini API pricing: Google’s pricing page, ai.google.dev/gemini-api/docs/pricing (5 Nov 2026, paid-tier price for gemini-3.5-flash-lite).")
+
 # Appendix C: no slides any more
 for tbl in doc.tables:
     for i, row in enumerate(tbl.rows):
         if row.cells[0].text.strip() == "Code, data, reports, slides, video script":
             set_cell(tbl, i, 0, "Code, data, reports, video script")
 
-out = Path(sys.argv[3]) if len(sys.argv) > 3 else SRC
-doc.save(out)
-print("saved", out)
+doc.save(OUT)
+print("saved", OUT)

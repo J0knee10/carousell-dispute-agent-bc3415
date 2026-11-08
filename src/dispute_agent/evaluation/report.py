@@ -40,7 +40,7 @@ def build_report(run: str) -> tuple[Path, dict]:
         lines += ["> **Mock provider: these numbers come from keyword rules, not an LLM. They only show the pipeline works.**", ""]
     lines += [
         f"- Cases: {info.get('split', '?')} split, {len(split_ids)} cases",
-        f"- Models: " + ", ".join(sorted({f"{r.get('provider')}/{r.get('model')}" for s in results for r in load_records(run, s)})),
+        "- Models: " + ", ".join(sorted({f"{r.get('provider')}/{r.get('model')}" for s in results for r in load_records(run, s)})),
         f"- Confidence threshold for escalation: {threshold}",
     ]
     any_res = next(iter(results.values()), {})

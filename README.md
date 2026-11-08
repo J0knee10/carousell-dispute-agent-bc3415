@@ -9,6 +9,8 @@ A staff member always makes the final decision.
 
 BC3415 group project, Option A (working prototype + demo video).
 
+Written report: `Carousell_Dispute_Agent_Full_Report.docx` (repo root, built from `docs/report_build/`).
+
 **Live app:** https://bc3415-carousell-dispute-agent.streamlit.app/ (Streamlit
 Community Cloud; it may take a minute to wake up if nobody has opened it for a
 while).
@@ -143,9 +145,11 @@ avoid API calls, or `--provider ollama --model llama3.1:8b` to use a local model
 | Command | What it does |
 |---|---|
 | `check-llm` | Checks the provider and models respond |
+| `build-index [--force]` | Builds the policy search index in `.chroma/` (other commands build it when needed) |
 | `run-case S01 [--approve]` | Runs the agent on one case and prints each step |
 | `evaluate --split test` | Agent and baseline on the 50 held-out cases, then writes `reports/evaluation_<run>.md` |
 | `evaluate ... --retrieval agentic` / `--no-retrieval` | Retrieval variants of the agent (see [Model comparison](#model-comparison)) |
+| `report RUN` | Rewrites `reports/evaluation_<run>.md` from a run's saved predictions, with no LLM calls |
 | `compare RUN1 RUN2 ...` | One report across runs: `reports/model_comparison.md` |
 | `eval-retrieval` | Retrieval hit rates for dense, keyword and hybrid search |
 | `whatif "proposed rule..." --limit 20` | Re-judges past cases under a proposed rule |
@@ -369,12 +373,23 @@ src/dispute_agent/
   data/                       Mercari sampler, case loading, generator, labels
   evaluation/                 harness, metrics, report, model comparison, retrieval eval, what-if
   cli.py                      command line
+config.yaml                   models, retrieval, agent, data and output settings
 data/                         policy text, listings, cases, labels, eval queries
-docs/labelling_guide.md       how to label cases
-docs/figures/                 workflow figure and the script that draws it
+docs/
+  labelling_guide.md          how to label cases
+  model_comparison_notes.md   written conclusions at the top of reports/model_comparison.md
+  figures/                    workflow figure and the script that draws it
+  report_build/               scripts that build the report
 reports/                      evaluation reports and the model comparison
+outputs/
+  runs/                       per-case predictions behind every report
+  runs_discarded/             the runs reports/tool_field_experiment.md cites
+  whatif/                     the what-if demo run
 presentation/VIDEO_SCRIPT.md  demo video script (all six members, about 4:55)
 tests/                        pytest suite (runs offline: mock LLM, faked HTTP)
+Dockerfile / compose.yaml     optional container for the app
+Carousell_Dispute_Agent_Full_Report.docx
+                              the written report (built from docs/report_build/)
 ```
 
 Run the tests with `uv run pytest` (69 tests, no network or API key needed; they write their outputs to a temporary folder).

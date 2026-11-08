@@ -86,7 +86,8 @@ data:
   retrieval_queries: data/eval/retrieval_queries.jsonl
 
 generation:
-  # Number of synthetic disputes to add on top of the hand-written seed cases.
+  # Total number of cases, including the 20 hand-written seed cases
+  # (200 = 20 seed + 180 generated). The generator writes only the difference.
   # Mix follows the brief: 60% clear, 30% borderline, 10% ineligible.
   target_total: 200
   mix:

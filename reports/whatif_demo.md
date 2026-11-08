@@ -19,7 +19,7 @@
 | S10 | J. Crew French Bulldog Sweater | wear_consistent_with_listing | decline | decline |  |  |
 | S11 | Camo Speed Shorts Lululemon 6 Blue Lotus | different_variation | decline | decline |  |  |
 | S12 | Nike foamposite | condition_worse_than_listed, wear_consistent_with_listing | decline | decline |  |  |
-| S13 | iPhone 4 | SALE HURRY FAST | wear_consistent_with_listing, wear_consistent_with_listing | decline | decline |  |  |
+| S13 | iPhone 4 \| SALE HURRY FAST | wear_consistent_with_listing, wear_consistent_with_listing | decline | decline |  |  |
 | S14 | Vintage Nike Sportswear Crewneck | undisclosed_defect | partial_refund | partial_refund |  |  |
 | S15 | Halloween costume | missing_part | partial_refund | full_refund_with_return | yes | yes |
 
