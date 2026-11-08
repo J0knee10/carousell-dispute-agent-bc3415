@@ -1,6 +1,6 @@
 # Session handoff (working notes, delete before submission)
 
-Last updated: 6 Nov 2026. For continuing the work on another device (or in a
+Last updated: 9 Nov 2026. For continuing the work on another device (or in a
 new Claude Code session). The team's task list is in [NEXT_STEPS.md](NEXT_STEPS.md);
 this file is the context behind it.
 
@@ -10,10 +10,52 @@ this file is the context behind it.
 - **OpenAI:** only the cloud app's automatic fallback when a Gemini call fails (`gpt-5.4-mini`). The key is **unpaid** (OpenAI free usage tier, about 50 requests a day), so there is no spend cap any more, and OpenAI is not in the comparison and not selectable as a judge in the app's sidebar. The CLI still takes `--provider openai` (`check-llm --provider openai` tests the key). The partial GPT-5.4 mini runs were deleted on 5 Nov.
 - **Gemini model:** `gemini-flash-lite-latest` pointed to `gemini-3.5-flash-lite` when checked through the API on 5 Nov. Google's paid price for it: US$0.30 in / US$2.50 out per million tokens (about US$0.002 a case); the free tier costs nothing.
 - **Team:** C1 Ronak, C2 Akshaya, C3 Evelyn, C4 Jonathan, B1 Dan Yu, B2 Drue. Names are in the README table and report section 12.2. The "Main contributions" and "Evidence" columns are still the role defaults: each member should correct their row.
-- **Video:** not recorded yet. `presentation/VIDEO_SCRIPT.md` gives all six members a part (B1 problem, C1 workflow, C2 policy search, C4 demo, C3 evaluation, B2 risks, B1 recommendation), about 4:55 in total, and asks for every speaker on camera. The slide deck was deleted on 6 Nov: the video records the app's own pages, with text cards added in editing.
+- **Video:** not recorded yet. `presentation/VIDEO_SCRIPT.md` gives all six members a part (B1 problem, C1 workflow, C2 policy search, C4 demo, C3 evaluation, B2 risks, B1 recommendation), about 4:55 in total, and asks for every speaker on camera. The old video slide deck (.pptx) was deleted on 6 Nov: the video records the app's own pages, with text cards added in editing. The professor will not run the app himself (no API keys are submitted), so the video and the live demo are where the app is seen working.
+- **Live presentation:** separate from the video. The team presents live (about 15 min plus 5 min Q&A) to a mock Carousell CTO and CFO, using a 25-slide Canva pitch deck ("Carousell_Dispute_Agent_Canva_Pitch", Group 4). The deck is kept outside the repo; its edit link is with the team and must not go in the repo.
+  - **Speakers and script:** the full script is in the deck's speaker notes. Each note starts with the speaker, a length and an "on time if done by" mark. Dan Yu takes slides 1–5, Ronak 6–9, Akshaya 10–13, Jonathan 14–17 (including the live demo on 17), Evelyn 18–21 and Drue 22–25.
+  - **Timing:** about 13:50 at 150 words a minute, including about 75 s of app waits in the demo; about 12:20 at a faster pace. Handovers add about 25 s. If rehearsal runs long, cut slides 11, 12 and 24 to the sentences their notes mark.
+  - **Demo and Q&A:** slide 17's notes hold the demo steps (S01, S16, G155; backups S02 and S10). Slide 25's notes hold a Q&A bank of CFO, CTO and evidence questions, each with an answer and who gives it.
+  - **QR code:** `qr-code.jpg` (in the repo folder, not committed) opens the live app. It is on slides 17 and 25. Ask the panel to scan it after the demo, because everyone on the link shares the free Gemini quota with the demo.
 - **Deployment:** live since 6 Nov at https://bc3415-carousell-dispute-agent.streamlit.app/; every push to `main` redeploys it. Secrets (set in Streamlit, not in the repo): `GEMINI_API_KEY` and `OPENAI_API_KEY`. Everyone using the link shares the free Gemini quota.
 - **App UI (6 Nov):** Review and What-if are a guided chat (bottom bar with a case picker or settings, plus a chat box); Evaluation results is a summary for non-technical readers that reads its numbers from `reports/`; How it works uses `docs/figures/agent_workflow.png`.
 - **Tests:** 69, all passing, offline.
+
+## What changed on 9 Nov
+
+A review compared the repo with the Canva pitch deck, then fixed both.
+
+**Canva pitch deck** (slide numbers are Canva's page numbers; the deck's own "(01)" labels are one lower):
+
+- Slides 2, 15, 16: "66 automated tests" became 69.
+- Slides 15, 16: "not deployed yet" became "live on Streamlit Community Cloud (since 6 Nov)".
+- Slide 5: the build cost row says "(amortised over 3 yrs)", so S$400K minus about S$100K a year gives the S$300K net value shown.
+- Slide 9: escalation item (2) now also covers citing a clause the judge was not given, as `review_gate` in `graph.py` does.
+- Slide 18: added the missing 17th scenario, "Seller didn't respond 1" (the Clear column now adds up to 120).
+- Slide 20: the footnote explains G134 (a judgement call the agent got right).
+- Slide 21: "THE AGENT BEAT A SINGLE PROMPT" became "WAS AHEAD OF", plus "none statistically significant", to agree with slide 19's "a tie on judgement".
+- Slides 22–24: the source lines got their report section numbers back (8.2, 8.5 and 10; 8.8 and 8.7; 8.7).
+- Slides 17 and 25: QR code to the live app, with a caption.
+- Every slide: new speaker notes, as described above. The old notes still said "Group [number]", "66 tests", "we haven't deployed it yet" and described the old app layout.
+
+**Repo:**
+
+- `docs/report_build/update_report.py` now needs the output path as a third argument and refuses to save over `report_orig.docx`. Before, running it as its docstring said would overwrite the base file every build starts from.
+- The report: Appendix B no longer says the Gemini pricing page is "to be checked", matching section 9.6. It was rebuilt with `build_report.py` and the contents page was refreshed in Word. The only text change is that line. Word's save also set the file's "last modified by" property.
+- `README.md`: names the written report, has a complete project layout (`config.yaml`, `outputs/`, `docs/report_build/`, Docker files, the .docx), and lists the `build-index` and `report` commands.
+- `docs/report_build/README.md`: the full `compare` command (it was cut short with "..." and no `--hardware`), plus the CRLF note, so it survives when this file is deleted.
+- `Dockerfile`: copies `docs/figures/`, which the How it works page needs.
+- Unused code removed: `mermaid_diagram` and `save_diagram` in `agent/graph.py`, and `format_retrieval` in `evaluation/retrieval.py`. `max_backup_calls` stays, because a test uses it and removing it would change the 69 test count.
+- Small fixes:
+  - the `config.yaml` comment on `target_total`, which includes the 20 seed cases;
+  - two lint warnings, in `evaluation/report.py` and `data/cases.py`;
+  - a `|` in the S13 title, which broke a table row in `reports/whatif_demo.md`.
+- `NEXT_STEPS.md`: the Push item is ticked. The Mercari fallback is now "keep the repo private", because generated cases embed the listing text. The submission item now notes the README link to this file and the `docs/report_build/` decision.
+
+**Still open from the review** (not changed on purpose):
+
+- The deck repeats some content (slides 10 and 11 both show the retrieval figures; slides 14 and 15 both list the stack). It also has no team slide. The slides were left as they are, so the length did not change.
+- `docs/report_build/report_orig.docx` still holds the draft's internal notes. Keep it while the report may need rebuilding, and decide before submission (see `NEXT_STEPS.md`).
+- 17 of the 19 `reports/citation_check_*.csv` files are empty; only `cmp_gemini-flash-lite` matters, and its human `supports` column is still blank.
 
 ## Mock grade (5 Nov)
 
@@ -46,7 +88,10 @@ uv run dispute-agent compare cmp_gemini-flash-lite cmp_llama3.1-8b cmp_qwen3-8b 
 - **Line endings on Windows:** `compare` rewrites every `reports/evaluation_*` file with CRLF endings. The content is unchanged and git shows them as modified, so restore those with `git checkout -- <file>` and keep only the files whose content changed (`git diff --name-only` lists the real ones). The repo stores LF (`.gitattributes`).
 - **Free Gemini quota:** about one full test run (agent and baseline on 50 cases) a day for `gemini-flash-lite-latest`; it resets at 4 PM Singapore. Long jobs stop with exit code 75 and resume when re-run.
 - **The test set has been used three times;** don't tune anything on it.
-- If a number changes, it has to change in the README, the comparison notes, `findings_text.json` / `update_report.py` (then rebuild the report) and `VIDEO_SCRIPT.md`. The app's Evaluation results page reads `reports/` itself.
+- If a number changes, it has to change in the README, the comparison notes, `findings_text.json` / `update_report.py` (then rebuild the report), `VIDEO_SCRIPT.md`, and the Canva deck and its speaker notes. The app's Evaluation results page reads `reports/` itself.
+- **Editing the Canva deck:**
+  - Find and replace (File menu) keeps most formatting, but replaced text can pick up bold from the text just before it. Check the weight after each replacement.
+  - Uploading images needs a signed-in Canva account; an anonymous edit link cannot upload.
 
 ## Ground rules with Jonathan
 
