@@ -195,7 +195,7 @@ set_runs(para(doc, "G059, G129, G134 and G147 are the cases"), "G059, G129, G134
 
 t = table_after(doc, "8.4 Other results")
 set_row(t, 1, [None, "Agent 100%, baseline 80% on the 20 hand-written cases (28 Oct; the 4 that are also test cases are scored against the hand labels, the other 16 against the outcomes they were written for). Not held out: these cases were used while writing the prompts"])
-set_row(t, 3, [None, "61 of the agent’s 68 citations (90%) support the decision. Most misses cite a procedural clause (how a return works), or a clause listing what is covered on a decline"])
+set_row(t, 3, ["Citation check (by a person)", "60 of the agent’s 68 citations (88%) support the decision, just under the 90% target: 41 of 42 on refunds but 19 of 26 on declines, which sometimes cite the wrong exclusion (BPR-03 instead of BPR-04). The AI reviewer agreed on 67 of 68"])
 resize_rows(t, 6)
 set_row(t, 5, ["search_policy tool (default design)", F["tool_use_row"]])
 
@@ -284,7 +284,7 @@ set_runs(b, [("Measured:", True), (" about 9 seconds and 1.8 LLM calls per case;
 b = para(doc, "Working agent, hybrid retrieval, what-if test")
 set_runs(b, "Working agent with the search_policy tool, hybrid retrieval, what-if test, evaluation harness, Streamlit app, CLI, 69 offline tests, Docker files.")
 b = para(doc, "Two test runs, seed run, dev runs")
-set_runs(b, "Three test runs with Gemini; the model comparison with two local models (Llama 3.1 8B, Qwen 3 8B); retrieval and decision-guide ablations; seed run, dev runs and retrieval evaluation, all in reports/; AI citation and label checks in separate columns.")
+set_runs(b, "Three test runs with Gemini; the model comparison with two local models (Llama 3.1 8B, Qwen 3 8B); retrieval and decision-guide ablations; seed run, dev runs and retrieval evaluation, all in reports/; a person’s check of all 68 citations (88% support the decision), with AI citation and label checks in separate columns.")
 b = para(doc, "GitHub repo linked on this machine (3 Nov).")
 insert_paragraph_after(b, BULLET, plain("App deployed on Streamlit Community Cloud at bc3415-carousell-dispute-agent.streamlit.app (6 Nov): keys from Streamlit secrets, Gemini first with OpenAI (free usage tier) as a fallback."))
 set_runs(para(doc, "Slides and video script"), "Video script for all six members (presentation/VIDEO_SCRIPT.md).")
@@ -301,7 +301,7 @@ t = table_after(doc, "12.3 Team roles") if False else table_after(doc, "12.3 Con
 anchor = insert_paragraph_after(h, NORMAL, "Fill in one row per member. Evidence can be commits, files, documents or meeting notes. The same table is in the README.")
 rows = [
     ["Member", "Role", "Main contributions", "Evidence", "In the video"],
-    ["Ronak", "C1: Agent lead", "LangGraph workflow, tool loop, confidence check, staff pause", "src/dispute_agent/agent/", "How it works"],
+    ["Ronak", "C1: Agent lead", "LangGraph workflow, tool loop, confidence check, staff pause; checked all 68 test-set citations by hand", "src/dispute_agent/agent/, reports/citation_audit_cmp_gemini-flash-lite.csv", "How it works"],
     ["Akshaya", "C2: RAG and policy", "Policy clauses, hybrid search, citations, retrieval evaluation", "src/dispute_agent/rag/, reports/retrieval.md", "Policy search"],
     ["Evelyn", "C3: Data and evaluation", "Listings, dispute generator, labels, harness, baseline, model comparison", "src/dispute_agent/data/, evaluation/, reports/", "Does it work?"],
     ["Jonathan", "C4: App and deployment", "Streamlit app, local models, cloud deployment, repo and README", "app/, src/dispute_agent/llm/, README.md", "Live demo"],

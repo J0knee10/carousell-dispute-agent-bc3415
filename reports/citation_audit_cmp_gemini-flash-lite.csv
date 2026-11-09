@@ -1,0 +1,141 @@
+CAROUSELL CITATION AUDIT,,,,,
+"All 68 citationa,  45 LLM decisions  ",,,,,
+,,,,,
+Case ID,AI verdict,Cited policy clause,"Supports?
+Y / N",Observation / why,Correction / better clause
+G006,Decline,"BPR-04
+Transactions not eligible for refund (continued)",Y,The buyer expected leggings that were not listed or separately agreed. The unpromised-item exclusion directly supports declining this claim.,—
+G008,Full refund with return,"BPR-02
+Eligible dispute reasons",Y,"The listing promised three knobs; the buyer reports receiving none. Missing promised parts are a covered dispute reason. This supports the claim category, not a mandatory full refund.",—
+G008,Full refund with return,"DPO-08
+Incomplete items / non-delivery",Y,"For an incomplete item, this clause permits supplying the missing parts, a full or partial refund, or return and refund. The recommended full return/refund is permitted, but not required.",—
+G008,Full refund with return,"DPO-02
+Dispute Request",Y,The buyer requested return and refund for missing promised knobs. This is an expressly permitted proposal for incomplete items; the clause does not itself approve the claim.,—
+G013,Decline,"BPR-03
+Transactions not eligible for refund",N,"The listing expressly excluded the box. BPR-03 covers subjective differences, disclosed wear and change of mind, not the specific exclusion for an accessory never promised. The decline may still be defensible.",Use BPR-04: claims for something not in the listing or agreement.
+G018,Full refund with return,"BPR-02
+Eligible dispute reasons",Y,"Cracked caps, stains and a half-empty tube materially conflict with a brand-new, full-volume listing. Undisclosed defects and a substantial mismatch are covered grounds.",—
+G018,Full refund with return,"DPO-02
+Dispute Request",Y,"Return and refund is an allowed proposal for a significantly misdescribed item. BPR-02 supplies the substantive grounds; DPO-02 supports the available remedy, not automatic approval.",—
+G019,Decline,"BPR-03
+Transactions not eligible for refund",Y,The listing disclosed that both boots and legs were glued. Dissatisfaction with that disclosed condition fits the exclusion for an accurately described used item/change of mind.,—
+G023,Full refund with return,"BPR-02
+Eligible dispute reasons",Y,The seller admitted sending size 9 instead of size 11. A wrong size is expressly covered. This does not by itself require refunding the whole two-pair bundle.,—
+G023,Full refund with return,"WBP-04
+For Buyers: general coverage",Y,This supplies general Buyer Protection coverage for a significantly misdescribed purchase. It is not the specific wrong-size rule; the accompanying BPR-02 supplies that detail.,—
+G025,Full refund with return,"BPR-02
+Eligible dispute reasons",Y,Undisclosed yellow stains and loose elastic conflict with the like-new description. The clause supports an undisclosed-defect claim; deciding its severity and remedy still requires judgement.,—
+G025,Full refund with return,"WBP-05
+For Buyers: covered discrepancies",Y,"The clause covers an item's condition differing from the listing. The reported stains and stretched elastic are relevant to that ground, not merely a change of preference.",—
+G030,Full refund with return,"BPR-02
+Eligible dispute reasons",Y,"The buyer received size L instead of the listed M, and the seller admitted the mix-up. The wrong-variation provision directly supports the claim.",—
+G031,Full refund with return,"BPR-02
+Eligible dispute reasons",Y,A significant shoulder-seam tear was not disclosed on clothing listed as like new. This is the type of undisclosed damage the clause covers.,—
+G031,Full refund with return,"WBP-04
+For Buyers: general coverage",Y,This supports general coverage for a significantly misdescribed item. It does not independently prove the tear or require a full refund; BPR-02 provides the specific damage ground.,—
+G041,Decline,"BPR-03
+Transactions not eligible for refund",N,"The complaint is about an original box that was never promised, rather than a subjective condition rating or disclosed wear. The more specific exclusion is outside this cited chunk.",Use BPR-04: claims for something not in the listing or agreement.
+G042,Decline,"BPR-04
+Transactions not eligible for refund (continued)",Y,The buyer admitted dropping the curler after receipt. The post-delivery-damage exclusion directly supports decline; the packing video alone would not establish what happened after delivery.,—
+G043,Partial refund,"BPR-02
+Eligible dispute reasons",Y,"The listing promised a factory charger plus an additional charger; the buyer reports receiving one. This supports an incomplete-item claim, not a fixed refund percentage.",—
+G043,Partial refund,"DPO-08
+Incomplete items / non-delivery",Y,"A partial refund is an available remedy for a missing promised charger, subject to determining the claim. Supplying the charger or arranging a return are also possible.",—
+G043,Partial refund,"DPO-02
+Dispute Request",Y,"Partial refund without return is an allowed resolution proposal for an incomplete item. It is not mandatory merely because the main tracker works, and agreement/approval remains necessary.",—
+G046,Full refund with return,"BPR-02
+Eligible dispute reasons",Y,Large stains and fraying contradict the flag's brand-new listing. Undisclosed defects support a significantly-not-as-described claim.,—
+G051,Full refund with return,"BPR-02
+Eligible dispute reasons",Y,The pillowcase was listed as 29 inches but reportedly measured 20 inches; the seller admitted sending the smaller version. The wrong-size provision directly applies.,—
+G051,Full refund with return,"WBP-04
+For Buyers: general coverage",Y,The clause establishes general coverage for a significantly misdescribed purchase. It does not itself list size examples; BPR-02 is the more specific accompanying citation.,—
+G054,Decline,"BPR-03
+Transactions not eligible for refund",Y,The spots on the shirt were disclosed in the description and listing photo. Dissatisfaction with that accurately described used condition supports decline under this exclusion.,—
+G059,Decline,"RRR-03
+Raise to support team: evidence",N,"This explains what evidence sellers may submit. It does not say a seller's pre-handover photo automatically defeats a buyer's damage claim, or that missing unboxing evidence requires decline.",Keep RRR-03 as evidence guidance only. Use the Carousell Support review process to resolve the conflict; no cited rule mandates decline.
+G061,Decline,"BPR-03
+Transactions not eligible for refund",Y,The buyer expresses subjective dissatisfaction with colour and wear on shoes disclosed as worn for a month. The minor-variation/disclosed-used-condition exclusion is relevant.,—
+G065,Full refund with return,"BPR-02
+Eligible dispute reasons",Y,The seller admitted sending the smaller print rather than the listed 18-by-24-inch version. A different size variation is an expressly covered discrepancy.,—
+G070,Decline,"BPR-04
+Transactions not eligible for refund (continued)",Y,The buyer admitted dropping and bending the rooster mould after collection. The exclusion for damage after successful delivery directly supports decline.,—
+G076,Decline,"BPR-02
+Eligible dispute reasons",N,This lists grounds for a valid incomplete-item claim. It does not directly state why an unpromised storage bag must be refused. A missing claimed accessory is not necessarily a missing promised part.,Use BPR-04: claims for something not in the listing or agreement.
+G076,Decline,"WBP-05
+For Buyers: covered discrepancies",N,"Comparison with the listing is relevant context, but this chunk lists refund-qualifying situations, not the explicit exclusion for an assumed accessory. Under the direct-support criterion, the denial needs BPR-04.",Use BPR-04 for the denial; retain WBP-05 only as background about comparing the item with its listing.
+G081,Full refund with return,"BPR-02
+Eligible dispute reasons",Y,The reported crack in the product casing supports an undisclosed-damage claim on a brand-new item. Stains on shipping packaging alone would not establish the same ground.,—
+G081,Full refund with return,"WBP-05
+For Buyers: covered discrepancies",Y,"Damage to the product casing/condition differing from a brand-new listing is relevant to this clause. Confirm the crack concerns the product, rather than only outer packaging.",—
+G084,Decline,"BPR-04
+Transactions not eligible for refund (continued)",Y,"The buyer admitted dropping the soap after receipt. The post-delivery-damage exclusion supports decline, regardless of dissatisfaction with the soap's brittleness.",—
+G088,Full refund with return,"BPR-02
+Eligible dispute reasons",Y,"Heavy stains and a broken DVD-case hinge conflict with a like-new bundle. These are reported defects in the sold items, not simply dents in a shipping parcel.",—
+G088,Full refund with return,"WBP-05
+For Buyers: covered discrepancies",Y,The sold DVD cases' condition differs from the like-new description. This clause supports the condition-mismatch ground; it does not prescribe a particular refund amount.,—
+G099,Partial refund,"BPR-02
+Eligible dispute reasons",Y,"The listing promised a USB cable and the buyer reports it missing. This supports the incomplete-item ground, but does not establish that the seller failed to pack it.",—
+G099,Partial refund,"DPO-08
+Incomplete items / non-delivery",Y,A partial refund is a permitted response to an established missing-cable claim. The clause also permits supplying the cable; it does not mandate the requested amount.,—
+G099,Partial refund,"DPO-02
+Dispute Request",Y,Partial refund without return is an allowed proposal for an incomplete item. The chosen amount and final resolution still need agreement or a support determination.,—
+G100,Full refund with return,"BPR-02
+Eligible dispute reasons",Y,The seller admitted sending a different model. The wrong-variation/material-mismatch provision supports a refund claim; a separate remedy provision should support the chosen return process.,—
+G100,Full refund with return,"BPR-08
+How can I get a refund?",N,This explains how to request a refund and the condition in which an item must be returned. It does not establish entitlement because the seller sent the wrong item.,Keep BPR-02 for the claim and add DPO-02 for the permitted return/refund proposal. Move BPR-08 to next-step instructions.
+G102,Full refund with return,"BPR-02
+Eligible dispute reasons",Y,Heavy staining inside the mug and a chipped rim contradict a brand-new listing. The undisclosed-damage provision supports the claim.,—
+G102,Full refund with return,"WBP-04
+For Buyers: general coverage",Y,"This supports general coverage for a significantly misdescribed purchase. The precise stain/chip ground comes from the accompanying BPR-02, not this general introduction.",—
+G107,Full refund with return,"BPR-02
+Eligible dispute reasons",Y,The case records a size mismatch and the seller's admission of mixing up the sheets. The wrong-variation provision supports the claim on those recorded facts.,—
+G109,Full refund with return,"BPR-02
+Eligible dispute reasons",Y,"Large stains and missing sequins contradict the brand-new pillow description. These undisclosed defects support a covered claim, not merely the minor variances disclosed in the listing.",—
+G111,Decline,"BPR-03
+Transactions not eligible for refund",Y,The model treats the wine/pink appearance as a minor shade difference. The clause supports decline on that interpretation; it does not independently prove lighting caused the difference.,—
+G116,Decline,"BPR-03
+Transactions not eligible for refund",Y,A minor pink-to-peach shade difference falls within the clause's non-significant-colour-variation category. A genuinely different ordered colour would need separate consideration.,—
+G124,Partial refund,"BPR-02
+Eligible dispute reasons",Y,"The undisclosed scratch supplies a potentially relevant defect ground. For a small cosmetic mark, this clause must be read with BPR-04's brand-new case-by-case exception; a partial refund is not automatic.",Read with BPR-04; explain the case-specific assessment and remedy rather than treating every scratch as automatically refundable.
+G124,Partial refund,"BPR-04
+Transactions not eligible for refund (continued)",Y,"The brand-new exception permits case-by-case review despite the surface-wear exclusion. This supports considering the claim, not requiring a partial refund or any fixed percentage.",—
+G125,Partial refund,"BPR-02
+Eligible dispute reasons",Y,"A missing promised remover is a covered type of claim. However, the seller has a packing photo and the buyer supplied no photo description. The citation does not establish that the remover was actually absent.",Resolve the evidence conflict before approval. Do not present a split-the-difference refund as a policy rule.
+G125,Partial refund,"DPO-08
+Incomplete items / non-delivery",Y,"Partial refund is permitted for an incomplete item, subject to Carousell's determination. This does not resolve the conflicting packing evidence or justify compensating an unproven loss.",Keep as a conditional remedy citation; first establish whether the promised remover was missing.
+G125,Partial refund,"DPO-02
+Dispute Request",Y,"A partial refund without return is an allowed proposal. The clause does not itself approve this disputed claim, replace evidence review or set a compromise amount.",—
+G126,Decline,"BPR-03
+Transactions not eligible for refund",Y,"The cited exclusion is relevant if the burgundy/brown difference is only a minor shade variation. Whether the colour genuinely differs remains a case judgement, not a fact proved by the policy.",—
+G129,Decline,"BPR-04
+Transactions not eligible for refund (continued)",Y,"The surface-wear exclusion is relevant to a small non-functional scratch. It does not establish that the separately advertised high-quality, like-new container was accurately described.",Do not assume the container is irrelevant packaging. Check the like-new promise and significance of the scratch before confirming decline.
+G134,Decline,"BPR-04
+Transactions not eligible for refund (continued)",Y,"The complaint is confined to a minor outer-box scratch while the perfume bottle remains sealed and undamaged. The packaging/surface-wear exclusions are relevant, with the brand-new case-by-case qualification.","Avoid claiming all packaging defects are excluded. Check the listing promise, item condition and the clause's qualifications."
+G139,Partial refund,"BPR-02
+Eligible dispute reasons",Y,A specific undisclosed stain on a like-new costume is relevant to the defect ground. The policy does not explicitly say every small stain on a like-new item requires a partial refund.,Read alongside BPR-04's surface-wear exclusion. Explain why the stain is material; the brand-new exception is not expressly a like-new exception.
+G144,Partial refund,"BPR-02
+Eligible dispute reasons",Y,An undisclosed stain on an item listed as brand new is relevant to the defect ground. The reason that every such flaw is automatically significant overstates what this clause says.,"Retain BPR-02 with BPR-04, but replace automatic-entitlement wording with a case-by-case assessment."
+G144,Partial refund,"BPR-04
+Transactions not eligible for refund (continued)",Y,Its brand-new exception allows individual review of the small stain. It does not itself prescribe a partial refund or make every manufacturing mark a significant discrepancy.,—
+G146,Decline,"BPR-03
+Transactions not eligible for refund",Y,"The policy excludes minor, subjective shade differences. It supports the model's interpretation of the black/grey difference, but does not verify that lighting rather than fading caused it.",—
+G147,Decline,"BPR-03
+Transactions not eligible for refund",Y,"Subjective condition-rating differences are covered by this exclusion. However, the actual listing was like new: the policy does not prove the scratches are ordinary wear consistent with that promise.","Qualify the 'correctly listed as used' assertion. If the condition was materially misrepresented, consider BPR-02/WBP-05 instead."
+G147,Decline,"BPR-04
+Transactions not eligible for refund (continued)",Y,Non-functional surface wear is an explicit exclusion and is relevant to the scratches. Whether the case was materially misdescribed as like new still needs assessment.,—
+G148,Decline,"BPR-03
+Transactions not eligible for refund",Y,"The shoes were described as worn many times and well used, with sole-condition photos. The disclosed-used-condition exclusion supports decline only insofar as the received wear matches that disclosure.",—
+G155,Decline,"BPR-02
+Eligible dispute reasons",N,This identifies incomplete items as a valid dispute ground. It does not establish an evidence standard under which the seller's packing photo requires the buyer's claim to be declined.,Keep BPR-02 as claim context only. Use RRR-03 and the Carousell Support review process to assess the conflicting evidence.
+G155,Decline,"DPO-08
+Incomplete items / non-delivery",N,This gives remedies for incomplete items; it does not say conflicting evidence requires decline. The untracked-mail exclusion in this chunk is also inapplicable: this order used tracked mail.,"Do not use DPO-08 as the denial rule. Escalate the factual conflict; use RRR-03 as evidence guidance, not an automatic winner rule."
+G158,Decline,"BPR-03
+Transactions not eligible for refund",Y,A chip was expressly disclosed on a heavily used item. The cited exclusion supports decline if the received chip matches the disclosure; a materially larger undisclosed defect would be a different issue.,—
+G163,Decline,"BPR-03
+Transactions not eligible for refund",Y,"The used-condition exclusion is relevant, but only if the listing accurately disclosed the received wear. 'Used' alone does not dismiss a claim about deep scratches or impaired usability.",Check the severity and original listing photos. Do not treat a used-condition label as blanket protection for undisclosed functional damage.
+S06,Full refund with return,"BPR-02
+Eligible dispute reasons",Y,"The buyer received size 6 rather than size 2, and the seller admitted the mistake. The wrong-size provision directly supports the dispute.",—
+S06,Full refund with return,"DPO-01
+Dispute handling / eligibility",Y,"This chunk expressly lists a wrong item/significantly misdescribed item as a valid dispute reason. It supports coverage, but does not itself mandate full refund instead of another accepted remedy.",—
+S08,Decline,"BPR-03
+Transactions not eligible for refund",Y,"The buyer needed king size but ordered the correctly described queen set, with all eight pieces present. The buyer-error/change-of-mind exclusion directly supports decline.",—

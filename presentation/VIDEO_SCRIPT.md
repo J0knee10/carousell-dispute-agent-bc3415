@@ -89,7 +89,7 @@ If a step gives a different answer from the one expected, keep going: say what t
 
 > "So our recommendation: it's ready for a staff-assist pilot, not for automatic decisions. It gives a cited recommendation in about 9 seconds, and flags 6% of cases for a person.
 >
-> A pilot would measure time to resolve a dispute, decisions overturned on appeal, and the share of orders using the Buy button. First, a person checks the citations, and we re-measure on more cases.
+> A pilot would measure time to resolve a dispute, decisions overturned on appeal, and the share of orders using the Buy button. First, we re-measure on more cases, with a person checking the citations.
 >
 > Here's who built what. Thank you."
 
@@ -111,7 +111,7 @@ If a step gives a different answer from the one expected, keep going: say what t
 
 **The evaluation**
 - **Labels:** the 50 test cases were labelled by hand: B1 took 25 and B2 the other 25 (`docs/labelling_guide.md`), so there is no agreement score between them yet. The hand labels differ from the outcomes the cases were written for on two cases (G134: decline; G147: partial refund). An AI reviewer (Claude) also labelled them in separate columns and agrees with the hand labels on 47 of 50 (kappa 0.90).
-- **Citation accuracy (90%):** checked by Claude, an AI model separate from every judge model, in the `claude_supports` column of `reports/citation_check_cmp_gemini-flash-lite.csv`. A team member should spot-check it. The 7 "no" answers are mostly procedural clauses (how a return works) or clauses listing what is covered, cited on a decline.
+- **Citation accuracy (88%):** Ronak checked all 68 citations (the `supports` column of `reports/citation_check_cmp_gemini-flash-lite.csv`; their reasons are in `reports/citation_audit_cmp_gemini-flash-lite.csv`), and 60 support the decision, just under the 90% target. 41 of 42 citations on refunds hold up, against 19 of 26 on declines: the misses cite the wrong exclusion (BPR-03 instead of BPR-04), a clause about what is covered, or a procedural clause. Claude's separate check (`claude_supports`, 90%) agrees on 67 of 68.
 - **Bias:** the baseline leans the other way: 96% of buyer wins right but 81% of seller wins.
 - **Escalation:** 6% of test cases were escalated, including 2 of the agent's 5 wrong answers. The baseline has no review step (it counts as escalated only below 0.7 confidence: 1 of its 6 wrong answers), so the two are not like for like. On the cases it does not escalate, the agent is right 94% of the time, including the 5 ineligible cases the rules decide.
 - **Generator vs judge:** 154 disputes were written by Gemma 4, 26 by Gemini 3 Flash and Gemini 3.5 Flash; the judges are Gemini Flash-Lite, Llama 3.1 8B and Qwen 3 8B. The generator had to quote the listing text each dispute is about.

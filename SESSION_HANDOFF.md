@@ -25,6 +25,15 @@ this file is the context behind it.
 - **App UI (6 Nov):** Review and What-if are a guided chat (bottom bar with a case picker or settings, plus a chat box); Evaluation results is a summary for non-technical readers that reads its numbers from `reports/`; How it works uses `docs/figures/agent_workflow.png`.
 - **Tests:** 69, all passing, offline.
 
+## Waiting for Jonathan's go: changes outside the repo
+
+The repo already has the person's citation check (88%, see "Later on 9 Nov: a person's citation check" below). Jonathan asked for the Canva deck to be changed later, only when he says go. Slides 10 and 26 aren't his part, but he asked for these changes himself.
+
+- **Slide 10 (Ronak), "Grounded in Carousell's own policy":** the figure "90% of citations (61 of 68) support the decision they back up (AI-checked; a person's check is pending)" becomes "88% of citations (60 of 68) support the decision they back up (checked by a person)". Its notes didn't mention the figure in the 9 Nov copy.
+- **Slide 26 (Dan Yu), "What's next":** stage 1 "Validate" starts with "A person checks the citations", which is now done on the test set. Suggest "re-check the citations on real cases", or drop it. The notes say the same ("a person checks the citations"), and the Q&A bank's evidence answer on citation accuracy may still quote 90% (AI-checked). Only edit notes that start with "[Name ·"; otherwise tell Jonathan what Dan Yu should change.
+- **Whole deck:** search for "citation", "61 of 68", "90%" and "AI-checked" to catch any other mention (for example slide 16's CTO Q&A prep). The copy reviewed on 9 Nov had it only on slides 10 and 26.
+- **Copies of the report outside the repo** (a shared drive or a submission folder), if any, need the rebuilt `Carousell_Dispute_Agent_Full_Report.docx`.
+
 ## What changed on 9 Nov
 
 A review compared the repo with the Canva pitch deck, then fixed both.
@@ -94,11 +103,26 @@ A review compared the repo with the Canva pitch deck, then fixed both.
   - **Slide 20:** 100% eligibility is expected, because the same rules generated the cases' dates.
   - **Slide 12:** the "23 of 25 with or without" wording reads as a contradiction.
 
+**Later on 9 Nov: a person's citation check**
+
+- Ronak checked all 68 citations from the Gemini test run in a Google Sheet. Its CSV export is now `reports/citation_audit_cmp_gemini-flash-lite.csv` (renamed from "Carousell_Citation_Audit.xlsx - Citation Audit.csv"). It gives a reason for each answer and a better clause where one fits. Ronak's row in the contribution table (README and report) now credits it.
+- Its Y/N answers fill the `supports` column of `reports/citation_check_cmp_gemini-flash-lite.csv`, which has the same 68 rows in the same order. `dispute-agent report cmp_gemini-flash-lite` then added "Checked by a person: 68 of 68 citations, 88% support the decision" to `reports/evaluation_cmp_gemini-flash-lite.md`; nothing else in that file changed.
+- **Result:** 60 of 68 (88%), just under the brief's 90% target.
+  - Claude's check said 61 of 68 (90%). The two agree on 67; the exception is G059's RRR-03.
+  - 41 of 42 citations on refunds hold up, against 19 of 26 on declines.
+  - The 8 misses are in 6 cases (G013, G041, G059, G076, G100, G155). The decision was right in 5 of them; G059 (wrong) and G155 were escalated.
+- **Updated to match:**
+  - the README's Evaluation section and limitations;
+  - the report's summary, the section 8.4 row (now "Citation check (by a person)") and the section 12.1 status lines. It was rebuilt and its contents page refreshed in Word; it's still 23 pages, with the same page numbers;
+  - `presentation/VIDEO_SCRIPT.md` (the pilot line and the citation note);
+  - `NEXT_STEPS.md`.
+- The deck still says 90% (AI-checked): see "Waiting for Jonathan's go" above.
+
 **Still open from the review** (not changed on purpose):
 
 - The deck repeats some content (slides 10 and 11 both show the retrieval figures; slide 15's repeated stack was fixed later the same day). It also has no team slide.
 - `docs/report_build/report_orig.docx` still holds the draft's internal notes. Keep it while the report may need rebuilding, and decide before submission (see `NEXT_STEPS.md`).
-- 17 of the 19 `reports/citation_check_*.csv` files are empty; only `cmp_gemini-flash-lite` matters, and its human `supports` column is still blank.
+- Only `cmp_gemini-flash-lite`'s citation sheet matters, and a person filled it on 9 Nov. The other 18 `reports/citation_check_*.csv` files have no person's check and don't need one.
 
 ## Mock grade (5 Nov)
 

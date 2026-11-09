@@ -191,7 +191,7 @@ Details on labels are in [docs/labelling_guide.md](docs/labelling_guide.md).
 
 - **Decision accuracy** on the 50-case held-out test set, overall and for clear, borderline and ineligible cases separately, compared with a single-prompt baseline (the whole policy pasted into one prompt, no rules, no retrieval, no agent steps). A case where the model gives no valid answer counts as wrong.
 - **Eligibility accuracy**, **escalation quality** (how many wrong answers were flagged), **buyer-win vs seller-win accuracy** (a bias check), **invented citations** (before and after the agent's check), **tool use**, **time, LLM calls and tokens per case**.
-- **Citation accuracy** needs a person: fill in `reports/citation_check_<run>.csv`.
+- **Citation accuracy** needs a person: they fill the `supports` column of `reports/citation_check_<run>.csv` (done for the Gemini test run, see below).
 - **Retrieval accuracy:** `reports/retrieval.md`.
 
 **Labels.** Accuracy is measured against the team's hand labels
@@ -233,15 +233,30 @@ the 5 ineligible cases the rules decide. The baseline leans towards refunding
 (81% of seller wins right); the agent leans towards declining (83% of buyer
 wins, 96% of seller wins).
 
+**Citation check (by a person).** Ronak (C1) checked all 68 clauses the
+agent cited on the test set (the `supports` column of
+[the citation sheet](reports/citation_check_cmp_gemini-flash-lite.csv); their
+reasons and better clauses are in
+[the citation audit](reports/citation_audit_cmp_gemini-flash-lite.csv)):
+**60 of 68 (88%) support the decision** they are cited for, just under the 90%
+target. The misses are almost all on declines: 41 of 42 citations on refunds
+hold up, against 19 of 26 on declines. The 8 misses are in 6 cases: a decline
+citing the wrong exclusion (BPR-03, accurately described used items, where
+BPR-04, something not in the listing, fits: G013, G041), a decline citing
+clauses about what *is* covered (G076, G155), or a procedural clause on
+evidence or next steps (G059, G100). The decision itself was right in 5 of the
+6; the wrong one (G059) was escalated, and so was G155. On 9 citations that do
+hold up, the reviewer noted that the agent's reasons stretch the clause, for
+example treating every scratch as refundable or every packaging flaw as
+excluded, where the policy calls for a case-by-case judgement.
+
 **AI-assisted checks (not human).** Claude, an AI model separate from every
 judge model here, did two checks. Its answers are in their own columns and
 never replace the human ones:
 
-- *Citation check:* 61 of the agent's 68 citations (90%) support the decision
-  they are cited for (`claude_supports` in
-  [the citation sheet](reports/citation_check_cmp_gemini-flash-lite.csv)). Most
-  misses cite a procedural clause (how a return works), or a clause listing
-  what *is* covered on a decline. No person has checked the citations yet.
+- *Citation check:* Claude marked 61 of the 68 citations (90%) as supporting
+  the decision (`claude_supports` in the citation sheet). It agrees with the
+  person on 67 of 68; the exception is G059's RRR-03, which Claude accepted.
 - *Labels:* Claude also labelled the 50 test cases (`claude_*` in
   `data/labels/labels.csv`). It agrees with the hand labels on 47 of 50 (Cohen's
   kappa 0.90); the differences are G059, G129 and G147, all judgement calls.
@@ -359,7 +374,7 @@ results, so its test numbers are slightly optimistic.
 - LLM answers can vary between runs even at temperature 0.
 - The local models were limited by an 8 GB GPU (see [Hardware constraints](#model-comparison)), so "cloud vs local" is also "strong small cloud model vs 8B models": the comparison cannot separate the two.
 - The app's OpenAI fallback (`gpt-5.4-mini`) was not evaluated on the test set, and on the free usage tier it covers only about 50 requests a day.
-- Single runs, no repeat runs to measure variation. Each test case was hand-labelled by one person (no agreement score), after the runs; no person has checked the citations yet.
+- Single runs, no repeat runs to measure variation. Each test case was hand-labelled by one person (no agreement score), after the runs, and the citations were checked by one person.
 - Paused reviews live in memory (LangGraph `InMemorySaver`), so a restart of the app loses cases waiting for a staff decision; the decision log is a local file.
 
 ## Project layout
@@ -428,7 +443,7 @@ pushed from one machine.
 
 | Member | Role | Main contributions | Evidence | In the video |
 |---|---|---|---|---|
-| Ronak | C1: Agent lead | LangGraph workflow, tool loop, confidence check, staff pause | `src/dispute_agent/agent/` | How it works (0:50–1:25) |
+| Ronak | C1: Agent lead | LangGraph workflow, tool loop, confidence check, staff pause; checked all 68 test-set citations by hand | `src/dispute_agent/agent/`, `reports/citation_audit_cmp_gemini-flash-lite.csv` | How it works (0:50–1:25) |
 | Akshaya | C2: RAG and policy | Policy clauses, hybrid search, citations, retrieval evaluation | `src/dispute_agent/rag/`, `reports/retrieval.md` | The policy search (1:25–1:40) |
 | Evelyn | C3: Data and evaluation | Listings, dispute generator, labels, harness, baseline, model comparison | `src/dispute_agent/data/`, `src/dispute_agent/evaluation/`, `reports/` | Does it work? (3:00–3:55) |
 | Jonathan | C4: App and deployment | Streamlit app, local models, cloud deployment, repo and README | `app/`, `src/dispute_agent/llm/`, `README.md` | Live demo (1:40–3:00) |

@@ -65,5 +65,7 @@ Wrong cases (baseline): G025 (full_refund_with_return -> decline), G125 (decline
 
 `citation_check_cmp_gemini-flash-lite.csv` lists every clause the agent cited with the decision it supports. Fill the `supports` column (Y/N); the share of Y is the citation accuracy in the brief.
 
+- Checked by a person: 68 of 68 citations, 88% support the decision.
+
 - Checked by Claude (an AI reviewer, not a person): 68 of 68 citations, 90% support the decision.
 
