@@ -1,6 +1,6 @@
 # Session handoff (working notes, delete before submission)
 
-Last updated: 9 Nov 2026. For continuing the work on another device (or in a
+Last updated: 10 Nov 2026. For continuing the work on another device (or in a
 new Claude Code session). The team's task list is in [NEXT_STEPS.md](NEXT_STEPS.md);
 this file is the context behind it.
 
@@ -14,7 +14,7 @@ this file is the context behind it.
 - **Live presentation:** separate from the video. The team presents live (15 to 17 min plus about 5 min Q&A) to a mock Carousell CTO and CFO, using a 26-slide Canva pitch deck ("Carousell_Dispute_Agent_Canva_Pitch", Group 4). The deck is kept outside the repo; its edit link is with the team and must not go in the repo.
   - **Speakers and script:** the script is in the deck's speaker notes. Each note Claude wrote starts with the speaker, a length and an "on time if done by" mark.
     - Work split: Drue 1–5, Evelyn 6–9, Ronak 10–13, Jonathan 14–18 (live demo on 18), Akshaya 19–22, Dan Yu 23–26.
-    - Dan Yu is writing his own notes: slides 23 and 24 are his, and he trimmed 25. Don't overwrite notes that don't start with "[Name ·".
+    - Dan Yu is writing her own notes: slides 23 and 24 are hers, and she trimmed 25. Don't overwrite notes that don't start with "[Name ·".
   - **Timing:** about 14:50 at 150 words a minute, including about 75 s of app waits in the demo; about 13:15 at 170 wpm. Handovers add about 25 s, and Dan Yu's own notes add about 20 s. If rehearsal runs long, cut slides 11 and 12 to the sentences their notes mark.
   - **Demo and Q&A:**
     - Slide 18's notes hold the demo steps (S01, S16, G155; backups S02 and S10).
@@ -25,14 +25,16 @@ this file is the context behind it.
 - **App UI (6 Nov):** Review and What-if are a guided chat (bottom bar with a case picker or settings, plus a chat box); Evaluation results is a summary for non-technical readers that reads its numbers from `reports/`; How it works uses `docs/figures/agent_workflow.png`.
 - **Tests:** 69, all passing, offline.
 
-## Waiting for Jonathan's go: changes outside the repo
+## Deck updated for the person's citation check (10 Nov, on Jonathan's go)
 
-The repo already has the person's citation check (88%, see "Later on 9 Nov: a person's citation check" below). Jonathan asked for the Canva deck to be changed later, only when he says go. Slides 10 and 26 aren't his part, but he asked for these changes himself.
+Slides 10 and 26 aren't Jonathan's part, but Jonathan asked for these changes.
 
-- **Slide 10 (Ronak), "Grounded in Carousell's own policy":** the figure "90% of citations (61 of 68) support the decision they back up (AI-checked; a person's check is pending)" becomes "88% of citations (60 of 68) support the decision they back up (checked by a person)". Its notes didn't mention the figure in the 9 Nov copy.
-- **Slide 26 (Dan Yu), "What's next":** stage 1 "Validate" starts with "A person checks the citations", which is now done on the test set. Suggest "re-check the citations on real cases", or drop it. The notes say the same ("a person checks the citations"), and the Q&A bank's evidence answer on citation accuracy may still quote 90% (AI-checked). Only edit notes that start with "[Name ·"; otherwise tell Jonathan what Dan Yu should change.
-- **Whole deck:** search for "citation", "61 of 68", "90%" and "AI-checked" to catch any other mention (for example slide 16's CTO Q&A prep). The copy reviewed on 9 Nov had it only on slides 10 and 26.
-- **Copies of the report outside the repo** (a shared drive or a submission folder), if any, need the rebuilt `Carousell_Dispute_Agent_Full_Report.docx`.
+- **Slide 10 (Ronak):** the figure now reads "88% of citations (60 of 68) support the decision they back up (checked by a person)". Before, it said 90%, 61 of 68 and "AI-checked; a person's check is pending". Its notes don't mention the figure.
+- **Slide 26 (Dan Yu):**
+  - Stage 1 "Validate" and its spoken line are unchanged and still say "A person checks the citations". Dropping it was tried and then reverted at Jonathan's request: slide 26 is about the steps of the pilot, so it means Carousell's own check, not ours.
+  - The Q&A bank's "Are the citations right?" answer (Ronak) now gives the person's check: 60 of 68, 88%, refunds 41 of 42, declines 19 of 26 (BPR-03 where BPR-04 fits), and the 8 misses fall in 6 cases, with the decision right in 5 and the wrong one escalated.
+- **Whole deck:** checked slide text with Find and every slide's notes. "61 of 68" and "AI-checked" are gone. The other "citation" mentions (slides 1, 7, 9, 12, 14 and 23's notes) don't quote the figure.
+- **Still open:** any copies of the report outside the repo (a shared drive or a submission folder) need the rebuilt `Carousell_Dispute_Agent_Full_Report.docx`.
 
 ## What changed on 9 Nov
 
@@ -116,7 +118,7 @@ A review compared the repo with the Canva pitch deck, then fixed both.
   - the report's summary, the section 8.4 row (now "Citation check (by a person)") and the section 12.1 status lines. It was rebuilt and its contents page refreshed in Word; it's still 23 pages, with the same page numbers;
   - `presentation/VIDEO_SCRIPT.md` (the pilot line and the citation note);
   - `NEXT_STEPS.md`.
-- The deck still says 90% (AI-checked): see "Waiting for Jonathan's go" above.
+- The deck was updated on 10 Nov: see "Deck updated for the person's citation check" above.
 
 **Still open from the review** (not changed on purpose):
 
@@ -161,6 +163,9 @@ uv run dispute-agent compare cmp_gemini-flash-lite cmp_llama3.1-8b cmp_qwen3-8b 
   - Uploading images needs a signed-in Canva account; an anonymous edit link cannot upload.
   - A speaker note is saved only after you move to another slide; reloading straight after typing loses the edit.
   - Teammates edit the deck at the same time, so check a note's current text before replacing it.
+  - Escape closes the Find panel. Single letters typed on the canvas are Canva shortcuts (R adds a rectangle, L a line, and typing then fills the shape), so check that the Find box has focus before typing. On 10 Nov this happened once and was undone.
+  - Find doesn't match across a line break inside a text box; search a shorter piece. It doesn't search speaker notes.
+  - Browser screenshots of the editor can time out; moving the mouse or scrolling right before the capture helps. Notes can be read and edited through the notes textarea (select the exact phrase, then type over it).
 
 ## Ground rules with Jonathan
 
