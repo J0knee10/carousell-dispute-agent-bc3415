@@ -151,6 +151,7 @@ avoid API calls, or `--provider ollama --model llama3.1:8b` to use a local model
 | `evaluate ... --retrieval agentic` / `--no-retrieval` | Retrieval variants of the agent (see [Model comparison](#model-comparison)) |
 | `report RUN` | Rewrites `reports/evaluation_<run>.md` from a run's saved predictions, with no LLM calls |
 | `compare RUN1 RUN2 ...` | One report across runs: `reports/model_comparison.md` |
+| `review-cost` | Prices the escalation threshold (staff time, AI usage, mistakes let through): `reports/review_cost.md`, no LLM calls |
 | `eval-retrieval` | Retrieval hit rates for dense, keyword and hybrid search |
 | `whatif "proposed rule..." --limit 20` | Re-judges past cases under a proposed rule |
 | `export-labels` / `agreement` | Labelling sheet and agreement between the two labellers |
@@ -261,6 +262,33 @@ never replace the human ones:
   `data/labels/labels.csv`). It agrees with the hand labels on 47 of 50 (Cohen's
   kappa 0.90); the differences are G059, G129 and G147, all judgement calls.
   Treat this with caution: Claude also helped build this project.
+
+### Is 0.7 the right escalation threshold?
+
+The 0.7 confidence threshold was set when the project started, before any
+results. [The cost analysis](reports/review_cost.md) (`review-cost`, no LLM
+calls) prices it with the business case's inputs (report section 9). A person
+checks every recommendation. An escalated one gets a careful review (45 minutes
+at S$35 an hour: S$26.25); a confident one gets a standard review, which the
+agent halves (S$13.12). So each escalation costs S$13.12 more. A wrong
+recommendation that a standard review lets through costs a careful review of
+rework plus the money moved wrongly on an average S$100 order: S$46 for a
+partial refund where a decline was due, S$126 for a full refund against a
+decline. AI usage is about S$0.003 a case, the same at every threshold.
+
+So escalating pays when the chance of a mistake is above 10% (full refund vs
+decline) to 28% (partial refund vs decline). Gemini's confidence only partly
+tracks that chance. Its answers at 1.0 were never wrong (0 of 33 on dev and
+test), both of its test answers below 0.7 were wrong, and between 0.85 and 0.95
+about one answer in eight is wrong (7 of 56), close to the break-even.
+
+Chosen on the 52 dev cases, 0.95 comes out cheapest, but only by S$0.30 a
+dispute (2%, about S$1,800 a year at 6,000 disputes), and 0.70 is cheapest
+again when every input is at its high value. On the test set, which played no
+part in the choice, 0.95 costs S$1.55 a dispute more than 0.70 and escalates a
+third of the disputes instead of 6%. Thresholds from 0.70 to 0.95 cost within a
+few percent of each other, so the threshold is a weak lever. The results above
+use 0.70.
 
 ### Model comparison
 
@@ -386,7 +414,7 @@ src/dispute_agent/
   rag/                        clause chunker, ChromaDB + BM25 store
   llm/                        Gemini, Ollama and OpenAI (fallback) clients, mock, fallback logic
   data/                       Mercari sampler, case loading, generator, labels
-  evaluation/                 harness, metrics, report, model comparison, retrieval eval, what-if
+  evaluation/                 harness, metrics, report, model comparison, retrieval eval, what-if, review cost
   cli.py                      command line
 config.yaml                   models, retrieval, agent, data and output settings
 data/                         policy text, listings, cases, labels, eval queries
