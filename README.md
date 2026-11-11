@@ -435,7 +435,7 @@ Carousell_Dispute_Agent_Full_Report.docx
                               the written report (built from docs/report_build/)
 ```
 
-Run the tests with `uv run pytest` (69 tests, no network or API key needed; they write their outputs to a temporary folder).
+Run the tests with `uv run pytest` (76 tests, no network or API key needed; they write their outputs to a temporary folder).
 
 ## Deploying to Streamlit Community Cloud
 
