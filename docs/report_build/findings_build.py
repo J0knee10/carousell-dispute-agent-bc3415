@@ -1,4 +1,5 @@
 """Build findings.json for update_report.py from the evaluation JSONs plus written text."""
+import csv
 import json
 import sys
 from pathlib import Path
@@ -89,6 +90,43 @@ F["rubric_table"] = [
     ["Rubric only, per gap", pct(lr["decision_accuracy"]), pct(qr["decision_accuracy"]), pct(gr["decision_accuracy"])],
     ["Rubric only, no retrieval", pct(lrn["decision_accuracy"]), pct(qrn["decision_accuracy"]), pct(grn["decision_accuracy"])],
 ]
+
+# Section 9.7: the escalation threshold, from `uv run dispute-agent review-cost`
+def md_table(path, header):
+    """Rows of the Markdown table whose header row starts with `header`, bold marks removed."""
+    lines = path.read_text(encoding="utf-8").splitlines()
+    start = next(i for i, line in enumerate(lines) if line.startswith(f"| {header} |"))
+    rows = []
+    for line in lines[start:]:
+        if not line.startswith("|"):
+            break
+        cells = [c.strip().replace("**", "") for c in line.strip().strip("|").split("|")]
+        if not set("".join(cells)) <= set("-: "):  # skip the |---| line
+            rows.append(cells)
+    return rows
+
+
+events = md_table(R / "review_cost.md", "Event")
+events[0][0] = "What it costs"
+F["threshold_costs_table"] = events
+rc = [r for r in csv.DictReader((R / "review_cost.csv").open(encoding="utf-8")) if r["level"] == "base"]
+
+
+def rc_cell(s, t):
+    r = next(r for r in rc if r["set"] == s and float(r["threshold"]) == t)
+    n, esc = int(r["disputes"]), int(r["escalated"])
+    cheapest = float(r["cost_per_dispute_sgd"]) == min(float(x["cost_per_dispute_sgd"]) for x in rc if x["set"] == s)
+    return [f"{esc} ({esc / n:.0%}); {r['mistakes_caught']} of {r['mistakes']}",
+            f"S${float(r['cost_per_dispute_sgd']):.2f}" + (" (cheapest)" if cheapest else "")]
+
+
+n_dev = next(int(r["disputes"]) for r in rc if r["set"] == "dev")
+n_test = next(int(r["disputes"]) for r in rc if r["set"] == "test")
+F["threshold_table"] = [["Escalate below", f"Dev ({n_dev} cases): escalated; mistakes caught", "Dev: cost per dispute",
+                         f"Test ({n_test} cases): escalated; mistakes caught", "Test: cost per dispute"]]
+for t in (0.7, 0.8, 0.85, 0.9, 0.95, 1.0):
+    F["threshold_table"].append([f"{t:.2f}" + (" (now)" if t == 0.7 else "")] + rc_cell("dev", t) + rc_cell("test", t))
+
 nums = {
     "lr": pct(lr["decision_accuracy"]), "lrn": pct(lrn["decision_accuracy"]),
     "qr": pct(qr["decision_accuracy"]), "qrn": pct(qrn["decision_accuracy"]),

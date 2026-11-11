@@ -6,6 +6,7 @@ The output must not be report_orig.docx: every build starts from it.
 """
 from __future__ import annotations
 
+import copy
 import json
 import sys
 from pathlib import Path
@@ -27,6 +28,7 @@ if OUT.resolve() == SRC.resolve():
     sys.exit(f"refusing to save over {SRC}: every build starts from it, so give another output path")
 F = json.loads(Path(sys.argv[2]).read_text(encoding="utf-8"))  # findings and numbers written after the runs
 FIGURE = REPO / "docs/figures/agent_workflow.png"
+N_TESTS = 76  # uv run pytest
 
 doc = Document(SRC)
 
@@ -87,7 +89,7 @@ t = table_after(doc, "BC3415 group assignment:")
 set_row(t, 0, ["Criterion (weight)", "How the project meets it", "Where to look"])
 set_row(t, 1, ["Problem relevance and originality (15%)", None, None])
 set_row(t, 2, ["Technical design and implementation (20%)",
-               "Real retrieval over a vector database (ChromaDB) plus BM25; a LangGraph graph with conditional routing, a tool loop (search_policy) and a human-approval pause; rules in code where rules are exact; structured JSON output from three providers; Streamlit app deployed on Community Cloud; 69 offline tests; resumable jobs.", "Sections 5 and 6"])
+               f"Real retrieval over a vector database (ChromaDB) plus BM25; a LangGraph graph with conditional routing, a tool loop (search_policy) and a human-approval pause; rules in code where rules are exact; structured JSON output from three providers; Streamlit app deployed on Community Cloud; {N_TESTS} offline tests; resumable jobs.", "Sections 5 and 6"])
 set_row(t, 3, ["Effectiveness of the AI / agent (25%)",
                "Held-out test set of 50 cases against a single-prompt baseline, for three judge models; grounded answers (citations checked by code), tool use, and a fallback (escalation to a person with follow-up questions). Honest about the tie on judgement with the strongest model.", "Section 8"])
 set_row(t, 4, ["Creativity and RAG / GenAI integration (20%)",
@@ -124,7 +126,7 @@ set_runs(para(doc, "Figure 1. The agent workflow."), "Figure 1. The agent workfl
 
 t = table_after(doc, "5.1 The steps")
 set_cell(t, 6, 2, "Judges each gap as significant, not significant or unclear; recommends an outcome, a partial-refund %, a confidence score, reasons, clause citations and follow-up questions. If the clauses do not cover a gap it calls search_policy with up to 2 queries; code runs the search and the graph returns to the judge once with the new clauses")
-set_cell(t, 7, 2, "Drops citations to clauses that were not retrieved and escalates if: confidence < 0.7, no valid citation, more evidence needed, a gap is unclear, the outcome contradicts the gap assessment, or the judge still wants policy the tool could not find")
+set_cell(t, 7, 2, "Drops citations to clauses that were not retrieved and escalates if: confidence < 0.7 (checked against costs in section 9.7), no valid citation, more evidence needed, a gap is unclear, the outcome contradicts the gap assessment, or the judge still wants policy the tool could not find")
 
 b = para(doc, "Mock mode. Without an API key")
 insert_paragraph_after(b, BULLET, lead("Choice of judge model. The same agent runs on Gemini (cloud, free tier) or a local model through Ollama (nothing leaves the machine). In the app, OpenAI takes over when a Gemini call fails (an unpaid key on OpenAI’s free usage tier, about 50 requests a day), and the recommendation is marked as a fallback answer. The app lists only the providers that can run where it is opened."))
@@ -156,10 +158,10 @@ t = table_after(doc, "6.4 Code layout")
 set_row(t, 1, [None, "Staff app: review a dispute as a guided chat (pick or type a case; recommendation with cited clauses and the judge’s tool calls; approve or override; message drafts), what-if policy test (type a rule), evaluation summary, policy library, how it works. AI model picker in the sidebar", ])
 set_row(t, 2, [None, "LangGraph graph with the search_policy tool loop, eligibility rules, prompts and decision guide, runner, photo interface"])
 set_row(t, 4, [None, "Gemini, Ollama and OpenAI clients, mock provider, model fallback, rate-limit handling, token counts"])
-set_row(t, 6, [None, "Harness, metrics, report writer, model comparison, retrieval evaluation, what-if"])
-set_row(t, 7, [None, "Command line: run-case, evaluate (with --provider, --model, --retrieval), compare, eval-retrieval, whatif, generate, split, export-labels, agreement, check-llm, wait-for-quota"])
-set_row(t, 9, [None, "Evaluation reports (Markdown and JSON), the model comparison and citation-check sheets"])
-set_row(t, 11, [None, "69 pytest tests that run offline (mock LLM; Ollama and OpenAI calls answered by fakes)"])
+set_row(t, 6, [None, "Harness, metrics, report writer, model comparison, retrieval evaluation, what-if, cost check of the escalation threshold"])
+set_row(t, 7, [None, "Command line: run-case, evaluate (with --provider, --model, --retrieval), compare, eval-retrieval, whatif, review-cost, generate, split, export-labels, agreement, check-llm, wait-for-quota"])
+set_row(t, 9, [None, "Evaluation reports (Markdown and JSON), the model comparison, the escalation-threshold cost check and citation-check sheets"])
+set_row(t, 11, [None, f"{N_TESTS} pytest tests that run offline (mock LLM; Ollama and OpenAI calls answered by fakes)"])
 for i, row in enumerate(t.rows):
     if row.cells[0].text.strip() == "presentation/":
         set_row(t, i, [None, "VIDEO_SCRIPT.md, the demo video script"])
@@ -167,7 +169,7 @@ for i, row in enumerate(t.rows):
 p = para(doc, "3.  Put a free Gemini key")
 insert_paragraph_after(p, p, "4.  Optional: install Ollama and run ollama pull llama3.1:8b (the default local model) to use it; choose it in the app’s sidebar or pass --provider ollama. Add OPENAI_API_KEY to .env to enable the OpenAI fallback (an unpaid key on the free usage tier is enough).")
 set_runs(para(doc, "4.  Start the app with"), "5.  Start the app with uv run streamlit run app/streamlit_app.py, or run one case with uv run dispute-agent run-case S01.")
-set_runs(para(doc, "5.  Run the tests with"), "6.  Run the tests with uv run pytest (69 tests, no network needed).")
+set_runs(para(doc, "5.  Run the tests with"), f"6.  Run the tests with uv run pytest ({N_TESTS} tests, no network needed).")
 
 # ------------------------------------------------------- 7. data
 set_runs(para(doc, "Provisional labels are the outcomes"), "Labels: the outcome each case was written for is its provisional label. For the 50 test cases the team labelled each case by hand on 4 November (B1 25 cases, B2 the other 25; final_outcome in data/labels/labels.csv), and every result below uses those hand labels. They differ from the provisional labels on two cases: G134 (decline instead of a partial refund) and G147 (a partial refund instead of a decline).")
@@ -247,7 +249,7 @@ insert_paragraph_after(b, BULLET, plain("The local models were limited to 8B par
 t = table_after(doc, "10. Risks, ethics and limitations")
 set_row(t, 1, [None, None, None, F["risk_invented"]])
 set_row(t, 2, [None, None, None, "With Gemini the agent leans to decline: 83% of buyer wins vs 96% of seller wins; the baseline the reverse (81% of seller wins). The local 8B models refund almost everything"])
-set_row(t, 3, [None, None, None, "6% escalated, including 2 of 5 wrong answers (Gemini)"])
+set_row(t, 3, [None, None, None, "6% escalated, including 2 of 5 wrong answers (Gemini). Section 9.7 checks the 0.7 threshold against staff and mistake costs"])
 set_row(t, 4, [None, None, "Different models write and judge; people wrote 20 hard cases; the test set is labelled by hand; said openly", "Hand labels for all 50 test cases (one labeller per case)"])
 set_row(t, 5, [None, None, "Only public or made-up data. A deployment would remove personal details and use a paid tier or a local model (free-tier prompts may be used by Google)", "Local models keep case data on the machine"])
 set_row(t, 6, [None, None, None, "G155 changed between runs (escalated every time)"])
@@ -282,9 +284,9 @@ set_runs(b, [("Measured:", True), (" about 9 seconds and 1.8 LLM calls per case;
 
 # ------------------------------------------------------- 12. status
 b = para(doc, "Working agent, hybrid retrieval, what-if test")
-set_runs(b, "Working agent with the search_policy tool, hybrid retrieval, what-if test, evaluation harness, Streamlit app, CLI, 69 offline tests, Docker files.")
+set_runs(b, f"Working agent with the search_policy tool, hybrid retrieval, what-if test, evaluation harness, Streamlit app, CLI, {N_TESTS} offline tests, Docker files.")
 b = para(doc, "Two test runs, seed run, dev runs")
-set_runs(b, "Three test runs with Gemini; the model comparison with two local models (Llama 3.1 8B, Qwen 3 8B); retrieval and decision-guide ablations; seed run, dev runs and retrieval evaluation, all in reports/; a person’s check of all 68 citations (88% support the decision), with AI citation and label checks in separate columns.")
+set_runs(b, "Three test runs with Gemini; the model comparison with two local models (Llama 3.1 8B, Qwen 3 8B); retrieval and decision-guide ablations; seed run, dev runs and retrieval evaluation, all in reports/; a person’s check of all 68 citations (88% support the decision), with AI citation and label checks in separate columns; a cost check of the escalation threshold (section 9.7).")
 b = para(doc, "GitHub repo linked on this machine (3 Nov).")
 insert_paragraph_after(b, BULLET, plain("App deployed on Streamlit Community Cloud at bc3415-carousell-dispute-agent.streamlit.app (6 Nov): keys from Streamlit secrets, Gemini first with OpenAI (free usage tier) as a fallback."))
 set_runs(para(doc, "Slides and video script"), "Video script for all six members (presentation/VIDEO_SCRIPT.md).")
@@ -316,8 +318,9 @@ remove(t)
 # ------------------------------------------------------- appendix
 t = table_after(doc, "Appendix A. Glossary")
 set_row(t, 3, [None, "Large language model, here Google Gemini, Meta’s Llama 3.1 or Alibaba’s Qwen 3 (and OpenAI GPT-5.4 mini as the app’s fallback)"])
-resize_rows(t, len(t.rows) + 3)
+resize_rows(t, len(t.rows) + 4)
 n = len(t.rows)
+set_row(t, n - 4, ["Reject option", "Sending a case to a person instead of acting on the model’s answer; cost-sensitive when the cut-off weighs the cost of a careful review against the cost of a mistake (section 9.7)"])
 set_row(t, n - 3, ["Tool call", "The LLM asks the program to run a function (here search_policy) and continues with the result"])
 set_row(t, n - 2, ["Ollama", "Free software that runs open LLMs on your own computer"])
 set_row(t, n - 1, ["Ablation", "Removing or changing one part of a system to measure what that part contributes"])
@@ -352,7 +355,7 @@ def _heading(prefix, level):
 t = table_after(doc, "We built a working AI agent")
 for i, row in enumerate(t.rows):
     if row.cells[0].text.startswith("What is left"):
-        set_row(t, i, ["Status", "Working prototype with 69 offline tests, evaluated against the team’s hand labels with Gemini and two local models; deployed on Streamlit Community Cloud (bc3415-carousell-dispute-agent.streamlit.app) with Gemini first and OpenAI (free usage tier) as a fallback."])
+        set_row(t, i, ["Status", f"Working prototype with {N_TESTS} offline tests, evaluated against the team’s hand labels with Gemini and two local models; deployed on Streamlit Community Cloud (bc3415-carousell-dispute-agent.streamlit.app) with Gemini first and OpenAI (free usage tier) as a fallback."])
 
 # Summary: the business-case self-assessment
 _remove_from(para(doc, "Our verdict on the business case", "Heading 2"), _heading("2. The assignment", 1))
@@ -373,7 +376,7 @@ for i, row in enumerate(t.rows):
 
 # 9. Business case
 set_runs(para(doc, "This section restates the business case"),
-         "This section sets out what the agent could be worth to Carousell in Singapore: the value formula, its inputs (each with a low, base and high value, marked as sourced, derived or assumed), the results, how we estimated Carousell’s transaction volume, and the costs, break-even point and caveats.")
+         "This section sets out what the agent could be worth to Carousell in Singapore: the value formula, its inputs (each with a low, base and high value, marked as sourced, derived or assumed), the results, how we estimated Carousell’s transaction volume, and the costs, break-even point and caveats. Section 9.7 uses the same inputs to check the confidence threshold at which the agent escalates a dispute.")
 h96 = para(doc, "9.6 Is the business case strong enough?", "Heading 2")
 set_runs(h96, "9.6 Costs, break-even and caveats")
 box = table_after(doc, "9.6 Costs, break-even and caveats")
@@ -398,6 +401,47 @@ set_runs(para(doc, "Timing study (any group member"),
          [("Timing study:", True), (" a few people each decide 5 test cases from the case alone and 5 others with the agent’s recommendation and citations, timing each. The median time without the agent would replace the vendor’s 30–60 minutes, and the reduction would replace the assumed 50% saving. Students are not trained support staff, so this is only a first estimate.", False)])
 _remove_from(para(doc, "Figures a group member could look for", "Heading 3"), _heading("10.", 1))
 
+# 9.7 The escalation threshold, priced (reports/review_cost.md), at the end of section 9
+h10 = para(doc, "10. Risks, ethics and limitations", "Heading 1")
+prev = h10._p.getprevious()
+prev = _P(prev, H2._parent) if prev.tag == qn("w:p") else Table(prev, H2._parent)
+cur = insert_paragraph_after(prev, H2, "9.7 Is 0.7 the right escalation threshold?")
+cur = insert_paragraph_after(cur, NORMAL, F["threshold_intro"])
+
+
+def _body(rows):
+    """Header row keeps the template's bold; body cells are plain (the template's last row may not be)."""
+    return [rows[0]] + [[plain(c) for c in r] for r in rows[1:]]
+
+
+def _band(table):
+    """Alternate the row shading like the other tables: rows added by resize_rows all copy the last row's."""
+    rows = table.rows
+    for i in range(3, len(rows)):
+        model = rows[1 if i % 2 else 2]
+        for cell, src in zip(rows[i].cells, model.cells):
+            cell._tc.remove(cell._tc.tcPr)
+            cell._tc.insert(0, copy.deepcopy(src._tc.tcPr))
+
+
+cur = insert_table_after(cur, _tpl(F["threshold_costs_table"]), _body(F["threshold_costs_table"]))
+_band(cur)
+set_widths(cur, [3.5, 1.0, 1.0, 1.0])
+cur = insert_paragraph_after(cur, NORMAL, "")
+cur = insert_paragraph_after(cur, NORMAL, F["threshold_costs_note"])
+cur = insert_paragraph_after(cur, NORMAL, [("Cost per dispute by threshold. ", True), (F["threshold_table_note"], False)])
+cur = insert_table_after(cur, _tpl(F["threshold_table"]), _body(F["threshold_table"]))
+_band(cur)
+set_widths(cur, [1.0, 1.65, 1.1, 1.65, 1.1])
+cur = insert_paragraph_after(cur, NORMAL, "")
+cur = insert_paragraph_after(cur, NORMAL, [("What we found.", True)])
+for line in F["threshold_found"]:
+    cur = insert_paragraph_after(cur, BULLET, plain(line))
+cur = insert_paragraph_after(cur, NORMAL, [("Our choice and why. ", True), (F["threshold_choice"], False)])
+cur = insert_paragraph_after(cur, NORMAL, [("Limits of this check.", True)])
+for line in F["threshold_limits"]:
+    cur = insert_paragraph_after(cur, BULLET, plain(line))
+
 # 10. Recommendation
 p = para(doc, "Recommendation to Carousell (as in the video)")
 set_runs(p, lead(p.text.replace("Recommendation to Carousell (as in the video):", "Recommendation to Carousell:"), ": "))
@@ -419,8 +463,12 @@ set_runs(para(doc, "Fill in one row per member."),
          "Each member’s role, main contributions, where the evidence is, and their part in the video.")
 
 # Appendix B: the price was checked on Google's own page (section 9.6)
-set_runs(para(doc, "Gemini API pricing:"),
-         "Gemini API pricing: Google’s pricing page, ai.google.dev/gemini-api/docs/pricing (5 Nov 2026, paid-tier price for gemini-3.5-flash-lite).")
+b = set_runs(para(doc, "Gemini API pricing:"),
+             "Gemini API pricing: Google’s pricing page, ai.google.dev/gemini-api/docs/pricing (5 Nov 2026, paid-tier price for gemini-3.5-flash-lite).")
+insert_paragraph_after(b, b, "Chow, C. K. (1970). On optimum recognition error and reject tradeoff. IEEE Transactions on Information Theory, 16(1), 41–46. The reject-option rule behind section 9.7 (a standard method reference, not one of the pages read on 31 Oct).")
+t = table_after(doc, "Appendix C. Where everything lives")
+resize_rows(t, len(t.rows) + 1)
+set_row(t, len(t.rows) - 1, ["Escalation threshold cost check", "reports/review_cost.md (uv run dispute-agent review-cost; inputs in config.yaml under review_cost)"])
 
 # Appendix C: no slides any more
 for tbl in doc.tables:

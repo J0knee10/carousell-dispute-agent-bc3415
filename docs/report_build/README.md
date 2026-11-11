@@ -23,6 +23,8 @@ uv run --no-project --with python-docx --with pillow python docs/report_build/bu
 
 On Windows, `compare` rewrites every `reports/evaluation_*` file with CRLF endings: restore the ones whose content did not change with `git checkout -- <file>`.
 
+Section 9.7 (the escalation threshold) takes its tables from `reports/review_cost.md` and `reports/review_cost.csv`. After new runs or a change to `review_cost` in `config.yaml`, refresh them with `uv run dispute-agent review-cost` (no LLM calls) before rebuilding, and update the numbers in the `threshold_*` text in `findings_text.json`.
+
 Then update the contents page: in Word, References → Update Table, or on
 Windows `powershell -File docs/report_build/render_docx.ps1 -Docx <full path to the .docx> -Pdf <full path to a .pdf> -UpdateAndSave`.
 The workflow figure comes from `docs/figures/agent_workflow.png` (drawn by
