@@ -191,6 +191,15 @@ def cmd_compare(args) -> int:
     return 0
 
 
+def cmd_review_cost(args) -> int:
+    from .evaluation.review_cost import build_review_cost
+
+    out = build_review_cost(tune_runs=args.tune, check_runs=args.check)
+    _print(out.read_text(encoding="utf-8"))
+    _print(f"Saved to {out}")
+    return 0
+
+
 def cmd_report(args) -> int:
     from .evaluation.report import build_report
 
@@ -308,6 +317,9 @@ def build_parser() -> argparse.ArgumentParser:
     sp.add_argument("--out", default="model_comparison", help="report name in reports/")
     sp.add_argument("--hardware", default=None, help="describe the local hardware for the report")
     sp.add_argument("--notes", default=None, help="Markdown file with the written conclusions")
+    sp = add("review-cost", cmd_review_cost, "price the escalation threshold (reports/review_cost.md)")
+    sp.add_argument("--tune", nargs="+", default=None, help="runs to choose the threshold on (dev cases; default from config.yaml)")
+    sp.add_argument("--check", nargs="+", default=None, help="runs to check it on (test cases; default from config.yaml)")
     add("eval-retrieval", cmd_eval_retrieval, "retrieval accuracy on the query set")
     sp = add("whatif", cmd_whatif, "re-judge past cases under a proposed policy change")
     sp.add_argument("change", help="the proposed rule, in plain English")

@@ -70,6 +70,42 @@ agent:
   max_tool_rounds: 1
   max_searches_per_round: 2
 
+# Cost-based check of the escalation threshold: `uv run dispute-agent review-cost`
+# writes reports/review_cost.md. Every recommendation is checked by a person: a
+# confident one gets a standard review, an escalated one a careful review (staff
+# decide it from scratch). A wrong recommendation that a standard review lets
+# through costs rework and money moved wrongly. The analysis prices all three
+# and finds the threshold with the lowest cost per dispute.
+# Low / base / high match the business case (report section 9.2).
+review_cost:
+  staff_cost_per_hour:
+    {low: 26, base: 35, high: 45, source: "MOM 2025 median for a customer service officer, plus CPF, 13th month and overheads (section 9.2)"}
+  careful_review_minutes:
+    {low: 30, base: 45, high: 60, source: "Staff time to decide a dispute by hand; vendor estimate of 30-60 min (Chargeflow, section 9.2)"}
+  time_saved_by_agent:
+    {low: 0.4, base: 0.5, high: 0.6, source: "Assumption (section 9.2): a standard review of a confident recommendation takes the rest of a careful review's time"}
+  order_value:
+    {low: 60, base: 100, high: 120, source: "Average 'Buy' order in S$, assumption (section 9.2)"}
+  disputes_per_year:
+    {low: 1440, base: 6000, high: 28000, source: "Disputes escalated to Carousell staff a year in Singapore (section 9.3); turns a cost per dispute into a cost per year"}
+  # Labels give the outcome, not the amount, so a partial refund that was due
+  # counts as this share of the order. Gemini's partial refunds in the test and
+  # dev runs: median 15%, mean 23%.
+  partial_refund_share: 0.2
+  # Paid-tier price of gemini-3.5-flash-lite (the judge alias on 5 Nov 2026), US$
+  # per million tokens. Tokens per case are measured from the runs.
+  llm_price_per_million: {input: 0.30, output: 2.50}
+  # Candidate thresholds: a recommendation is escalated when its confidence is
+  # below the threshold (and still for the review gate's other reasons).
+  thresholds: [0.5, 0.6, 0.7, 0.8, 0.85, 0.9, 0.95, 1.0]
+  # The threshold is chosen on dev cases only and checked on the test set.
+  # dev_borderline_v2 is the 36 borderline dev cases after the decision-guide
+  # fix; gemini_seed holds the hand-written seed cases (its test cases are left out).
+  tune_runs: [dev_borderline_v2, gemini_seed]
+  check_runs: [cmp_gemini-flash-lite]
+  # Resamples of the dev cases, to show how often each threshold comes out cheapest.
+  bootstrap: 2000
+
 data:
   mercari_archive: data/raw/train.tsv.7z
   mercari_tsv: data/raw/train.tsv
