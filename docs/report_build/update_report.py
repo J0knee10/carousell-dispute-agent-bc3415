@@ -16,9 +16,10 @@ if len(sys.argv) != 4:
 sys.path.insert(0, sys.argv[1])
 from docx import Document  # noqa: E402
 from docx.oxml.ns import qn  # noqa: E402
+from docx.shared import Pt  # noqa: E402
 from docx_helpers import (  # noqa: E402
-    insert_paragraph_after, insert_table_after, para, remove, resize_rows, set_cell, set_row, set_runs, set_widths,
-    table_after, update_fields_on_open,
+    insert_paragraph_after, insert_table_after, keep_columns, para, remove, resize_rows, set_cell, set_row, set_runs,
+    set_widths, stripe_rows, table_after, update_fields_on_open,
 )
 
 REPO = Path(".")
@@ -458,9 +459,32 @@ remove(para(doc, "GitHub repo linked on this machine (3 Nov)."))
 b = para(doc, "App deployed on Streamlit Community Cloud")
 insert_paragraph_after(b, BULLET, plain(F["status_not_done"]))
 _remove_from(para(doc, "12.2 What is left", "Heading 2"), _heading("12.3", 2))
-set_runs(para(doc, "12.3 Contribution table (template)", "Heading 2"), "12.2 Team and contributions")
-set_runs(para(doc, "Fill in one row per member."),
-         "Each member’s role, main contributions, where the evidence is, and their part in the video.")
+h = set_runs(para(doc, "12.3 Contribution table (template)", "Heading 2"), "12.2 Team and contributions (Task Allocation)")
+intro = set_runs(para(doc, "Fill in one row per member."),
+                 "Each member’s role, main contributions, where the evidence is, and their part in the video.")
+
+# The course's Task Allocation form, as the team filled it in on Google Drive (13 Nov):
+# equal contribution, then each task and the member in charge of it
+insert_paragraph_after(h, intro, "All six members contributed equally to all tasks.")
+roles = table_after(doc, "Each member’s role, main contributions")
+cap = insert_paragraph_after(roles, intro, "Task allocation: each task and the member in charge of it.")
+cap.paragraph_format.space_before = Pt(8)  # the intro style has no space above, and this one follows a table
+tasks = insert_table_after(cap, roles, [
+    ["S/N", "Tasks", "Member in charge"],
+    ["1", "Agent workflow: LangGraph steps, tool loop, confidence check, staff pause", "Ronak (C1)"],
+    ["2", "Citation check: all 68 test-set citations checked by hand", "Ronak (C1)"],
+    ["3", "Policy search: policy clauses, hybrid search, citations, retrieval evaluation", "Akshaya (C2)"],
+    ["4", "Data and evaluation: listings, dispute generator, labels, test harness, baseline, model comparison", "Evelyn (C3)"],
+    ["5", "App and deployment: Streamlit app, local models, cloud deployment, repo and README", "Jonathan (C4)"],
+    ["6", "Business case: problem, evidence, competitors, value and costs, recommendation", "Dan Yu (B1)"],
+    ["7", "Presentation slides", "Dan Yu (B1)"],
+    ["8", "Policy corpus, hard cases, labelling, risks and ethics", "Drue (B2)"],
+    ["9", "Video: planning and editing", "Drue (B2)"],
+    ["10", "Presenting: each member presents their own slides and their part of the video", "All members"],
+])
+keep_columns(tasks, 3)
+set_widths(tasks, [0.5, 4.5, 1.5])
+stripe_rows(tasks)
 
 # Appendix B: the price was checked on Google's own page (section 9.6)
 b = set_runs(para(doc, "Gemini API pricing:"),

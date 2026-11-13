@@ -466,6 +466,8 @@ After changing dependencies, regenerate `requirements.txt` with
 
 ## Team and contributions
 
+All six members contributed equally to all tasks.
+
 Evidence can be commits, files, documents or meeting notes; the commit history alone shows one author because the code was
 pushed from one machine.
 
@@ -477,6 +479,21 @@ pushed from one machine.
 | Jonathan | C4: App and deployment | Streamlit app, local models, cloud deployment, repo and README | `app/`, `src/dispute_agent/llm/`, `README.md` | Live demo (1:40–3:00) |
 | Dan Yu | B1: Business lead | Problem, evidence, competitors, business case, recommendation | Project Brief, Business Case | Problem; recommendation (0:00–0:50, 4:20–4:50) |
 | Drue | B2: Policy and story lead | Policy corpus, hard cases, labelling, risks and ethics, video editing | `data/policy/`, `data/labels/labels.csv`, `presentation/` | Risks (3:55–4:20); edits the video |
+
+Task allocation (the course's form; the same table is in report section 12.2):
+
+| S/N | Tasks | Member in charge |
+|---|---|---|
+| 1 | Agent workflow: LangGraph steps, tool loop, confidence check, staff pause | Ronak (C1) |
+| 2 | Citation check: all 68 test-set citations checked by hand | Ronak (C1) |
+| 3 | Policy search: policy clauses, hybrid search, citations, retrieval evaluation | Akshaya (C2) |
+| 4 | Data and evaluation: listings, dispute generator, labels, test harness, baseline, model comparison | Evelyn (C3) |
+| 5 | App and deployment: Streamlit app, local models, cloud deployment, repo and README | Jonathan (C4) |
+| 6 | Business case: problem, evidence, competitors, value and costs, recommendation | Dan Yu (B1) |
+| 7 | Presentation slides | Dan Yu (B1) |
+| 8 | Policy corpus, hard cases, labelling, risks and ethics | Drue (B2) |
+| 9 | Video: planning and editing | Drue (B2) |
+| 10 | Presenting: each member presents their own slides and their part of the video | All members |
 
 ## Before submission
 

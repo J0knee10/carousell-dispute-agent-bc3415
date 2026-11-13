@@ -137,3 +137,24 @@ def set_widths(table: Table, inches: list[float]) -> None:
     for row in table.rows:
         for cell, w in zip(row.cells, inches):
             cell.width = Inches(w)
+
+
+def keep_columns(table: Table, n: int) -> None:
+    """Drop every column after the first n (grid and cells); the table has no merged cells."""
+    for gc in table._tbl.tblGrid.findall(qn("w:gridCol"))[n:]:
+        gc.getparent().remove(gc)
+    for tr in table._tbl.findall(qn("w:tr")):
+        for tc in tr.findall(qn("w:tc"))[n:]:
+            tr.remove(tc)
+
+
+def stripe_rows(table: Table, fill: str = "F2F5F9") -> None:
+    """Shade every second body row (2, 4, ...) like the report's other tables; leave the header as it is."""
+    for i, row in enumerate(table.rows[1:], start=1):
+        for cell in row.cells:
+            tc_pr = cell._tc.get_or_add_tcPr()
+            for shd in tc_pr.findall(qn("w:shd")):
+                tc_pr.remove(shd)
+            if i % 2 == 0:
+                shd = tc_pr.makeelement(qn("w:shd"), {qn("w:val"): "clear", qn("w:color"): "auto", qn("w:fill"): fill})
+                tc_pr.append(shd)
