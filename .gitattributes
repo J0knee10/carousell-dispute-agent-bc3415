@@ -2,3 +2,7 @@
 *.png binary
 *.7z binary
 *.zip binary
+
+# Team working notes: kept in the repo, left out of the submitted code copy (git archive)
+SESSION_HANDOFF.md export-ignore
+NEXT_STEPS.md export-ignore

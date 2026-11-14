@@ -14,9 +14,30 @@ final submission if you do not want it in the repo.
 - [ ] **Confirm the real submission deadline** (15 Nov was assumed).
 - [ ] **Check the Mercari competition rules** allow sharing the 300 sampled listings before making the repo public. If they do not, keep the repo private: dropping `data/listings/listings_sample.jsonl` is not enough, because every case in `data/cases/generated_cases.jsonl` embeds the full listing text and its `mercari_train:<row>` source, `data/labels/labels.csv`, `outputs/runs/` and `reports/whatif_demo.md` carry listing titles, and all of it stays in the git history.
 - [ ] **Record and edit the video** (`presentation/VIDEO_SCRIPT.md`; no slides, it records the live app). Re-check the demo cases on the day in the app (S01, S16, G155, the what-if rule), early in the Gemini quota day.
-- [ ] **Re-read the README** once more before submission, and delete `SESSION_HANDOFF.md` (and this file, if you do not want team notes in the repo).
-  - Also remove the README's "Before submission" section, which links to this file.
-  - Decide whether to keep `docs/report_build/`: `report_orig.docx` still holds the draft's internal notes ("Not yet agreed by the group" and so on), but without it the report cannot be rebuilt.
+- [x] ~~Remove the README's "Before submission" section~~ (done 14 Nov). This file and `SESSION_HANDOFF.md` stay in the repo but are marked `export-ignore` in `.gitattributes`, so the submitted code copy leaves them out.
+- [ ] **Re-read the README** once more before submission.
+- [ ] Decide whether to keep `docs/report_build/` in the submitted code: `report_orig.docx` still holds the draft's internal notes ("Not yet agreed by the group" and so on), but without it the report cannot be rebuilt.
+- [ ] **Finish the submission folder and zip it** (see "Submission folder" below).
+
+## Submission folder
+
+`submission/` in the repo root is git-ignored: it holds the files to zip for the professor. Built on 14 Nov:
+
+| File | From |
+|---|---|
+| `Carousell_Dispute_Agent_Full_Report.docx` | Google Drive (the source of truth). Same text as the repo's copy; Drive's was re-saved through Google Docs. |
+| `Task_Allocation_BC3409_BC3415.docx` | Google Drive ("BC3409 and BC 3415 Group Project - Task Allocation.docx"); also in the repo root |
+| `Carousell_Dispute_Agent_Pitch_Deck.pdf` | Canva export (26 slides, 14 Nov 08:11); also `presentation/` |
+| `Carousell_Dispute_Agent_Video_Slides.pdf` | Google Slides export (15 slides); also `presentation/` |
+| `carousell-dispute-agent-code/` | `git archive` of `main` (tracked files only: no `.env`, `.venv`, videos or team notes) |
+
+Before zipping:
+
+- [ ] Add the final video (Drue) as `submission/Carousell_Dispute_Agent_Demo_Video.mp4`.
+- [ ] Video slides: slide 1 still says "BC3415 · GROUP [number]" (the pitch deck says Group 4).
+- [ ] If the report, form or decks changed, download or export them again into `submission/` (and `presentation/`).
+- [ ] Refresh the code copy after the last commit:
+  `rm -rf submission/carousell-dispute-agent-code && git archive --prefix=carousell-dispute-agent-code/ HEAD | tar -x -C submission`
 
 ## Business case (B1, B2)
 

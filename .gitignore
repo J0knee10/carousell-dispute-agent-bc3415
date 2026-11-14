@@ -27,6 +27,9 @@ outputs/whatif/*
 *.mov
 *.mkv
 
+# Local folder of files to zip for submission (built from the repo, see NEXT_STEPS.md)
+submission/
+
 # Node packages (installed from a package.json, never committed)
 node_modules/
 

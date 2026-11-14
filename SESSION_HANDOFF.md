@@ -21,10 +21,17 @@ this file is the context behind it.
     - Slide 18's notes hold the demo steps (S01, S16, G155; backups S02 and S10).
     - Slide 26's notes hold a Q&A bank of CFO, CTO and evidence questions, each with an answer and who gives it.
     - Slide 16's notes hold Jonathan's extra CTO Q&A prep: prompt injection, photos, model version, fallback, PDPA.
-  - **QR code:** `qr-code.jpg` (in the repo root) opens the live app. It is on slides 18 and 26. Ask the panel to scan it after the demo, because everyone on the link shares the free Gemini quota with the demo.
+  - **QR code:** `presentation/qr-code.jpg` (moved from the repo root on 14 Nov) opens the live app. It is on slides 18 and 26. Ask the panel to scan it after the demo, because everyone on the link shares the free Gemini quota with the demo.
 - **Deployment:** live since 6 Nov at https://bc3415-carousell-dispute-agent.streamlit.app/; every push to `main` redeploys it. Secrets (set in Streamlit, not in the repo): `GEMINI_API_KEY` and `OPENAI_API_KEY`. Everyone using the link shares the free Gemini quota.
 - **App UI (6 Nov):** Review and What-if are a guided chat (bottom bar with a case picker or settings, plus a chat box); Evaluation results is a summary for non-technical readers that reads its numbers from `reports/`; How it works uses `docs/figures/agent_workflow.png`.
 - **Tests:** 69, all passing, offline.
+
+## Tidy for submission (14 Nov)
+
+- Google Drive's report has the same text as the repo's (checked word by word on 14 Nov); Drive's file was re-saved through Google Docs, so its bytes differ. The repo keeps the Word build; `submission/` has Drive's copy.
+- Added to the repo: the task allocation form (repo root), the Canva pitch deck PDF and the video slides PDF (Dan Yu's Google Slides deck, 15 slides) in `presentation/`.
+- The video now uses slides: the Google Slides deck "Carousell Dispute Agent" in the team's Drive. Demo video exports (`*.mp4`) are git-ignored.
+- `submission/` (git-ignored) is the folder to zip; what's in it and what's left is in `NEXT_STEPS.md` ("Submission folder").
 
 ## Deck updated for the person's citation check (10 Nov, on Jonathan's go)
 
