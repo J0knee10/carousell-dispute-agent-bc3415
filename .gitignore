@@ -22,6 +22,11 @@ outputs/*
 outputs/whatif/*
 !outputs/whatif/whatif_20261028_231316.json
 
+# Demo video exports (too large for git; submitted separately)
+*.mp4
+*.mov
+*.mkv
+
 # Node packages (installed from a package.json, never committed)
 node_modules/
 
