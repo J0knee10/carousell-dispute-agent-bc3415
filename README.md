@@ -428,11 +428,17 @@ outputs/
   runs/                       per-case predictions behind every report
   runs_discarded/             the runs reports/tool_field_experiment.md cites
   whatif/                     the what-if demo run
-presentation/VIDEO_SCRIPT.md  demo video script (all six members, about 4:55)
+presentation/
+  Carousell_Dispute_Agent_Pitch_Deck.pdf    live pitch deck (Canva export, 26 slides)
+  Carousell_Dispute_Agent_Video_Slides.pdf  slides used in the demo video
+  VIDEO_SCRIPT.md             demo video script (all six members, about 4:55)
+  qr-code.jpg                 QR code to the live app (on the pitch deck)
 tests/                        pytest suite (runs offline: mock LLM, faked HTTP)
 Dockerfile / compose.yaml     optional container for the app
 Carousell_Dispute_Agent_Full_Report.docx
                               the written report (built from docs/report_build/)
+Task_Allocation_BC3409_BC3415.docx
+                              the course's task allocation form
 ```
 
 Run the tests with `uv run pytest` (76 tests, no network or API key needed; they write their outputs to a temporary folder).
@@ -480,7 +486,7 @@ pushed from one machine.
 | Dan Yu | B1: Business lead | Problem, evidence, competitors, business case, recommendation | Project Brief, Business Case | Problem; recommendation (0:00–0:50, 4:20–4:50) |
 | Drue | B2: Policy and story lead | Policy corpus, hard cases, labelling, risks and ethics, video editing | `data/policy/`, `data/labels/labels.csv`, `presentation/` | Risks (3:55–4:20); edits the video |
 
-Task allocation (the course's form; the same table is in report section 12.2):
+Task allocation (the course's form, `Task_Allocation_BC3409_BC3415.docx`; the same table is in report section 12.2):
 
 | S/N | Tasks | Member in charge |
 |---|---|---|
@@ -494,7 +500,3 @@ Task allocation (the course's form; the same table is in report section 12.2):
 | 8 | Policy corpus, hard cases, labelling, risks and ethics | Drue (B2) |
 | 9 | Video: planning and editing | Drue (B2) |
 | 10 | Presenting: each member presents their own slides and their part of the video | All members |
-
-## Before submission
-
-The team's remaining tasks are in [NEXT_STEPS.md](NEXT_STEPS.md).
